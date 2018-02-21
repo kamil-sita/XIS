@@ -8,13 +8,15 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import sections.imageCopyFinder.ImageCopyFinder;
 
+
 public class ControllerMV {
 
-    public static Label labelStatusGlobal;
-    public static AnchorPane vistaHolderGlobal;
-    public static ScrollPane scrollPaneGlobal;
+    private static Label labelStatusGlobal;
+    private static AnchorPane vistaHolderGlobal;
+    private static AnchorPane currentVistaGlobal;
+    private static ScrollPane scrollPaneGlobal;
 
-    public static AnchorPane anchorPaneLeftGlobal;
+    private static AnchorPane anchorPaneLeftGlobal;
 
 
     @FXML
@@ -47,7 +49,9 @@ public class ControllerMV {
     }
 
     public static void changeVista(AnchorPane anchorPane) {
+        currentVistaGlobal = anchorPane;
         vistaHolderGlobal.getChildren().setAll((Node) anchorPane);
+        windowSizeChange();
     }
 
     public static void setStatus(String text) {
@@ -60,16 +64,16 @@ public class ControllerMV {
     }
 
     private static void generateShadow() {
+        //TODO fix - shadow is not generated before any changes (when program starts)
         double currentWidth = anchorPaneLeftGlobal.getWidth();
-        System.out.println(currentWidth);
         anchorPaneLeftGlobal.setStyle(
-                "-fx-background-color: linear-gradient(from " + currentWidth + "px 0px to " + (currentWidth-25) + "px 0px, lightgray, white)"
+                "-fx-background-color: linear-gradient(from " + currentWidth + "px 0px to " + (currentWidth-15) + "px 0px, lightgray, white)"
         );
     }
 
     //changing size of anchorPane (vista holder) in scrollPane
     private static void resizeAnchorPane() {
-        //TODO not working yet
-        vistaHolderGlobal.setPrefWidth(scrollPaneGlobal.getWidth() - scrollPaneGlobal.getViewportBounds().getWidth());
+        if (currentVistaGlobal == null) return;
+        currentVistaGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
     }
 }

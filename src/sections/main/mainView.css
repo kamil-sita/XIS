@@ -1,0 +1,89 @@
+/*
+    No glow
+ */
+
+.button:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-background-insets: -1.4, 0, 1, 2;
+    -fx-background-radius: 5, 4, 3;
+}
+
+.root {
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: transparent;
+}
+
+
+/*
+    No rounding on elements
+ */
+
+.button {
+    -fx-border-radius: 0 0 0 0;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.text-field {
+    -fx-border-radius: 0 0 0 0;
+    -fx-background-radius: 0 0 0 0;
+}
+
+/*
+    Captions are main labels before textfields, buttons, etc that briefly describe their function
+ */
+.caption {
+    -fx-font-weight: bold;
+}
+
+/*
+    Gradients on various elements of GUI
+ */
+
+.anchor-pane-left {
+
+}
+
+.anchor-pane-right {
+    -fx-background-color: linear-gradient(from 0px 0px to 25px 0px, lightgray, white);
+}
+
+.tile-pane {
+    -fx-background-color: linear-gradient(to bottom, white, lightgray);
+}
+
+/*
+
+https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
+
+.anchor-pane-left {
+    -fx-background-color: linear-gradient(to right, white, lightgray);
+}
+
+.anchor-pane-right {
+    -fx-background-color: linear-gradient(to left, white, lightgray);
+}
+
+.tile-pane {
+    -fx-background-color: linear-gradient(to bottom, white, lightgray);
+}
+ */
+
+/*
+    Border
+ */
+
+.information-box {
+    -fx-border-color: gray;
+    -fx-border-width: 1;
+}
+
+.tile-pane {
+    -fx-border-color: gray;
+    -fx-border-width: 0;
+}
+
+.menu-bar {
+    -fx-border-color: gray;
+    -fx-border-width: 1;
+}

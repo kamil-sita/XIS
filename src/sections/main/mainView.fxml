@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainView.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.main.ControllerMV">
+   <children>
+      <MenuBar VBox.vgrow="NEVER">
+         <menus>
+            <Menu mnemonicParsing="false" text="File">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="New" />
+                  <MenuItem mnemonicParsing="false" text="Open…" />
+                  <Menu mnemonicParsing="false" text="Open Recent" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" text="Save As…" />
+                  <MenuItem mnemonicParsing="false" text="Revert" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Preferences…" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Quit" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Undo" />
+                  <MenuItem mnemonicParsing="false" text="Redo" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Cut" />
+                  <MenuItem mnemonicParsing="false" text="Copy" />
+                  <MenuItem mnemonicParsing="false" text="Paste" />
+                  <MenuItem mnemonicParsing="false" text="Delete" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" text="Select All" />
+                  <MenuItem mnemonicParsing="false" text="Unselect All" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <GridPane VBox.vgrow="ALWAYS">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="0.0" prefWidth="200.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <TilePane maxWidth="200.0" minWidth="0.0" prefWidth="200.0" styleClass="tile-pane">
+               <children>
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="ScannerHelper" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="LoSTIC" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="SpritesheetBuilder" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Ulam" />
+                  <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="ImageCopyFinder" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Sorter" />
+               </children>
+            </TilePane>
+            <GridPane prefHeight="523.0" prefWidth="658.0" GridPane.columnIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="7.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="1200.0" minWidth="600.0" prefWidth="600.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="7.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" GridPane.columnIndex="1">
+                     <content>
+                        <AnchorPane fx:id="vistaHolder" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
+                              <ToggleButton layoutX="98.0" layoutY="14.0" mnemonicParsing="false" text="ToggleButton" AnchorPane.rightAnchor="3.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </ScrollPane>
+                  <AnchorPane fx:id="anchorPaneLeft" prefHeight="200.0" prefWidth="200.0" styleClass="anchor-pane-left" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="anchor-pane-right" GridPane.columnIndex="2" />
+               </children>
+            </GridPane>
+         </children>
+      </GridPane>
+      <HBox alignment="CENTER_LEFT" prefHeight="22.0" prefWidth="754.0" spacing="5.0" styleClass="information-box" VBox.vgrow="NEVER">
+         <children>
+            <Label fx:id="labelStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Status" HBox.hgrow="ALWAYS" />
+            <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+            <ProgressBar maxWidth="200.0" minWidth="50.0" prefWidth="200.0" progress="0.0" HBox.hgrow="NEVER" />
+         </children>
+         <padding>
+            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

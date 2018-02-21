@@ -23,12 +23,14 @@ public class Main extends Application {
         stage.show();
 
         stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            ControllerMV.windowSizeChange();
+            ControllerMainView.windowSizeChange();
         });
 
         stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            ControllerMV.windowSizeChange();
+            ControllerMainView.windowSizeChange();
         });
+
+        //TODO add window maximalization listener -> shadow bug
 
     }
 

@@ -7,9 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import sections.imageCopyFinder.ImageCopyFinder;
+import sections.welcomePage.WelcomePage;
 
 
-public class ControllerMV {
+public class ControllerMainView {
 
     private static Label labelStatusGlobal;
     private static AnchorPane vistaHolderGlobal;
@@ -32,6 +33,14 @@ public class ControllerMV {
     private Label labelStatus;
 
     @FXML
+    void mainPress(ActionEvent event) {
+        WelcomePage welcomePage = new WelcomePage();
+        AnchorPane anchorPane = welcomePage.getUserInterface();
+        changeVista(anchorPane);
+        setStatus("welcome page loaded");
+    }
+
+    @FXML
     void imageCopyFinderPress(ActionEvent event) {
         ImageCopyFinder imageCopyFinder = new ImageCopyFinder();
         AnchorPane anchorPane = imageCopyFinder.getUserInterface();
@@ -45,6 +54,7 @@ public class ControllerMV {
         vistaHolderGlobal = vistaHolder;
         anchorPaneLeftGlobal = anchorPaneLeft;
         scrollPaneGlobal = scrollPane;
+        mainPress(null);
         windowSizeChange();
     }
 
@@ -59,16 +69,7 @@ public class ControllerMV {
     }
 
     public static void windowSizeChange() {
-        generateShadow();
         resizeAnchorPane();
-    }
-
-    private static void generateShadow() {
-        //TODO fix - shadow is not generated before any changes (when program starts)
-        double currentWidth = anchorPaneLeftGlobal.getWidth();
-        anchorPaneLeftGlobal.setStyle(
-                "-fx-background-color: linear-gradient(from " + currentWidth + "px 0px to " + (currentWidth-15) + "px 0px, lightgray, white)"
-        );
     }
 
     //changing size of anchorPane (vista holder) in scrollPane

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.SubScene?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.ArcTo?>
+<?import javafx.scene.shape.ClosePath?>
+<?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.shape.LineTo?>
+<?import javafx.scene.shape.MoveTo?>
+<?import javafx.scene.shape.Path?>
+<?import javafx.scene.shape.QuadCurveTo?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imageCopyFinder.view1.View1Controller">
+   <children>
+      <Label layoutX="40.0" layoutY="14.0" text="HELLO WELCOME TO MAIN TEST PAGE">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <TabPane layoutX="40.0" layoutY="87.0" prefHeight="123.0" prefWidth="441.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="119.0">
+        <tabs>
+          <Tab text="Untitled Tab 1">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="61.0" layoutY="35.0" mnemonicParsing="false" text="Button" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Untitled Tab 2">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="441.0">
+                     <children>
+                        <ColorPicker layoutX="186.0" layoutY="35.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <TabPane layoutX="32.0" layoutY="229.0" prefHeight="142.0" prefWidth="282.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.rightAnchor="286.0">
+         <tabs>
+            <Tab text="Untitled Tab 1">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Ellipse fill="DODGERBLUE" layoutX="124.0" layoutY="56.0" radiusX="100.0" radiusY="80.0" stroke="BLACK" strokeType="INSIDE" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Untitled Tab 2">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Spinner layoutX="74.0" layoutY="44.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+      <Button layoutX="354.0" layoutY="483.0" mnemonicParsing="false" text="Button" />
+      <Separator layoutX="40.0" layoutY="435.0" prefWidth="200.0" />
+      <SubScene height="142.0" layoutX="73.0" layoutY="450.0" width="229.0">
+        <root>
+          <Region />
+        </root>
+      </SubScene>
+      <Path fill="DODGERBLUE" layoutX="28.0" layoutY="508.0" stroke="BLACK" strokeType="INSIDE">
+          <elements>
+              <MoveTo x="100.0" />
+              <LineTo x="150.0" y="50.0" />
+              <ArcTo radiusX="30.0" radiusY="25" x="200.0" y="100.0" />
+              <QuadCurveTo controlX="300.0" controlY="300.0" y="150.0" />
+              <ClosePath />
+          </elements>
+      </Path>
+      <Slider layoutX="483.0" layoutY="483.0" orientation="VERTICAL" prefHeight="335.0" prefWidth="14.0" AnchorPane.leftAnchor="483.0" AnchorPane.rightAnchor="103.0" />
+      <ProgressIndicator layoutX="93.0" layoutY="889.0" progress="0.0" />
+      <PasswordField layoutX="261.0" layoutY="877.0" />
+      <ProgressBar layoutX="380.0" layoutY="841.0" prefWidth="200.0" progress="0.0" />
+      <Pagination layoutX="136.0" layoutY="964.0" prefHeight="200.0" prefWidth="317.0" AnchorPane.leftAnchor="136.0" AnchorPane.rightAnchor="147.0" />
+      <ImageView fitHeight="244.0" fitWidth="282.0" layoutX="180.0" layoutY="1216.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="176.0">
+         <image>
+            <Image url="@../../../../../../../Users/Sita/Pictures/4nX44_A7.jpg" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

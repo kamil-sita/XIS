@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainView.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.main.ControllerMV">
+<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainView.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.main.ControllerMainView">
    <children>
       <MenuBar VBox.vgrow="NEVER">
          <menus>
@@ -62,8 +62,8 @@
       </MenuBar>
       <GridPane VBox.vgrow="ALWAYS">
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="0.0" prefWidth="200.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="100.0" prefWidth="200.0" />
+            <ColumnConstraints hgrow="ALWAYS" minWidth="628.0" />
          </columnConstraints>
          <rowConstraints>
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -71,6 +71,7 @@
          <children>
             <TilePane maxWidth="200.0" minWidth="0.0" prefWidth="200.0" styleClass="tile-pane">
                <children>
+                  <Button mnemonicParsing="false" onAction="#mainPress" prefHeight="42.0" prefWidth="200.0" text="Main" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="ScannerHelper" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="LoSTIC" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="SpritesheetBuilder" />
@@ -82,7 +83,7 @@
             <GridPane prefHeight="523.0" prefWidth="658.0" GridPane.columnIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="7.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="ALWAYS" maxWidth="1200.0" minWidth="600.0" prefWidth="600.0" />
+                <ColumnConstraints hgrow="ALWAYS" maxWidth="1200.0" minWidth="612.0" prefWidth="612.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="7.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
@@ -99,8 +100,8 @@
                         </AnchorPane>
                      </content>
                   </ScrollPane>
-                  <AnchorPane fx:id="anchorPaneLeft" prefHeight="200.0" prefWidth="200.0" styleClass="anchor-pane-left" />
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="anchor-pane-right" GridPane.columnIndex="2" />
+                  <AnchorPane fx:id="anchorPaneLeft" prefHeight="200.0" prefWidth="200.0" styleClass="background-anchor-pane" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="background-anchor-pane" GridPane.columnIndex="2" />
                </children>
             </GridPane>
          </children>

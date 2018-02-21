@@ -37,15 +37,11 @@
 }
 
 /*
-    Gradients on various elements of GUI
+    Gradients and colors on various elements of GUI
  */
 
-.anchor-pane-left {
-
-}
-
-.anchor-pane-right {
-    -fx-background-color: linear-gradient(from 0px 0px to 25px 0px, lightgray, white);
+.background-anchor-pane {
+    -fx-background-color: dimgray;
 }
 
 .tile-pane {

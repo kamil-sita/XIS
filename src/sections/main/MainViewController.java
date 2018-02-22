@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import sections.ModuleTemplate;
 import sections.imageCopyFinder.ImageCopyFinder;
 import sections.welcomePage.WelcomePage;
 
@@ -17,14 +18,14 @@ public class MainViewController {
     private static AnchorPane currentVistaGlobal;
     private static ScrollPane scrollPaneGlobal;
 
-    private static AnchorPane anchorPaneLeftGlobal;
+    private static ModuleTemplate currentModule;
+
+    public static ImageCopyFinder imageCopyFinder;
+
 
 
     @FXML
     private AnchorPane vistaHolder;
-
-    @FXML
-    private AnchorPane anchorPaneLeft;
 
     @FXML
     private ScrollPane scrollPane;
@@ -37,22 +38,26 @@ public class MainViewController {
         WelcomePage welcomePage = new WelcomePage();
         AnchorPane anchorPane = welcomePage.getUserInterface();
         changeVista(anchorPane);
+        currentModule = welcomePage;
         setStatus("welcome page loaded");
     }
 
     @FXML
     void imageCopyFinderPress(ActionEvent event) {
-        ImageCopyFinder imageCopyFinder = new ImageCopyFinder();
+        imageCopyFinder = new ImageCopyFinder();
         AnchorPane anchorPane = imageCopyFinder.getUserInterface();
         changeVista(anchorPane);
+        currentModule = imageCopyFinder;
         setStatus("imageCopyFinder module loaded");
     }
 
+    /**
+     * Function called on initialization (JavaFX function)
+     */
     @FXML
     public void initialize() {
         labelStatusGlobal = labelStatus;
         vistaHolderGlobal = vistaHolder;
-        anchorPaneLeftGlobal = anchorPaneLeft;
         scrollPaneGlobal = scrollPane;
         mainPress(null);
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
@@ -61,21 +66,42 @@ public class MainViewController {
         onWindowSizeChange();
     }
 
+    /**
+     * Changes vista (main AnchorPane where content is displayed)
+     * @param anchorPane new vista
+     */
     public static void changeVista(AnchorPane anchorPane) {
         currentVistaGlobal = anchorPane;
         vistaHolderGlobal.getChildren().setAll((Node) anchorPane);
         onWindowSizeChange();
     }
 
+    /**
+     * Sets status (Label) in bottom left label
+     * @param text text of label
+     */
     public static void setStatus(String text) {
         labelStatusGlobal.setText(text);
     }
 
+    /**
+     * Function called when Stage changes it's size
+     */
     public static void onWindowSizeChange() {
         resizeAnchorPane();
     }
 
-    //changing size of anchorPane (vista holder) in scrollPane
+    /**
+     * Reloads anchorPane from last used class implementing ModuleTemplate
+     */
+    public static void reloadView() {
+        changeVista(currentModule.getUserInterface());
+        onWindowSizeChange();
+    }
+
+    /**
+     * Changes preferred width of vista (AnchorPane) so it scales properly with stage size
+     */
     private static void resizeAnchorPane() {
         if (currentVistaGlobal == null) return;
         currentVistaGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());

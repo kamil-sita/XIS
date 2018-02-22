@@ -10,7 +10,7 @@ import sections.imageCopyFinder.ImageCopyFinder;
 import sections.welcomePage.WelcomePage;
 
 
-public class ControllerMainView {
+public class MainViewController {
 
     private static Label labelStatusGlobal;
     private static AnchorPane vistaHolderGlobal;
@@ -55,20 +55,23 @@ public class ControllerMainView {
         anchorPaneLeftGlobal = anchorPaneLeft;
         scrollPaneGlobal = scrollPane;
         mainPress(null);
-        windowSizeChange();
+        scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            MainViewController.onWindowSizeChange();
+        });
+        onWindowSizeChange();
     }
 
     public static void changeVista(AnchorPane anchorPane) {
         currentVistaGlobal = anchorPane;
         vistaHolderGlobal.getChildren().setAll((Node) anchorPane);
-        windowSizeChange();
+        onWindowSizeChange();
     }
 
     public static void setStatus(String text) {
         labelStatusGlobal.setText(text);
     }
 
-    public static void windowSizeChange() {
+    public static void onWindowSizeChange() {
         resizeAnchorPane();
     }
 

@@ -1,6 +1,8 @@
 package sections.main;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,14 +25,22 @@ public class Main extends Application {
         stage.show();
 
         stage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            ControllerMainView.windowSizeChange();
+            MainViewController.onWindowSizeChange();
         });
 
         stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            ControllerMainView.windowSizeChange();
+            MainViewController.onWindowSizeChange();
         });
 
-        //TODO add window maximalization listener -> shadow bug
+        //TODO add/fix window maximalization listener - > windows don't scale well after maximalization
+        stage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
+                System.out.println("max");
+                MainViewController.onWindowSizeChange();
+            }
+        });
 
     }
 

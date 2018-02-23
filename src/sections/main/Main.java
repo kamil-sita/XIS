@@ -18,7 +18,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("mainView.fxml"));
-        stage.setTitle("XIS");
+        stage.setTitle("XIS pre-alpha");
         stage.setScene(new Scene (root, 1280, 800));
         stage.setMinHeight(480);
         stage.setMinWidth(800);

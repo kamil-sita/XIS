@@ -13,16 +13,18 @@ import sections.welcomePage.WelcomePage;
 
 public class MainViewController {
 
+    //static elements
+
     private static Label labelStatusGlobal;
     private static AnchorPane vistaHolderGlobal;
     private static AnchorPane currentVistaGlobal;
     private static ScrollPane scrollPaneGlobal;
-
     private static ModuleTemplate currentModule;
 
     public static ImageCopyFinder imageCopyFinder;
 
 
+    //JavaFX Elements
 
     @FXML
     private AnchorPane vistaHolder;
@@ -32,6 +34,8 @@ public class MainViewController {
 
     @FXML
     private Label labelStatus;
+
+    //Actions methods
 
     @FXML
     void mainPress(ActionEvent event) {
@@ -50,6 +54,8 @@ public class MainViewController {
         currentModule = imageCopyFinder;
         setStatus("imageCopyFinder module loaded");
     }
+
+    //Other methods
 
     /**
      * Function called on initialization (JavaFX function)

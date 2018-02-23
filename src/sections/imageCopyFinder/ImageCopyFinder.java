@@ -31,7 +31,6 @@ public class ImageCopyFinder implements ModuleTemplate {
 
     public void setInterface(ImageCopyFinderViews view) {
         switch (view) {
-
             case mainView:
                 setInterface(LOCATION_VIEW1);
                 break;

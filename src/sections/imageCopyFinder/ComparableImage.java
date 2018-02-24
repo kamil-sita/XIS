@@ -17,12 +17,12 @@ public class ComparableImage {
     private int height;
 
 
-    public ComparableImage(File file) {
+    public ComparableImage(File file, BufferedImage image) {
         imageFile = file;
+        fullSizeImage = image;
     }
 
     public void generateData(final int COMPARED_IMAGE_SIZE) {
-        fullSizeImage = BufferedImageIO.getImage(imageFile);
         if (fullSizeImage.equals(null)) return;
         smallImage = BufferedImageScale.getScaledDownImage(fullSizeImage, COMPARED_IMAGE_SIZE);
 

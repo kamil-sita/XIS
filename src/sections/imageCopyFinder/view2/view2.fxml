@@ -22,6 +22,6 @@
       </SplitPane>
       <Button alignment="CENTER" layoutX="274.0" layoutY="561.0" mnemonicParsing="false" onAction="#deleteRightPress" text="Delete right" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
       <Button alignment="CENTER" layoutX="18.0" layoutY="561.0" mnemonicParsing="false" onAction="#deleteLeftPress" text="Delete left" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
-      <Button alignment="CENTER" layoutX="147.0" layoutY="561.0" mnemonicParsing="false" onAction="#hideButtonPress" text="Hide" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="100.0" />
+      <Button alignment="CENTER" layoutX="147.0" layoutY="561.0" mnemonicParsing="false" onAction="#hideButtonPress" text="Hide conflict" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="100.0" />
    </children>
 </AnchorPane>

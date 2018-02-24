@@ -5,12 +5,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="401.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imageCopyFinder.imageInfoView.ImageInfoViewController">
+<AnchorPane minWidth="295.0" prefHeight="401.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imageCopyFinder.imageInfoView.ImageInfoViewController">
 <children>
-      <ImageView fitHeight="281.0" fitWidth="281.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
-      <Separator layoutX="1.0" layoutY="298.0" prefHeight="3.0" prefWidth="288.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" />
-      <Label layoutX="99.0" layoutY="308.0" text="Name" textAlignment="RIGHT" />
-      <Label layoutX="68.0" layoutY="333.0" text="Dimensions" textAlignment="RIGHT" />
-      <Label layoutX="105.0" layoutY="358.0" text="Size" textAlignment="RIGHT" />
+    <ImageView fx:id="imageView" fitHeight="281.0" fitWidth="281.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="7.0" />
+    <Separator layoutX="1.0" layoutY="298.0" prefHeight="3.0" prefWidth="288.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" />
+    <Label layoutX="45" layoutY="310.0" text="Name" textAlignment="RIGHT" />
+    <Label layoutX="45" layoutY="330.0" text="Dimensions" textAlignment="RIGHT" />
+    <Label layoutX="45" layoutY="350.0" text="Size" textAlignment="RIGHT" />
+    <Label fx:id="nameValue" layoutX="150" layoutY="310.0" text="NameValue" textAlignment="RIGHT" />
+    <Label fx:id="dimensionsValue" layoutX="150" layoutY="330.0" text="DimensionsValue" textAlignment="RIGHT" />
+    <Label fx:id="sizeValue" layoutX="150" layoutY="350.0" text="SizeValue" textAlignment="RIGHT" />
 </children>
 </AnchorPane>

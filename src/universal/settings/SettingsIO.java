@@ -7,6 +7,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class SettingsIO {
+    /**
+     * Saves settings to given file
+     * @param usp settings
+     * @param loc location
+     */
 
     public void write (UniversalSettingPackage usp, String loc) {
         BufferedWriter bw;

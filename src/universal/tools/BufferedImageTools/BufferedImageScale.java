@@ -26,13 +26,22 @@ public class BufferedImageScale {
                 int xs = x / sampleWidth;
                 int ys = y / sampleHeight;
 
-                newImage.setRGB(xs, ys, getAverageRGB(x, y, source, SIZE).getRGBA());
+                newImage.setRGB(xs, ys, getAverageRGB(x, y, source, SIZE).getInt());
 
             }
         }
 
         return newImage;
     }
+
+    /**
+     * Returns average RGB of given tile of size SIZE, starting at (x, y)
+     * @param x coordinate
+     * @param y coordinate
+     * @param source input BufferedImage on which average value of given pixel should be found
+     * @param SIZE size of tile
+     * @return average RGB
+     */
 
     private static RGB getAverageRGB (int x, int y, BufferedImage source, final int SIZE) {
 
@@ -41,6 +50,7 @@ public class BufferedImageScale {
 
         ArrayList<RGB> sample = new ArrayList<>();
 
+        //Gettting samples from BufferedImage
         for (int i = 0; i < sampleWidth; i++) {
             for (int j = 0; j < sampleHeight; j++) {
 
@@ -55,13 +65,14 @@ public class BufferedImageScale {
         int combinedG = 0;
         int combinedB = 0;
 
-
+        //sum of all values on r, g, b channels
         for (RGB rgb : sample) {
             combinedR += rgb.r;
             combinedG += rgb.g;
             combinedB += rgb.b;
         }
 
+        //calculating averages
         combinedR /= sample.size();
         combinedG /= sample.size();
         combinedB /= sample.size();

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Universal setting format for XIS
+ */
 public class UniversalSettingPackage {
     // String - name of a section.
     // ArrayList<Settings> - list of settings under that section

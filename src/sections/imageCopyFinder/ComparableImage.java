@@ -40,7 +40,7 @@ public class ComparableImage {
         return smallImage;
     }
 
-    public File getImageFile() {
+    public File getFile() {
         return imageFile;
     }
 

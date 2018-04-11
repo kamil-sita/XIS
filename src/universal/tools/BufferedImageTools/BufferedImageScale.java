@@ -20,13 +20,15 @@ public class BufferedImageScale {
         int sampleWidth = source.getWidth() / SIZE;
         int sampleHeight = source.getHeight() / SIZE;
 
-        for (int x = 0; x < source.getWidth(); x += sampleWidth) {
-            for (int y = 0; y < source.getHeight(); y += sampleHeight) {
+        for (int xw = 0; xw < SIZE; xw++) {
+            for (int yw = 0; yw < SIZE; yw++) {
 
-                int xs = x / sampleWidth;
-                int ys = y / sampleHeight;
+                int x = xw * sampleWidth;
+                int y = yw * sampleHeight;
 
-                newImage.setRGB(xs, ys, getAverageRGB(x, y, source, SIZE).getInt());
+                int color = getAverageRgbOfTile(x, y, source, SIZE).getInt();
+
+                newImage.setRGB(xw, yw, color);
 
             }
         }
@@ -43,7 +45,7 @@ public class BufferedImageScale {
      * @return average RGB
      */
 
-    private static RGB getAverageRGB (int x, int y, BufferedImage source, final int SIZE) {
+    private static RGB getAverageRgbOfTile(int x, int y, BufferedImage source, final int SIZE) {
 
         int sampleWidth = source.getWidth() / SIZE;
         int sampleHeight = source.getHeight() / SIZE;
@@ -55,7 +57,8 @@ public class BufferedImageScale {
             for (int j = 0; j < sampleHeight; j++) {
 
                 if (x + i < source.getWidth() && y + j < source.getHeight()) {
-                    sample.add(new RGB(source.getRGB(x + y, y + j)));
+                    //System.out.println(x + " " + j);
+                    sample.add(new RGB(source.getRGB(x + i, y + j)));
                 }
 
             }

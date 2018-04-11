@@ -1,6 +1,5 @@
 package sections.imageCopyFinder;
 
-import com.sun.org.apache.bcel.internal.generic.ReturnInstruction;
 import universal.tools.BufferedImageTools.BufferedImageIO;
 import universal.tools.BufferedImageTools.RGB;
 
@@ -20,7 +19,14 @@ public class ImageComparator {
     private ArrayList<ComparableImage> images;
     private ArrayList<ComparableImagePair> imagePairs;
 
+    private ImageComparatorStatus status;
+
     private boolean initialized = false;
+
+
+    public ArrayList<ComparableImagePair> getImagePairs() {
+        return imagePairs;
+    }
 
     /**
      * Runs image comparator
@@ -28,9 +34,16 @@ public class ImageComparator {
      * @return true if initialized
      */
 
-    public boolean run (File folder) {
-        if (!initialize(folder)) return false;
+    public boolean initialize(File folder) {
+        if (!loadFiles(folder)) return false;
         findPairs();
+
+        //TODO debug usunąć
+        for (ComparableImagePair cip : imagePairs) {
+            System.out.println(cip.getComparableImage1().getFile().getName() + " : " + cip.getComparableImage2().getFile().getName() + ", similarity: " + cip.getSimilarity());
+        }
+
+        //koniec debug
 
         return true;
     }
@@ -41,13 +54,23 @@ public class ImageComparator {
      * @return true if initialized
      */
 
-    private boolean initialize (File folder) {
+    private boolean loadFiles(File folder) {
+        images = new ArrayList<>();
         File[] files = folder.listFiles();
         if (files == null) return false;
         if (files.length == 0) return false;
 
+        int i = 0;
         for (File file : files) {
-            BufferedImage image = BufferedImageIO.getImage(file);
+            System.out.println(i++ + "/" + files.length);
+            BufferedImage image;
+            try {
+                 image = BufferedImageIO.getImage(file);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(file.getName());
+                continue;
+            }
             if (image != null) {
                 ComparableImage comparableImage = new ComparableImage(file, image);
                 comparableImage.generateData(GENERATED_MINIATURE_SIZE);
@@ -66,17 +89,23 @@ public class ImageComparator {
      */
 
     private void findPairs() {
+        imagePairs = new ArrayList<>();
 
-        for (ComparableImage image1 : images) {
-            for (ComparableImage image2 : images) {
 
-                if (image1 == image2) continue;
+        for (int i = 0; i < images.size(); i++) {
+
+            ComparableImage image1 = images.get(i);
+
+            for (int j = i + 1; j < images.size(); j++) {
+
+                ComparableImage image2 = images.get(j);
+
                 double similarity = compareImages(image1, image2);
-                if (similarity < MINIMUM_SIMILARITY) {
-                    continue;
+
+                if (similarity >= MINIMUM_SIMILARITY) {
+                    imagePairs.add(new ComparableImagePair(image1, image2, similarity));
                 }
 
-                imagePairs.add(new ComparableImagePair(image1, image2, similarity));
             }
         }
 
@@ -90,8 +119,8 @@ public class ImageComparator {
      */
 
     public static double compareImages(ComparableImage image1, ComparableImage image2) {
-        double image1Proportion = image1.getHeight()/image1.getWidth() * 1.0;
-        double image2Proportion = image2.getHeight()/image2.getWidth() * 1.0;
+        double image1Proportion = (image1.getHeight() * 1.0)/(image1.getWidth() * 1.0);
+        double image2Proportion = (image2.getHeight() * 1.0)/(image2.getWidth() * 1.0);
 
         double imagesProportion = image1Proportion/image2Proportion;
         final double LOWER_PROPORTION_DIFFERENCE = 1/MAXIMUM_PROPORTIONS_DIFFERENCE;
@@ -119,5 +148,17 @@ public class ImageComparator {
 
     public boolean isInitialized() {
         return initialized;
+    }
+
+    public ImageComparatorStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ImageComparatorStatus status) {
+        this.status = status;
+    }
+
+    public enum ImageComparatorStatus {
+        SUCCESFUL, NO_IMAGES_IN_DIRECTORY, NOT_FOLDER, IO_ERROR, NO_PAIRS
     }
 }

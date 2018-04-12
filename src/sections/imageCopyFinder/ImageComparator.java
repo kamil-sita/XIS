@@ -14,7 +14,7 @@ public class ImageComparator {
     //Maximum proportions difference for pair to be considered similar
     private static final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
     //Size of generated miniature of image
-    private static final int GENERATED_MINIATURE_SIZE = 5;
+    private static final int GENERATED_MINIATURE_SIZE = 64;
 
     private ArrayList<ComparableImage> images;
     private ArrayList<ComparableImagePair> imagePairs;
@@ -57,25 +57,40 @@ public class ImageComparator {
     private boolean loadFiles(File folder) {
         images = new ArrayList<>();
         File[] files = folder.listFiles();
+        File x = files[3349];
         if (files == null) return false;
         if (files.length == 0) return false;
 
+        //todo
+
         int i = 0;
         for (File file : files) {
+
+            if (x == file) {
+                System.out.println("ddd");
+            }
+
             System.out.println(i++ + "/" + files.length);
-            BufferedImage image;
+            BufferedImage bufferedImage;
             try {
-                 image = BufferedImageIO.getImage(file);
+                 bufferedImage = BufferedImageIO.getImage(file);
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println(file.getName());
                 continue;
             }
-            if (image != null) {
-                ComparableImage comparableImage = new ComparableImage(file, image);
-                comparableImage.generateData(GENERATED_MINIATURE_SIZE);
-                images.add(comparableImage);
+            if (bufferedImage != null) {
+                try {
+                    //TODO zaktualizować javę
+                    ComparableImage comparableImage = new ComparableImage(file, bufferedImage);
+                    comparableImage.generateData(GENERATED_MINIATURE_SIZE);
+                    bufferedImage = null;
+                    images.add(comparableImage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+
         }
         if (images.size() > 0) {
             initialized = true;
@@ -133,8 +148,8 @@ public class ImageComparator {
         for (int x = 0; x < GENERATED_MINIATURE_SIZE; x++) {
             for (int y = 0; y < GENERATED_MINIATURE_SIZE; y++) {
 
-                RGB rgb1 = new RGB(image1.getSmallImage().getRGB(x, y));
-                RGB rgb2 = new RGB(image2.getSmallImage().getRGB(x, y));
+                RGB rgb1 = new RGB(image1.getPreview().getRGB(x, y));
+                RGB rgb2 = new RGB(image2.getPreview().getRGB(x, y));
 
                 equality += rgb1.compareToRGB(rgb2);
 

@@ -1,6 +1,5 @@
 package sections.imageCopyFinder;
 
-import universal.tools.BufferedImageTools.BufferedImageIO;
 import universal.tools.BufferedImageTools.BufferedImageScale;
 
 import java.awt.image.BufferedImage;
@@ -36,7 +35,7 @@ public class ComparableImage {
         fullSizeImage = null;
     }
 
-    public BufferedImage getSmallImage() {
+    public BufferedImage getPreview() {
         return smallImage;
     }
 

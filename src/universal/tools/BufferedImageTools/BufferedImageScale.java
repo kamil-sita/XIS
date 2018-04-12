@@ -28,6 +28,8 @@ public class BufferedImageScale {
 
                 int color = getAverageRgbOfTile(x, y, source, SIZE).getInt();
 
+                RGB rgb = new RGB(color);
+
                 newImage.setRGB(xw, yw, color);
 
             }
@@ -50,15 +52,17 @@ public class BufferedImageScale {
         int sampleWidth = source.getWidth() / SIZE;
         int sampleHeight = source.getHeight() / SIZE;
 
-        ArrayList<RGB> sample = new ArrayList<>();
+        //ArrayList<RGB> sample = new ArrayList<>();
+        RGB[] sample = new RGB[sampleHeight*sampleWidth];
+        int arrayIndex = 0;
 
         //Gettting samples from BufferedImage
         for (int i = 0; i < sampleWidth; i++) {
             for (int j = 0; j < sampleHeight; j++) {
 
                 if (x + i < source.getWidth() && y + j < source.getHeight()) {
-                    //System.out.println(x + " " + j);
-                    sample.add(new RGB(source.getRGB(x + i, y + j)));
+                    sample[arrayIndex] = new RGB(source.getRGB(x + i, y + j));
+                    arrayIndex++;
                 }
 
             }
@@ -69,16 +73,18 @@ public class BufferedImageScale {
         int combinedB = 0;
 
         //sum of all values on r, g, b channels
-        for (RGB rgb : sample) {
+
+        for (int i = 0; i < arrayIndex; i++) {
+            RGB rgb = sample[i];
             combinedR += rgb.r;
             combinedG += rgb.g;
             combinedB += rgb.b;
         }
 
         //calculating averages
-        combinedR /= sample.size();
-        combinedG /= sample.size();
-        combinedB /= sample.size();
+        combinedR /= arrayIndex;
+        combinedG /= arrayIndex;
+        combinedB /= arrayIndex;
 
         return new RGB(combinedR, combinedG, combinedB);
     }

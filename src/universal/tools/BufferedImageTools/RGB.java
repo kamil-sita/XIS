@@ -23,10 +23,10 @@ public class RGB {
     }
 
     public RGB (int rgba) {
-        int a = (rgba >> 24) & 0xFF;
-        int r = (rgba >> 16) & 0xFF;
-        int g = (rgba >> 8) & 0xFF;
-        int b = rgba & 0xFF;
+        a = (rgba >> 24) & 0xFF;
+        r = (rgba >> 16) & 0xFF;
+        g = (rgba >> 8) & 0xFF;
+        b = rgba & 0xFF;
     }
 
     /**
@@ -47,13 +47,13 @@ public class RGB {
      */
 
     public double compareToRGB(RGB secondColor) {
-        double totalSimilarity = 3;
+        double totalSimilarity = 3.0;
 
-        totalSimilarity -= Math.abs(r - secondColor.r)/255;
-        totalSimilarity -= Math.abs(g - secondColor.g)/255;
-        totalSimilarity -= Math.abs(b - secondColor.b)/255;
+        totalSimilarity -= Math.abs(r - secondColor.r)/255.0;
+        totalSimilarity -= Math.abs(g - secondColor.g)/255.0;
+        totalSimilarity -= Math.abs(b - secondColor.b)/255.0;
 
-        return totalSimilarity/3;
+        return totalSimilarity/3.0;
 
     }
 }

@@ -1,9 +1,13 @@
 package sections.main;
 
+import javafx.application.Platform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import sections.ModuleTemplate;
@@ -15,11 +19,14 @@ public class MainViewController {
 
     //static elements
 
+    private static Runnable runnable;
+
     private static Label labelStatusGlobal;
     private static AnchorPane vistaHolderGlobal;
     private static AnchorPane currentVistaGlobal;
     private static ScrollPane scrollPaneGlobal;
     private static ModuleTemplate currentModule;
+    private static ProgressBar progressBarGlobal;
 
     public static ImageCopyFinder imageCopyFinder;
 
@@ -34,6 +41,9 @@ public class MainViewController {
 
     @FXML
     private Label labelStatus;
+
+    @FXML
+    private ProgressBar progressBar;
 
     //Actions methods
 
@@ -58,18 +68,21 @@ public class MainViewController {
     //Other methods
 
     /**
-     * Function called on initialization (JavaFX function)
+     * Function called after initialization (JavaFX function)
      */
     @FXML
     public void initialize() {
         labelStatusGlobal = labelStatus;
         vistaHolderGlobal = vistaHolder;
         scrollPaneGlobal = scrollPane;
+        progressBarGlobal = progressBar;
         mainPress(null);
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             MainViewController.onWindowSizeChange();
         });
         onWindowSizeChange();
+
+
     }
 
     /**
@@ -103,6 +116,19 @@ public class MainViewController {
     public static void reloadView() {
         changeVista(currentModule.getUserInterface());
         onWindowSizeChange();
+    }
+
+    public static ProgressBar getProgressBar() {
+        return progressBarGlobal;
+    }
+
+    public static void bindProgress(ReadOnlyDoubleProperty progress) {
+        progressBarGlobal.progressProperty().unbind();
+        progressBarGlobal.progressProperty().bind(progress);
+    }
+
+    public static void unBindProgress() {
+        progressBarGlobal.progressProperty().unbind();
     }
 
     /**

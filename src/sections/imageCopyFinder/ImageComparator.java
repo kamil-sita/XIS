@@ -1,5 +1,7 @@
 package sections.imageCopyFinder;
 
+import javafx.application.Platform;
+import sections.main.MainViewController;
 import universal.tools.BufferedImageTools.BufferedImageIO;
 import universal.tools.BufferedImageTools.RGB;
 
@@ -20,6 +22,7 @@ public class ImageComparator {
     private ArrayList<ComparableImagePair> imagePairs;
 
     private ImageComparatorStatus status;
+    private ThreadedImageComparator threadedImageComparator = null;
 
     private boolean initialized = false;
 
@@ -35,7 +38,10 @@ public class ImageComparator {
      */
 
     public boolean initialize(File folder) {
-        if (!loadFiles(folder)) return false;
+        if (!loadFiles(folder)) {
+            reportProgress("No files found");
+            return false;
+        }
         findPairs();
 
         //TODO debug usunąć
@@ -48,6 +54,27 @@ public class ImageComparator {
         return true;
     }
 
+    public void addProgressReporter(ThreadedImageComparator tic) {
+        threadedImageComparator = tic;
+    }
+
+    private void reportProgress (double percentProgress) {
+        if (threadedImageComparator != null) {
+            threadedImageComparator.updateProgress(percentProgress);
+        }
+    }
+
+    private void reportProgress (String message) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                MainViewController.setStatus(message);
+            }
+        });
+
+    }
+
+
     /**
      * Initializes ImageComparator - finds all images in given folder.
      * @param folder folder containing files to compare
@@ -55,9 +82,9 @@ public class ImageComparator {
      */
 
     private boolean loadFiles(File folder) {
+        reportProgress("Finding files in folder");
         images = new ArrayList<>();
         File[] files = folder.listFiles();
-        File x = files[3349];
         if (files == null) return false;
         if (files.length == 0) return false;
 
@@ -66,9 +93,8 @@ public class ImageComparator {
         int i = 0;
         for (File file : files) {
 
-            if (x == file) {
-                System.out.println("ddd");
-            }
+            reportProgress("Analyzing file (" + (i+1) + "/" + files.length + ")");
+            reportProgress(i/(1.0 * files.length) * 0.5);
 
             System.out.println(i++ + "/" + files.length);
             BufferedImage bufferedImage;
@@ -92,6 +118,7 @@ public class ImageComparator {
             }
 
         }
+
         if (images.size() > 0) {
             initialized = true;
             return true;
@@ -108,6 +135,8 @@ public class ImageComparator {
 
 
         for (int i = 0; i < images.size(); i++) {
+            reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
+            reportProgress(0.5 + 0.5 * i/(images.size() * 1.0));
 
             ComparableImage image1 = images.get(i);
 
@@ -123,6 +152,7 @@ public class ImageComparator {
 
             }
         }
+        reportProgress("Images compared");
 
     }
 

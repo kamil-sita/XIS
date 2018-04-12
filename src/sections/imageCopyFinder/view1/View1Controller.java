@@ -37,6 +37,7 @@ public class View1Controller {
                 );
 
         new Thread(tic).start();
+        MainViewController.bindProgress(tic.progressProperty());
 
         System.out.println("press");
 
@@ -46,7 +47,7 @@ public class View1Controller {
         if (imageComparator == null) {
             throw new RuntimeException("UnexpectedError");
         }
-
+        MainViewController.unBindProgress();
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESFUL) {
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
             MainViewController.reloadView();

@@ -28,6 +28,7 @@ public class ThreadedImageComparator extends Task<ImageComparator> {
             imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NOT_FOLDER);
         }
 
+        imageComparator.addProgressReporter(this);
         boolean status = imageComparator.initialize(folder);
 
         if (!status) {

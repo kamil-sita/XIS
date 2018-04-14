@@ -18,6 +18,9 @@ public class ImageComparator {
     //Size of generated miniature of image
     private static final int GENERATED_MINIATURE_SIZE = 64;
 
+    //how much of progress is being done in first phase
+    private static final double FIRST_PHASE_WEIGHT = 0.7;
+
     private ArrayList<ComparableImage> images;
     private ArrayList<ComparableImagePair> imagePairs;
 
@@ -94,7 +97,7 @@ public class ImageComparator {
         for (File file : files) {
 
             reportProgress("Analyzing file (" + (i+1) + "/" + files.length + ")");
-            reportProgress(i/(1.0 * files.length) * 0.5);
+            reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
 
             System.out.println(i++ + "/" + files.length);
             BufferedImage bufferedImage;
@@ -136,7 +139,7 @@ public class ImageComparator {
 
         for (int i = 0; i < images.size(); i++) {
             reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
-            reportProgress(0.5 + 0.5 * i/(images.size() * 1.0));
+            reportProgress(FIRST_PHASE_WEIGHT + (1 - FIRST_PHASE_WEIGHT) * i/(images.size() * 1.0));
 
             ComparableImage image1 = images.get(i);
 

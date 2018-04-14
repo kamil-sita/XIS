@@ -122,15 +122,6 @@ public class MainViewController {
         return progressBarGlobal;
     }
 
-    public static void bindProgress(ReadOnlyDoubleProperty progress) {
-        progressBarGlobal.progressProperty().unbind();
-        progressBarGlobal.progressProperty().bind(progress);
-    }
-
-    public static void unBindProgress() {
-        progressBarGlobal.progressProperty().unbind();
-    }
-
     /**
      * Changes preferred width of vista (AnchorPane) so it scales properly with stage size
      */

@@ -1,7 +1,6 @@
 package sections.imageCopyFinder;
 
-import javafx.application.Platform;
-import sections.main.MainViewController;
+import sections.XISProgressReportingClass;
 import universal.tools.BufferedImageTools.BufferedImageIO;
 import universal.tools.BufferedImageTools.RGB;
 
@@ -9,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ImageComparator {
+public class ImageComparator extends XISProgressReportingClass {
 
     //Minimum similarity for given pair to even be considered similar
     private static final double MINIMUM_SIMILARITY = 0.90;
@@ -60,23 +59,6 @@ public class ImageComparator {
     public void addProgressReporter(ThreadedImageComparator tic) {
         threadedImageComparator = tic;
     }
-
-    private void reportProgress (double percentProgress) {
-        if (threadedImageComparator != null) {
-            threadedImageComparator.updateProgress(percentProgress);
-        }
-    }
-
-    private void reportProgress (String message) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                MainViewController.setStatus(message);
-            }
-        });
-
-    }
-
 
     /**
      * Initializes ImageComparator - finds all images in given folder.

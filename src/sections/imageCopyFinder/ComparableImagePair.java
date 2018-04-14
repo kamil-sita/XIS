@@ -12,12 +12,6 @@ public class ComparableImagePair {
         this.similarity = similarity;
     }
 
-    public ComparableImagePair(ComparableImage comparableImage1, ComparableImage comparableImage2) {
-        this.comparableImage1 = comparableImage1;
-        this.comparableImage2 = comparableImage2;
-        similarity = ImageComparator.compareImages(comparableImage1, comparableImage2);
-    }
-
     public ComparableImage getComparableImage1() {
         return comparableImage1;
     }

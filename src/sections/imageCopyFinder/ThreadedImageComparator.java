@@ -44,12 +44,4 @@ public class ThreadedImageComparator extends Task<ImageComparator> {
 
         return imageComparator;
     }
-
-    /**
-     * Task method, used to update ProgressBar
-     * @param percent current percent of work done
-     */
-    public void updateProgress(double percent) {
-        updateProgress(percent, 1);
-    }
 }

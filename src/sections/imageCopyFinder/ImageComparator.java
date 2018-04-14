@@ -24,7 +24,6 @@ public class ImageComparator extends XISProgressReportingClass {
     private ArrayList<ComparableImagePair> imagePairs;
 
     private ImageComparatorStatus status;
-    private ThreadedImageComparator threadedImageComparator = null;
 
     private boolean initialized = false;
 
@@ -56,10 +55,6 @@ public class ImageComparator extends XISProgressReportingClass {
         return true;
     }
 
-    public void addProgressReporter(ThreadedImageComparator tic) {
-        threadedImageComparator = tic;
-    }
-
     /**
      * Initializes ImageComparator - finds all images in given folder.
      * @param folder folder containing files to compare
@@ -72,8 +67,6 @@ public class ImageComparator extends XISProgressReportingClass {
         File[] files = folder.listFiles();
         if (files == null) return false;
         if (files.length == 0) return false;
-
-        //todo
 
         int i = 0;
         for (File file : files) {
@@ -92,7 +85,6 @@ public class ImageComparator extends XISProgressReportingClass {
             }
             if (bufferedImage != null) {
                 try {
-                    //TODO zaktualizować javę
                     ComparableImage comparableImage = new ComparableImage(file, bufferedImage);
                     comparableImage.generateData(GENERATED_MINIATURE_SIZE);
                     bufferedImage = null;
@@ -145,7 +137,7 @@ public class ImageComparator extends XISProgressReportingClass {
      * Calculates equality % of two images, based on RGB>compareToRGB() method
      * @param image1
      * @param image2
-     * @return
+     * @return % of similarity between images.
      */
 
     public static double compareImages(ComparableImage image1, ComparableImage image2) {
@@ -172,8 +164,6 @@ public class ImageComparator extends XISProgressReportingClass {
         }
 
         return equality / (GENERATED_MINIATURE_SIZE * GENERATED_MINIATURE_SIZE);
-
-
     }
 
     public boolean isInitialized() {

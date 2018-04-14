@@ -9,7 +9,7 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imageCopyFinder.view2.View2Controller">
    <children>
-      <ListView fx:id="listViewFiles" layoutX="26.0" layoutY="47.0" prefHeight="191.0" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="47.0" />
+      <ListView fx:id="comparableImagePairListView" layoutX="26.0" layoutY="47.0" prefHeight="191.0" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="47.0" />
       <Label layoutX="26.0" layoutY="14.0" styleClass="caption" text="Found copies:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
       <Slider fx:id="sliderPercentIdentical" layoutX="18.0" layoutY="253.0" majorTickUnit="5.0" min="90.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="253.0" />
       <Label layoutX="164.0" layoutY="253.0" text="\% identical previews" />

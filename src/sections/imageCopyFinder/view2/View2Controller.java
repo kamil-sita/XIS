@@ -1,15 +1,24 @@
 package sections.imageCopyFinder.view2;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
+import sections.imageCopyFinder.ComparableImagePair;
+import sections.imageCopyFinder.ImageCopyFinder;
+
+import java.util.ArrayList;
 
 public class View2Controller {
 
+    private ArrayList<ComparableImagePair> imagePairs;
+
     @FXML
-    private ListView<?> listViewFiles;
+    private ListView<ComparableImagePair> comparableImagePairListView;
 
     @FXML
     private Slider sliderPercentIdentical;
@@ -37,7 +46,52 @@ public class View2Controller {
 
     @FXML
     void refreshButtonPress(ActionEvent event) {
+        double x = sliderPercentIdentical.getValue()/100.0;
+        ArrayList<ComparableImagePair> newImagePairs = imagePairsWithSimilarityOver(x);
+        refreshListView(newImagePairs);
+    }
 
+    @FXML
+    public void initialize() {
+
+        comparableImagePairListView.setCellFactory(param -> new ListCell<ComparableImagePair>() {
+                    @Override
+                    protected void updateItem(ComparableImagePair comparableImagePair, boolean empty) {
+                        super.updateItem(comparableImagePair, empty);
+
+                        if (empty || comparableImagePair == null) {
+                            setText(null);
+                        } else {
+                            setText(comparableImagePair.toString());
+                        }
+
+                    }
+                }
+        );
+
+        imagePairs = ImageCopyFinder.getImageComparator().getImagePairs();
+        refreshListView(imagePairs);
+    }
+
+    private ArrayList<ComparableImagePair> imagePairsWithSimilarityOver (double value) {
+        ArrayList<ComparableImagePair> newImagePairs = new ArrayList<>();
+        for (ComparableImagePair imagePair : imagePairs) {
+            if (imagePair.getSimilarity() >= value) {
+                newImagePairs.add(imagePair);
+            }
+        }
+        return newImagePairs;
+    }
+
+    private void refreshListView() {
+        comparableImagePairListView.refresh();
+    }
+
+    private void refreshListView(ArrayList<ComparableImagePair> pairs) {
+        ObservableList<ComparableImagePair> comparableImagePairs = FXCollections.observableArrayList();
+        comparableImagePairs.addAll(pairs);
+        comparableImagePairListView.setItems(comparableImagePairs);
+        refreshListView();
     }
 
 }

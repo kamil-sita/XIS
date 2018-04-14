@@ -46,6 +46,7 @@ public class View1Controller {
             throw new RuntimeException("UnexpectedError");
         }
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESFUL) {
+            ImageCopyFinder.setImageComparator(imageComparator);
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
             MainViewController.reloadView();
         } else {

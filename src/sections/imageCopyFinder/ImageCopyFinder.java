@@ -12,6 +12,7 @@ public class ImageCopyFinder implements ModuleTemplate {
     private static final String LOCATION_VIEW1 = "sections/imageCopyFinder/view1/view1.fxml";
     private static final String LOCATION_VIEW2 = "sections/imageCopyFinder/view2/view2.fxml";
     private static AnchorPane anchorPane;
+    private static ImageComparator imageComparator;
 
     public AnchorPane getUserInterface() {
         if (anchorPane == null) {
@@ -38,6 +39,14 @@ public class ImageCopyFinder implements ModuleTemplate {
                 setInterface(LOCATION_VIEW2);
                 break;
         }
+    }
+
+    public static ImageComparator getImageComparator() {
+        return imageComparator;
+    }
+
+    public static void setImageComparator(ImageComparator imageComparator) {
+        ImageCopyFinder.imageComparator = imageComparator;
     }
 
     public enum ImageCopyFinderViews {

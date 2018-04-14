@@ -12,6 +12,10 @@ public class ComparableImagePair {
         this.similarity = similarity;
     }
 
+    public String toString() {
+        return comparableImage1.getFile().getName() + ", " + comparableImage2.getFile().getName();
+    }
+
     public ComparableImage getComparableImage1() {
         return comparableImage1;
     }

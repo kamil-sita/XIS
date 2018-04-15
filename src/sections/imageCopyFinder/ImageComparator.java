@@ -44,14 +44,6 @@ public class ImageComparator extends XISProgressReportingClass {
             return false;
         }
         findPairs();
-
-        //TODO debug usunąć
-        for (ComparableImagePair cip : imagePairs) {
-            System.out.println(cip.getComparableImage1().getFile().getName() + " : " + cip.getComparableImage2().getFile().getName() + ", similarity: " + cip.getSimilarity());
-        }
-
-        //koniec debug
-
         return true;
     }
 

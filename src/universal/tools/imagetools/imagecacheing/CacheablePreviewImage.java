@@ -1,25 +1,22 @@
-package sections.imageCopyFinder;
+package universal.tools.imagetools.imagecacheing;
 
 
-import universal.tools.BufferedImageTools.BufferedImageIO;
-import universal.tools.BufferedImageTools.BufferedImageScale;
+import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
+import universal.tools.imagetools.bufferedimagetools.BufferedImageScale;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 
 public class CacheablePreviewImage {
-
-    private static final int PREVIEW_SIZE = 200;
 
     private BufferedImage preview;
     private File file;
     private int age;
 
-    public CacheablePreviewImage(File file) {
+    public CacheablePreviewImage(File file, int previewSize) {
         BufferedImage image = BufferedImageIO.getImage(file);
-        preview = BufferedImageScale.generatePreviewImage(image, PREVIEW_SIZE);
+        preview = BufferedImageScale.generatePreviewImage(image, previewSize);
         age = 0;
     }
 

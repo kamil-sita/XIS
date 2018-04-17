@@ -1,13 +1,20 @@
-package sections.imageCopyFinder;
+package universal.tools.imagetools.imagecacheing;
 
 import java.io.File;
 
 public class ImagePreviewsCache {
 
-    private static final int CACHE_SIZE = 32;
-    private static final int MAX_AGE = 24;
+    private int cacheSize = 32;
+    private int maximumAge = 24;
+    private int previewSize;
 
-    private CacheablePreviewImage[] cacheablePreviewImages = new CacheablePreviewImage[CACHE_SIZE];
+    private CacheablePreviewImage[] cacheablePreviewImages = new CacheablePreviewImage[cacheSize];
+
+    public ImagePreviewsCache (int cacheSize, int maximumAge, int previewSize) {
+        this.cacheSize = cacheSize;
+        this.maximumAge = maximumAge;
+        this.previewSize = previewSize;
+    }
 
     public CacheablePreviewImage getImage(File file) {
 
@@ -26,23 +33,25 @@ public class ImagePreviewsCache {
 
         //checking if there are any free spots
 
-        for (int i = 0; i < cacheablePreviewImages.length; i++) {
-            if (cacheablePreviewImages[i] == null) {
-                cacheablePreviewImages[i] = new CacheablePreviewImage(file);
-                return cacheablePreviewImages[i];
-            }
-        }
+        CacheablePreviewImage cacheablePreviewImage = findSpot(file);
+        if (cacheablePreviewImage != null) return cacheablePreviewImage;
 
         throwAwayOldestImage();
 
+        cacheablePreviewImage = findSpot(file);
+        if (cacheablePreviewImage != null) return cacheablePreviewImage;
+
+        throw new RuntimeException("This SHOULD NOT happen");
+    }
+
+    private CacheablePreviewImage findSpot(File file) {
         for (int i = 0; i < cacheablePreviewImages.length; i++) {
             if (cacheablePreviewImages[i] == null) {
-                cacheablePreviewImages[i] = new CacheablePreviewImage(file);
+                cacheablePreviewImages[i] = new CacheablePreviewImage(file, previewSize);
                 return cacheablePreviewImages[i];
             }
         }
-
-        throw new RuntimeException("This SHOULD NOT happen");
+        return null;
     }
 
     private void ageAllImages() {

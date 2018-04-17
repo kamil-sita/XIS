@@ -1,4 +1,4 @@
-package universal.tools.BufferedImageTools;
+package universal.tools.imagetools.bufferedimagetools;
 
 
 /**

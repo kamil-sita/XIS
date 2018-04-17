@@ -1,8 +1,8 @@
 package sections.imageCopyFinder;
 
 import sections.XISProgressReportingClass;
-import universal.tools.BufferedImageTools.BufferedImageIO;
-import universal.tools.BufferedImageTools.RGB;
+import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
+import universal.tools.imagetools.bufferedimagetools.RGB;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

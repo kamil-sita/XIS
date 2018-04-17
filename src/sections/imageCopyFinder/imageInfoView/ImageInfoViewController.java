@@ -7,15 +7,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import sections.ModuleTemplate;
 import sections.imageCopyFinder.ComparableImage;
-import sections.imageCopyFinder.ImageComparator;
-import universal.tools.BufferedImageTools.BufferedImageIO;
+import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.Buffer;
 
 public class ImageInfoViewController {
 

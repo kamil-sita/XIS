@@ -11,7 +11,7 @@
 
 .root {
     -fx-faint-focus-color: transparent;
-    -fx-focus-color: #c0ee9c;
+    -fx-focus-color: #9DE093;
 }
 
 
@@ -41,11 +41,26 @@
  */
 
 .background-anchor-pane {
-    -fx-background-color: dimgray;
+    -fx-background-color: #717171;
 }
 
 .tile-pane {
     -fx-background-color: linear-gradient(to bottom, white, lightgray);
+}
+
+.progress-bar {
+    -fx-background-radius: 0 0 0 0;
+    -fx-border-radius: 0 0 0 0;
+    -fx-accent: #9DE093;
+}
+
+
+/*
+    Dark accents
+ */
+
+.label {
+    -fx-text-fill: #333333;
 }
 
 /*

@@ -33,7 +33,7 @@ public class RGB {
      * @return int value of (ARGB)
      */
 
-    public int getInt() {
+    public int toInt() {
         int rgba = a;
         rgba = (rgba << 8) + r;
         rgba = (rgba << 8) + g;

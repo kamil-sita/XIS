@@ -1,6 +1,5 @@
 package sections.imageCopyFinder.view2;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -10,17 +9,16 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
-import sections.imageCopyFinder.ComparableImage;
 import sections.imageCopyFinder.ComparableImagePair;
 import sections.imageCopyFinder.ImageCopyFinder;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.util.ArrayList;
 
 public class View2Controller {
 
     private ArrayList<ComparableImagePair> imagePairs;
+    private ArrayList<ComparableImagePair> displayedImagePairs;
+    private ComparableImagePair hoveredElement;
 
     @FXML
     private ListView<ComparableImagePair> comparableImagePairListView;
@@ -58,12 +56,11 @@ public class View2Controller {
 
         sliderPercentIdentical.valueProperty().addListener((observable, oldValue, newValue) -> {
             double x = sliderPercentIdentical.getValue()/100.0;
-            ArrayList<ComparableImagePair> newImagePairs = imagePairsWithSimilarityOver(x);
-            refreshListView(newImagePairs);
+            displayPairsWithSimilarityOver(x);
             refreshListView();
         });
 
-        comparableImagePairListView.setCellFactory(param -> new ListCell<ComparableImagePair>() {
+        comparableImagePairListView.setCellFactory(param -> new ListCell<>() {
                     @Override
                     protected void updateItem(ComparableImagePair comparableImagePair, boolean empty) {
                         super.updateItem(comparableImagePair, empty);
@@ -78,36 +75,37 @@ public class View2Controller {
                 }
         );
         imagePairs = ImageCopyFinder.getImageComparator().getImagePairs();
-        refreshListView(imagePairs);
+        displayPairsWithSimilarityOver(0.0); //all of them
         comparableImagePairListView.getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    elementHovered(newValue);
-        });
+                (observable, oldValue, newValue) -> elementHovered(newValue)
+        );
     }
 
-    private ArrayList<ComparableImagePair> imagePairsWithSimilarityOver (double value) {
-        ArrayList<ComparableImagePair> newImagePairs = new ArrayList<>();
+    private void displayPairsWithSimilarityOver(double value) {
+        displayedImagePairs = new ArrayList<>();
         for (ComparableImagePair imagePair : imagePairs) {
             if (imagePair.getSimilarity() >= value) {
-                newImagePairs.add(imagePair);
+                displayedImagePairs.add(imagePair);
             }
         }
-        return newImagePairs;
+        ObservableList<ComparableImagePair> comparableImagePairs = FXCollections.observableArrayList();
+        comparableImagePairs.addAll(displayedImagePairs);
+        comparableImagePairListView.setItems(comparableImagePairs);
+        refreshListView();
     }
 
     private void refreshListView() {
         comparableImagePairListView.refresh();
     }
 
-    private void refreshListView(ArrayList<ComparableImagePair> pairs) {
-        ObservableList<ComparableImagePair> comparableImagePairs = FXCollections.observableArrayList();
-        comparableImagePairs.addAll(pairs);
-        comparableImagePairListView.setItems(comparableImagePairs);
-        refreshListView();
+    private void elementHovered(ComparableImagePair comparableImagePair) {
+        hoveredElement = comparableImagePair;
+        System.out.println(comparableImagePair.getComparableImage1().getFile().getName() + ", " + comparableImagePair.getComparableImage2().getFile().getName());
+        prepareImageInfoViews();
     }
 
-    private void elementHovered(ComparableImagePair comparableImagePair) {
-        System.out.println(comparableImagePair.getComparableImage1().getFile().getName() + ", " + comparableImagePair.getComparableImage2().getFile().getName());
+    private void prepareImageInfoViews() {
+
     }
 
 

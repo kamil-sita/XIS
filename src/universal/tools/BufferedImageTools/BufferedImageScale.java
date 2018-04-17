@@ -1,10 +1,42 @@
 package universal.tools.BufferedImageTools;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public class BufferedImageScale {
 
+
+    public static BufferedImage generatePreviewImage (BufferedImage source, final int SIZE) {
+        if (source == null) return null;
+
+        int targetWidth;
+        int targetHeight;
+
+        if (source.getHeight() > source.getWidth()) {
+            targetHeight = SIZE;
+            targetWidth = (int) (SIZE * ((source.getWidth() * 1.0)/source.getHeight()));
+        } else {
+            targetWidth = SIZE;
+            targetHeight = (int) (SIZE * ((source.getHeight() * 1.0)/source.getWidth()));
+        }
+
+        BufferedImage output = new BufferedImage(targetWidth, targetHeight, source.getType());
+
+        //todo are they the same?
+        int scaleX = source.getWidth()/targetWidth;
+        int scaleY = source.getHeight()/targetHeight;
+
+        for (int x = 0; x < targetWidth; x++) {
+            for (int y = 0; y < targetHeight; y++) {
+
+                RGB rgb = getAverageOfArea(x * scaleX, y * scaleY, (x+1) * scaleX, (y+1) * scaleY, source);
+                output.setRGB(x, y, rgb.toInt());
+
+            }
+        }
+
+        return output;
+
+    }
 
     /**
      * Scales down image
@@ -26,7 +58,7 @@ public class BufferedImageScale {
                 int x = xw * sampleWidth;
                 int y = yw * sampleHeight;
 
-                int color = getAverageRgbOfTile(x, y, source, SIZE).getInt();
+                int color = getAverageRgbOfTile(x, y, source, SIZE).toInt();
 
                 RGB rgb = new RGB(color);
 
@@ -82,6 +114,40 @@ public class BufferedImageScale {
         }
 
         //calculating averages
+        combinedR /= arrayIndex;
+        combinedG /= arrayIndex;
+        combinedB /= arrayIndex;
+
+        return new RGB(combinedR, combinedG, combinedB);
+    }
+
+    private static RGB getAverageOfArea (int xStart, int yStart, int xEnd, int yEnd, BufferedImage source) {
+        RGB[] sample = new RGB[(xEnd - xStart) * (yEnd - yStart)];
+
+        int arrayIndex = 0;
+
+        for (int x = xStart; x < xEnd; x++) {
+            for (int y = yStart; y < yEnd; y++) {
+
+                if (x < source.getWidth() && y < source.getHeight()) {
+                    sample[arrayIndex] = new RGB(source.getRGB(x, y));
+                    arrayIndex++;
+                }
+
+            }
+        }
+
+        int combinedR = 0;
+        int combinedG = 0;
+        int combinedB = 0;
+
+        for (int i = 0; i < arrayIndex; i++) {
+            RGB rgb = sample[i];
+            combinedR += rgb.r;
+            combinedB += rgb.b;
+            combinedG += rgb.g;
+        }
+
         combinedR /= arrayIndex;
         combinedG /= arrayIndex;
         combinedB /= arrayIndex;

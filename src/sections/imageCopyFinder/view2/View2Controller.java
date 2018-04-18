@@ -11,6 +11,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import sections.imageCopyFinder.ComparableImagePair;
 import sections.imageCopyFinder.ImageCopyFinder;
+import universal.tools.imagetools.imagecacheing.ThreadableImagePreviewsCache;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class View2Controller {
     private ArrayList<ComparableImagePair> imagePairs;
     private ArrayList<ComparableImagePair> displayedImagePairs;
     private ComparableImagePair hoveredElement;
+    private ThreadableImagePreviewsCache cache;
 
     @FXML
     private ListView<ComparableImagePair> comparableImagePairListView;

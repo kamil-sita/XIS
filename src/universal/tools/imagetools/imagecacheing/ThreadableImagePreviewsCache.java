@@ -1,22 +1,28 @@
 package universal.tools.imagetools.imagecacheing;
 
 import java.io.File;
+import java.util.concurrent.Semaphore;
 
-public class ImagePreviewsCache {
+public class ThreadableImagePreviewsCache {
 
-    private int cacheSize = 32;
-    private int maximumAge = 24;
+    private int cacheSize;
     private int previewSize;
+    private Semaphore semaphore = new Semaphore(1);
 
     private CacheablePreviewImage[] cacheablePreviewImages = new CacheablePreviewImage[cacheSize];
 
-    public ImagePreviewsCache (int cacheSize, int maximumAge, int previewSize) {
+    public ThreadableImagePreviewsCache(int cacheSize, int previewSize) {
         this.cacheSize = cacheSize;
-        this.maximumAge = maximumAge;
         this.previewSize = previewSize;
     }
 
     public CacheablePreviewImage getImage(File file) {
+
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         ageAllImages();
 
@@ -25,7 +31,9 @@ public class ImagePreviewsCache {
             if (previewImage != null) {
                 if (previewImage.getFile().equals(file)) {
                     previewImage.resetAge();
+                    semaphore.release();
                     return previewImage;
+
                 }
             }
 
@@ -34,12 +42,18 @@ public class ImagePreviewsCache {
         //checking if there are any free spots
 
         CacheablePreviewImage cacheablePreviewImage = findSpot(file);
-        if (cacheablePreviewImage != null) return cacheablePreviewImage;
+        if (cacheablePreviewImage != null) {
+            semaphore.release();
+            return cacheablePreviewImage;
+        }
 
         throwAwayOldestImage();
 
         cacheablePreviewImage = findSpot(file);
-        if (cacheablePreviewImage != null) return cacheablePreviewImage;
+        if (cacheablePreviewImage != null) {
+            semaphore.release();
+            return cacheablePreviewImage;
+        }
 
         throw new RuntimeException("This SHOULD NOT happen");
     }

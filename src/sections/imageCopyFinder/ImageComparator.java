@@ -61,6 +61,8 @@ public class ImageComparator extends XISProgressReportingClass {
         if (files.length == 0) return false;
 
         int i = 0;
+
+        //TODO maybe do it multithreaded? - at least scaling down
         for (File file : files) {
 
             reportProgress("Analyzing file (" + (i+1) + "/" + files.length + ")");

@@ -15,6 +15,7 @@ public class CacheablePreviewImage {
     private int age;
 
     public CacheablePreviewImage(File file, int previewSize) {
+        this.file = file;
         BufferedImage image = BufferedImageIO.getImage(file);
         preview = BufferedImageScale.generatePreviewImage(image, previewSize);
         age = 0;

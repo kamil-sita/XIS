@@ -19,28 +19,20 @@ public class View1Controller {
 
     @FXML
     private void runButtonPress(ActionEvent event) {
-
         TaskImageComparator tic = new TaskImageComparator(folderLocationTextField.getText());
-
         tic.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent event) {
-                        imageComparator = tic.getValue();
-                        finished();
-                    }
+                event1 -> {
+                    imageComparator = tic.getValue();
+                    finished();
                 }
-                );
+        );
 
         new Thread(tic).start();
-
-        System.out.println("press");
-
     }
 
     private void finished() {
         if (imageComparator == null) {
-            throw new RuntimeException("UnexpectedError");
+            throw new RuntimeException("UnexpectedError: imageComparator not initialized");
         }
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESFUL) {
             ImageCopyFinder.setImageComparator(imageComparator);

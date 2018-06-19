@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
-import sections.ModuleTemplate;
+import sections.SubUserInterface;
 import sections.imageCopyFinder.ImageCopyFinder;
 import sections.welcomePage.WelcomePage;
 
@@ -19,7 +19,7 @@ public class MainViewController {
     private static AnchorPane vistaHolderGlobal;
     private static AnchorPane currentVistaGlobal;
     private static ScrollPane scrollPaneGlobal;
-    private static ModuleTemplate currentModule;
+    private static SubUserInterface currentModule;
     private static ProgressBar progressBarGlobal;
 
     public static ImageCopyFinder imageCopyFinder;
@@ -79,9 +79,9 @@ public class MainViewController {
      * Changes vista (main AnchorPane where content is displayed)
      * @param mt module with AnchorPane
      */
-    public static void changeVista(ModuleTemplate mt) {
+    public static void changeVista(SubUserInterface mt) {
         currentVistaGlobal = mt.getUserInterface();
-        vistaHolderGlobal.getChildren().setAll((Node) mt);
+        vistaHolderGlobal.getChildren().setAll((Node) mt.getUserInterface());
         onWindowSizeChange();
     }
 
@@ -101,7 +101,7 @@ public class MainViewController {
     }
 
     /**
-     * Reloads anchorPane from last used class implementing ModuleTemplate
+     * Reloads anchorPane from last used class implementing SubUserInterface
      */
     public static void reloadView() {
         changeVista(currentModule);

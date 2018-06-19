@@ -2,12 +2,12 @@ package sections.imageCopyFinder;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import sections.ModuleTemplate;
+import sections.SubUserInterface;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class ImageCopyFinder implements ModuleTemplate {
+public class ImageCopyFinder implements SubUserInterface {
 
     private static final String LOCATION_VIEW1 = "sections/imageCopyFinder/view1/view1.fxml";
     private static final String LOCATION_VIEW2 = "sections/imageCopyFinder/view2/view2.fxml";
@@ -22,7 +22,7 @@ public class ImageCopyFinder implements ModuleTemplate {
     }
 
     private void setInterface(String location) {
-        URL url = ModuleTemplate.class.getClassLoader().getResource(location);
+        URL url = SubUserInterface.class.getClassLoader().getResource(location);
         try {
             anchorPane = FXMLLoader.load(url);
         } catch (IOException e) {

@@ -1,5 +1,3 @@
-package sections.main;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -7,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sections.main.MainViewController;
 
 public class Main extends Application {
 
@@ -17,7 +16,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("mainView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("sections/main/mainView.fxml"));
         stage.setTitle("XIS pre-alpha");
         stage.setScene(new Scene (root, 1280, 800));
         stage.setMinHeight(480);

@@ -10,4 +10,4 @@ KS Image Suite will combine my previous graphical projects into a single project
 * possibly more
 
 ## When
-I will update this repository when I will have time to finish those features, POSSIBLY this June!
+Now?

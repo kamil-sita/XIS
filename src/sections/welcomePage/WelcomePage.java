@@ -2,19 +2,19 @@ package sections.welcomePage;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import sections.ModuleTemplate;
+import sections.SubUserInterface;
 
 import java.io.IOException;
 import java.net.URL;
 
-public class WelcomePage implements ModuleTemplate {
+public class WelcomePage implements SubUserInterface {
 
     private static final String LOCATION = "sections/welcomePage/welcomePage.fxml";
     private static AnchorPane anchorPane;
 
     public AnchorPane getUserInterface() {
         if (anchorPane == null) {
-            URL url = ModuleTemplate.class.getClassLoader().getResource(LOCATION);
+            URL url = SubUserInterface.class.getClassLoader().getResource(LOCATION);
             try {
                 anchorPane = FXMLLoader.load(url);
             } catch (IOException e) {

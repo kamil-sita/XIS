@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import sections.ModuleTemplate;
+import sections.SubUserInterface;
 import sections.imageCopyFinder.ComparableImage;
 
 import javax.imageio.ImageIO;
@@ -35,28 +35,16 @@ public class ImageInfoViewController {
     private ComparableImage comparableImage;
     private AnchorPane anchorPane;
 
-    public ImageInfoViewController(ComparableImage comparableImage) {
-        //imageView.setImage(taskImagePreviewsCache.);
-        this.comparableImage = comparableImage;
-        URL url = ModuleTemplate.class.getClassLoader().getResource(LOCATION_VIEW);
-        try {
-            anchorPane = FXMLLoader.load(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        setFileInformation(comparableImage.getFile());
-        loadImageLater();
-    }
-
     public AnchorPane getAnchorPane() {
         return anchorPane;
     }
 
     private void loadImageLater() {
+        System.out.println("not implemented");
         //todo
     }
 
-    private void setFileInformation(File file) {
+    public void setFileInformation(File file) {
         if (file != null) {
             nameValue.setText(file.getName());
             final long length = file.length();

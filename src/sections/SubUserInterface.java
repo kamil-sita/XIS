@@ -2,6 +2,6 @@ package sections;
 
 import javafx.scene.layout.AnchorPane;
 
-public interface ModuleTemplate {
+public interface SubUserInterface {
     AnchorPane getUserInterface();
 }

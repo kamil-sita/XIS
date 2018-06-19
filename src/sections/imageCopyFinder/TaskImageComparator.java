@@ -4,12 +4,12 @@ import javafx.concurrent.Task;
 
 import java.io.File;
 
-public class ThreadedImageComparator extends Task<ImageComparator> {
+public class TaskImageComparator extends Task<ImageComparator> {
 
     private ImageComparator imageComparator;
     private String fileFolder;
 
-    public ThreadedImageComparator(String fileFolder) {
+    public TaskImageComparator(String fileFolder) {
         imageComparator = new ImageComparator();
         this.fileFolder = fileFolder;
     }

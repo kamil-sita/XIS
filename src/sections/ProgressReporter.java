@@ -3,7 +3,7 @@ package sections;
 import javafx.application.Platform;
 import sections.main.MainViewController;
 
-public abstract class XISProgressReportingClass {
+public abstract class ProgressReporter {
     protected void reportProgress (double percentProgress) {
         Platform.runLater(() -> MainViewController.getProgressBar().setProgress(percentProgress));
     }

@@ -1,6 +1,6 @@
 package sections.imageCopyFinder;
 
-import sections.XISProgressReportingClass;
+import sections.ProgressReporter;
 import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
 import universal.tools.imagetools.bufferedimagetools.RGB;
 
@@ -8,14 +8,14 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ImageComparator extends XISProgressReportingClass {
+public class ImageComparator extends ProgressReporter {
 
     //Minimum similarity for given pair to even be considered similar
     private static final double MINIMUM_SIMILARITY = 0.90;
     //Maximum proportions difference for pair to be considered similar
     private static final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
     //Size of generated miniature of image
-    private static final int GENERATED_MINIATURE_SIZE = 64;
+    private static final int GENERATED_MINIATURE_SIZE = 128; //TODO: changeable?
 
     //how much of progress is being done in first phase
     private static final double FIRST_PHASE_WEIGHT = 0.7;
@@ -65,18 +65,12 @@ public class ImageComparator extends XISProgressReportingClass {
         //TODO maybe do it multithreaded? - at least scaling down
         for (File file : files) {
 
-            reportProgress("Analyzing file (" + (i+1) + "/" + files.length + ")");
+            reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + ")");
             reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
 
             System.out.println(i++ + "/" + files.length);
             BufferedImage bufferedImage;
-            try {
-                 bufferedImage = BufferedImageIO.getImage(file);
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println(file.getName());
-                continue;
-            }
+            bufferedImage = BufferedImageIO.getImage(file);
             if (bufferedImage != null) {
                 try {
                     ComparableImage comparableImage = new ComparableImage(file, bufferedImage);

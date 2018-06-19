@@ -4,14 +4,11 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import sections.imageCopyFinder.ImageComparator;
 import sections.imageCopyFinder.ImageCopyFinder;
-import sections.imageCopyFinder.ThreadedImageComparator;
+import sections.imageCopyFinder.TaskImageComparator;
 import sections.main.MainViewController;
-
-import java.util.stream.StreamSupport;
 
 public class View1Controller {
 
@@ -23,7 +20,7 @@ public class View1Controller {
     @FXML
     private void runButtonPress(ActionEvent event) {
 
-        ThreadedImageComparator tic = new ThreadedImageComparator(folderLocationTextField.getText());
+        TaskImageComparator tic = new TaskImageComparator(folderLocationTextField.getText());
 
         tic.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                 new EventHandler<WorkerStateEvent>() {

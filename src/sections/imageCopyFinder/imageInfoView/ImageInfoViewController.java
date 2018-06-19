@@ -7,12 +7,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import sections.ModuleTemplate;
 import sections.imageCopyFinder.ComparableImage;
-import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
 
-import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 
 public class ImageInfoViewController {
 
@@ -32,9 +34,9 @@ public class ImageInfoViewController {
 
     private ComparableImage comparableImage;
     private AnchorPane anchorPane;
-    private BufferedImage preview;
 
-    public ImageInfoViewController(ComparableImage comparableImage, int width, int height) {
+    public ImageInfoViewController(ComparableImage comparableImage) {
+        //imageView.setImage(taskImagePreviewsCache.);
         this.comparableImage = comparableImage;
         URL url = ModuleTemplate.class.getClassLoader().getResource(LOCATION_VIEW);
         try {
@@ -42,19 +44,21 @@ public class ImageInfoViewController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        preview = BufferedImageIO.getImage(comparableImage.getFile());
-        setInformation(comparableImage.getFile(), preview.getWidth(), preview.getHeight());
+        setFileInformation(comparableImage.getFile());
+        loadImageLater();
     }
 
     public AnchorPane getAnchorPane() {
         return anchorPane;
     }
 
-    private void setInformation (File file, int width, int height) {
+    private void loadImageLater() {
+        //todo
+    }
+
+    private void setFileInformation(File file) {
         if (file != null) {
             nameValue.setText(file.getName());
-            dimensionsValue.setText(width + " x " + height);
-
             final long length = file.length();
             final int unit = 1024;
             if (length < unit) {
@@ -67,6 +71,30 @@ public class ImageInfoViewController {
                 sizeValue.setText(length/unit/unit/unit + "GB");
             }
 
+        }
+    }
+
+    private void setDimensionsValue(int width, int height) {
+        dimensionsValue.setText(width + " x " + height);
+    }
+
+    private void loadDimensions(File resourceFile) {
+
+        //based on https://stackoverflow.com/questions/1559253/java-imageio-getting-image-dimensions-without-reading-the-entire-file
+
+        try (ImageInputStream in = ImageIO.createImageInputStream(resourceFile)) {
+            final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
+            if (readers.hasNext()) {
+                ImageReader reader = readers.next();
+                try {
+                    reader.setInput(in);
+                    setDimensionsValue(reader.getWidth(0), reader.getHeight(0));
+                } finally {
+                    reader.dispose();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

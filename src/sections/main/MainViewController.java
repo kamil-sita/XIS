@@ -1,8 +1,5 @@
 package sections.main;
 
-import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -18,9 +15,6 @@ import sections.welcomePage.WelcomePage;
 public class MainViewController {
 
     //static elements
-
-    private static Runnable runnable;
-
     private static Label labelStatusGlobal;
     private static AnchorPane vistaHolderGlobal;
     private static AnchorPane currentVistaGlobal;
@@ -50,8 +44,7 @@ public class MainViewController {
     @FXML
     void mainPress(ActionEvent event) {
         WelcomePage welcomePage = new WelcomePage();
-        AnchorPane anchorPane = welcomePage.getUserInterface();
-        changeVista(anchorPane);
+        changeVista(welcomePage);
         currentModule = welcomePage;
         setStatus("welcome page loaded");
     }
@@ -59,8 +52,7 @@ public class MainViewController {
     @FXML
     void imageCopyFinderPress(ActionEvent event) {
         imageCopyFinder = new ImageCopyFinder();
-        AnchorPane anchorPane = imageCopyFinder.getUserInterface();
-        changeVista(anchorPane);
+        changeVista(imageCopyFinder);
         currentModule = imageCopyFinder;
         setStatus("imageCopyFinder module loaded");
     }
@@ -81,17 +73,15 @@ public class MainViewController {
             MainViewController.onWindowSizeChange();
         });
         onWindowSizeChange();
-
-
     }
 
     /**
      * Changes vista (main AnchorPane where content is displayed)
-     * @param anchorPane new vista
+     * @param mt module with AnchorPane
      */
-    public static void changeVista(AnchorPane anchorPane) {
-        currentVistaGlobal = anchorPane;
-        vistaHolderGlobal.getChildren().setAll((Node) anchorPane);
+    public static void changeVista(ModuleTemplate mt) {
+        currentVistaGlobal = mt.getUserInterface();
+        vistaHolderGlobal.getChildren().setAll((Node) mt);
         onWindowSizeChange();
     }
 
@@ -114,7 +104,7 @@ public class MainViewController {
      * Reloads anchorPane from last used class implementing ModuleTemplate
      */
     public static void reloadView() {
-        changeVista(currentModule.getUserInterface());
+        changeVista(currentModule);
         onWindowSizeChange();
     }
 

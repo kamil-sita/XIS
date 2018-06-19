@@ -11,9 +11,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class ImageInfoViewController {
-
-    private static final String LOCATION_VIEW = "sections/imageCopyFinder/imageInfoView/imageInfoView.fxml";
-
     @FXML
     private ImageView imageView;
 
@@ -45,20 +42,14 @@ public class ImageInfoViewController {
     }
 
     private void loadImage(File resourceFile) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                BufferedImage bi = BufferedImageIO.getImage(resourceFile);
-                if (bi == null) return;
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        imageView.setImage(BufferedImageToFXImage.toFxImage(bi));
-                        dimensionsValue.setText("(" + bi.getWidth() + "x" + bi.getHeight() + ")");
-                    }
-                });
+        new Thread(() -> {
+            BufferedImage bi = BufferedImageIO.getImage(resourceFile);
+            if (bi == null) return;
+            Platform.runLater(() -> {
+                imageView.setImage(BufferedImageToFXImage.toFxImage(bi));
+                dimensionsValue.setText("(" + bi.getWidth() + "x" + bi.getHeight() + ")");
+            });
 
-            }
         }).start();
     }
 

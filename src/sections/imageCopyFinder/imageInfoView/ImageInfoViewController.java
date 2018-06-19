@@ -1,20 +1,14 @@
 package sections.imageCopyFinder.imageInfoView;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import sections.SubUserInterface;
-import sections.imageCopyFinder.ComparableImage;
+import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
+import universal.tools.imagetools.bufferedimagetools.BufferedImageToFXImage;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Iterator;
 
 public class ImageInfoViewController {
 
@@ -32,58 +26,40 @@ public class ImageInfoViewController {
     @FXML
     private Label sizeValue;
 
-    private ComparableImage comparableImage;
-    private AnchorPane anchorPane;
-
-    public AnchorPane getAnchorPane() {
-        return anchorPane;
-    }
-
-    private void loadImageLater() {
-        System.out.println("not implemented");
-        //todo
-    }
-
     public void setFileInformation(File file) {
-        if (file != null) {
-            nameValue.setText(file.getName());
-            final long length = file.length();
-            final int unit = 1024;
-            if (length < unit) {
-                sizeValue.setText(length + "B");
-            } else if (length < unit * unit) {
-                sizeValue.setText(length/unit + "kB");
-            } else if (length < unit * unit * unit) {
-                sizeValue.setText(length/unit/unit + "MB");
-            } else {
-                sizeValue.setText(length/unit/unit/unit + "GB");
-            }
+        if (file == null) return;
 
+        nameValue.setText(file.getName());
+        final long length = file.length();
+        final int unit = 1024;
+        if (length < unit) {
+            sizeValue.setText(length + "B");
+        } else if (length < unit * unit) {
+            sizeValue.setText(length / unit + "kB");
+        } else if (length < unit * unit * unit) {
+            sizeValue.setText(length / unit / unit + "MB");
+        } else {
+            sizeValue.setText(length / unit / unit / unit + "GB");
         }
+        loadImage(file);
     }
 
-    private void setDimensionsValue(int width, int height) {
-        dimensionsValue.setText(width + " x " + height);
-    }
+    private void loadImage(File resourceFile) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                BufferedImage bi = BufferedImageIO.getImage(resourceFile);
+                if (bi == null) return;
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImage(BufferedImageToFXImage.toFxImage(bi));
+                        dimensionsValue.setText("(" + bi.getWidth() + "x" + bi.getHeight() + ")");
+                    }
+                });
 
-    private void loadDimensions(File resourceFile) {
-
-        //based on https://stackoverflow.com/questions/1559253/java-imageio-getting-image-dimensions-without-reading-the-entire-file
-
-        try (ImageInputStream in = ImageIO.createImageInputStream(resourceFile)) {
-            final Iterator<ImageReader> readers = ImageIO.getImageReaders(in);
-            if (readers.hasNext()) {
-                ImageReader reader = readers.next();
-                try {
-                    reader.setInput(in);
-                    setDimensionsValue(reader.getWidth(0), reader.getHeight(0));
-                } finally {
-                    reader.dispose();
-                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
 }

@@ -13,7 +13,7 @@
     <Label layoutX="45" layoutY="330.0" text="Dimensions" textAlignment="RIGHT" />
     <Label layoutX="45" layoutY="350.0" text="Size" textAlignment="RIGHT" />
     <Label fx:id="nameValue" layoutX="150" layoutY="310.0" text="NameValue" textAlignment="RIGHT" />
-    <Label fx:id="dimensionsValue" layoutX="150" layoutY="330.0" text="DimensionsValue" textAlignment="RIGHT" />
+    <Label fx:id="dimensionsValue" layoutX="150" layoutY="330.0" text="Loading..." textAlignment="RIGHT" />
     <Label fx:id="sizeValue" layoutX="150" layoutY="350.0" text="SizeValue" textAlignment="RIGHT" />
 </children>
 </AnchorPane>

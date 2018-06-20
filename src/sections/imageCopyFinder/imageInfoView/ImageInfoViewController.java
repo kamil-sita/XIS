@@ -27,16 +27,12 @@ public class ImageInfoViewController {
         if (file == null) return;
 
         nameValue.setText(file.getName());
-        final long length = file.length();
+        double length = file.length();
         final int unit = 1024;
-        if (length < unit) {
-            sizeValue.setText(length + "B");
-        } else if (length < unit * unit) {
-            sizeValue.setText(length / unit + "kB");
-        } else if (length < unit * unit * unit) {
-            sizeValue.setText(length / unit / unit + "MB");
-        } else {
-            sizeValue.setText(length / unit / unit / unit + "GB");
+        if (length < unit * unit) {
+            sizeValue.setText(String.format("%.3f", length/unit) + "kB");
+        } else  {
+            sizeValue.setText(String.format("%.3f", length / unit / unit) + "MB");
         }
         loadImage(file);
     }

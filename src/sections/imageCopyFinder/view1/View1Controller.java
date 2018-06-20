@@ -10,6 +10,8 @@ import sections.imageCopyFinder.ImageCopyFinder;
 import sections.imageCopyFinder.TaskImageComparator;
 import sections.main.MainViewController;
 
+import java.awt.*;
+
 public class View1Controller {
 
     @FXML
@@ -36,6 +38,7 @@ public class View1Controller {
         }
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESFUL) {
             ImageCopyFinder.setImageComparator(imageComparator);
+            ImageCopyFinder.setDeleteDirectory(folderLocationTextField.getText() + System.getProperty("file.separator") + "markedForDeletion" + System.getProperty("file.separator"));
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
             MainViewController.reloadView();
         } else {

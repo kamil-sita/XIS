@@ -16,6 +16,10 @@ public class ComparableImagePair {
         return comparableImage1.getFile().getName() + ", " + comparableImage2.getFile().getName();
     }
 
+    public boolean isInPair(ComparableImage cip) {
+        return (cip.equals(comparableImage1)||cip.equals(comparableImage2));
+    }
+
     public ComparableImage getComparableImage1() {
         return comparableImage1;
     }

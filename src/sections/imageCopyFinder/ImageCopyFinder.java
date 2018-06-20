@@ -13,6 +13,7 @@ public class ImageCopyFinder implements SubUserInterface {
     private static final String LOCATION_VIEW2 = "sections/imageCopyFinder/view2/view2.fxml";
     private static AnchorPane anchorPane;
     private static ImageComparator imageComparator;
+    private static String deleteDirectory;
 
     public AnchorPane getUserInterface() {
         if (anchorPane == null) {
@@ -47,6 +48,14 @@ public class ImageCopyFinder implements SubUserInterface {
 
     public static void setImageComparator(ImageComparator imageComparator) {
         ImageCopyFinder.imageComparator = imageComparator;
+    }
+
+    public static String getDeleteDirectory() {
+        return deleteDirectory;
+    }
+
+    public static void setDeleteDirectory(String loc) {
+        deleteDirectory = loc;
     }
 
     public enum ImageCopyFinderViews {

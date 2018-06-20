@@ -10,18 +10,22 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
+import sections.imageCopyFinder.ComparableImage;
 import sections.imageCopyFinder.ComparableImagePair;
 import sections.imageCopyFinder.ImageCopyFinder;
 import sections.imageCopyFinder.imageInfoView.ImageInfoView;
 import sections.imageCopyFinder.imageInfoView.ImageInfoViewController;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import static universal.tools.FileManagementTools.moveFile;
 
 public class View2Controller {
 
     private ArrayList<ComparableImagePair> imagePairs;
-    private ArrayList<ComparableImagePair> displayedImagePairs;
     private ComparableImagePair hoveredElement;
+    private String deleteLocation;
 
     @FXML
     private ListView<ComparableImagePair> comparableImagePairListView;
@@ -38,27 +42,50 @@ public class View2Controller {
     @FXML
     private SplitPane splitPane;
 
+    private double lastSimilarity;
+
     @FXML
     void deleteLeftPress(ActionEvent event) {
-
+        System.out.println("left");
+        delete(hoveredElement.getComparableImage1());
     }
 
     @FXML
     void deleteRightPress(ActionEvent event) {
+        System.out.println("right");
+        delete(hoveredElement.getComparableImage2());
+    }
 
+    private void delete(ComparableImage cip) {
+        for (int i = 0; i < imagePairs.size(); i++) {
+            if (imagePairs.get(i).isInPair(cip)) {
+                imagePairs.remove(i);
+                i--;
+            }
+        }
+        displayPairsWithSimilarityOver(lastSimilarity);
+        moveFile(cip.getFile(), deleteLocation);
     }
 
     @FXML
     void hideButtonPress(ActionEvent event) {
-
+        System.out.println("hide");
+        for (int i = 0; i < imagePairs.size(); i++) {
+            if (hoveredElement.equals(imagePairs.get(i))) {
+                imagePairs.remove(i);
+                displayPairsWithSimilarityOver(lastSimilarity);
+                return;
+            }
+        }
     }
 
 
     @FXML
     public void initialize() {
+        deleteLocation = ImageCopyFinder.getDeleteDirectory();
 
         sliderPercentIdentical.valueProperty().addListener((observable, oldValue, newValue) -> {
-            double x = sliderPercentIdentical.getValue()/100.0;
+            double x = sliderPercentIdentical.getValue() / 100.0;
             displayPairsWithSimilarityOver(x);
             refreshListView();
         });
@@ -85,7 +112,8 @@ public class View2Controller {
     }
 
     private void displayPairsWithSimilarityOver(double value) {
-        displayedImagePairs = new ArrayList<>();
+        lastSimilarity = value;
+        ArrayList<ComparableImagePair> displayedImagePairs = new ArrayList<>();
         for (ComparableImagePair imagePair : imagePairs) {
             if (imagePair.getSimilarity() >= value) {
                 displayedImagePairs.add(imagePair);

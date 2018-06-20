@@ -61,14 +61,27 @@ public class ImageComparator extends ProgressReporter {
         if (files.length == 0) return false;
 
         int i = 0;
+        long time = System.nanoTime();
+
 
         //TODO maybe do it multithreaded? - at least scaling down
         for (File file : files) {
+            if (i >= 10) {
+                //calculating estimated time left
+                double dt = System.nanoTime() - time;
+                dt = dt * (files.length - i) / (i);
+                dt /= 1000000000;
+                reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
+            } else {
+                reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + ")");
+            }
 
-            reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + ")");
+
+
             reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
 
-            System.out.println(i++ + "/" + files.length);
+            System.out.println(i+ "/" + files.length);
+            i++;
             BufferedImage bufferedImage;
             bufferedImage = BufferedImageIO.getImage(file);
             if (bufferedImage != null) {
@@ -98,9 +111,35 @@ public class ImageComparator extends ProgressReporter {
     private void findPairs() {
         imagePairs = new ArrayList<>();
 
+        long time = System.nanoTime();
 
         for (int i = 0; i < images.size(); i++) {
-            reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
+            if (i >= 10) {
+                //calculating estimated time left
+                //if you were to plot comparisons for x-th iteration, formula would go somewhat like this: f(x) = size - x
+                //calculating integral of it would be too boring, so instead we will calculate
+                //two areas of rectangles
+
+                //rectangle 1
+                int base1 = i;
+                int height1 = (2 * images.size() - i)/2;
+
+                //rectangle 2
+                int base2 = images.size() - i;
+                int height2 = (images.size() - i)/2;
+
+                int area1 = base1 * height1;
+                int area2 = base2 * height2;
+
+                double dt = System.nanoTime() - time;
+                dt = dt * area2/area1;
+                dt /= 1000000000;
+
+                reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
+            } else {
+                reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
+            }
+
             reportProgress(FIRST_PHASE_WEIGHT + (1 - FIRST_PHASE_WEIGHT) * i/(images.size() * 1.0));
 
             ComparableImage image1 = images.get(i);

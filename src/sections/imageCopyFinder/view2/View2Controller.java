@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import sections.imageCopyFinder.ComparableImage;
 import sections.imageCopyFinder.ComparableImagePair;
@@ -16,7 +15,6 @@ import sections.imageCopyFinder.ImageCopyFinder;
 import sections.imageCopyFinder.imageInfoView.ImageInfoView;
 import sections.imageCopyFinder.imageInfoView.ImageInfoViewController;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import static universal.tools.FileManagementTools.moveFile;
@@ -39,44 +37,27 @@ public class View2Controller {
     @FXML
     private AnchorPane rightImageAnchorPane;
 
-    @FXML
-    private SplitPane splitPane;
-
     private double lastSimilarity;
 
     @FXML
     void deleteLeftPress(ActionEvent event) {
-        System.out.println("left");
+        int index = getSelectedItemIndex();
         delete(hoveredElement.getComparableImage1());
+        selectItemAtIndex(index);
     }
 
     @FXML
     void deleteRightPress(ActionEvent event) {
-        System.out.println("right");
+        int index = getSelectedItemIndex();
         delete(hoveredElement.getComparableImage2());
-    }
-
-    private void delete(ComparableImage cip) {
-        for (int i = 0; i < imagePairs.size(); i++) {
-            if (imagePairs.get(i).isInPair(cip)) {
-                imagePairs.remove(i);
-                i--;
-            }
-        }
-        displayPairsWithSimilarityOver(lastSimilarity);
-        moveFile(cip.getFile(), deleteLocation);
+        selectItemAtIndex(index);
     }
 
     @FXML
     void hideButtonPress(ActionEvent event) {
-        System.out.println("hide");
-        for (int i = 0; i < imagePairs.size(); i++) {
-            if (hoveredElement.equals(imagePairs.get(i))) {
-                imagePairs.remove(i);
-                displayPairsWithSimilarityOver(lastSimilarity);
-                return;
-            }
-        }
+        int index = getSelectedItemIndex();
+        imagePairs.remove(hoveredElement);
+        selectItemAtIndex(index);
     }
 
 
@@ -111,6 +92,36 @@ public class View2Controller {
         );
     }
 
+    private int getSelectedItemIndex() {
+        return comparableImagePairListView.getSelectionModel().getSelectedIndex();
+    }
+
+    private int listViewSize() {
+        return comparableImagePairListView.getItems().size();
+    }
+
+    private void selectItemAtIndex(int i) {
+        if (i < listViewSize()) {
+            comparableImagePairListView.getSelectionModel().select(i);
+        } else {
+            if (i >= 0 && listViewSize() > 0) {
+                selectItemAtIndex(i - 1);
+            }
+        }
+
+    }
+
+    private void delete(ComparableImage cip) {
+        for (int i = 0; i < imagePairs.size(); i++) {
+            if (imagePairs.get(i).isInPair(cip)) {
+                imagePairs.remove(i);
+                i--;
+            }
+        }
+        displayPairsWithSimilarityOver(lastSimilarity);
+        moveFile(cip.getFile(), deleteLocation);
+    }
+
     private void displayPairsWithSimilarityOver(double value) {
         lastSimilarity = value;
         ArrayList<ComparableImagePair> displayedImagePairs = new ArrayList<>();
@@ -133,7 +144,6 @@ public class View2Controller {
         if (comparableImagePair == null) return;
         if (hoveredElement == comparableImagePair) return;
         hoveredElement = comparableImagePair;
-        System.out.println(comparableImagePair.getComparableImage1().getFile().getName() + ", " + comparableImagePair.getComparableImage2().getFile().getName());
         setImageAnchorPanes(comparableImagePair);
     }
 

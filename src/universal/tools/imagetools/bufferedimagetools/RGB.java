@@ -1,6 +1,8 @@
 package universal.tools.imagetools.bufferedimagetools;
 
 
+import java.awt.*;
+
 /**
  * Class representing color in RGB model
  */
@@ -10,6 +12,10 @@ public class RGB {
     public int r;
     public int g;
     public int b;
+
+    public RGB() {
+
+    }
 
     public RGB (int r, int g, int b) {
         this.r = r;
@@ -55,5 +61,11 @@ public class RGB {
 
         return totalSimilarity/3.0;
 
+    }
+
+    public HSB toHSB() {
+        float[] hsb = new float[3];
+        Color.RGBtoHSB(r, g, b, hsb);
+        return new HSB(hsb[0], hsb[1], hsb[2]);
     }
 }

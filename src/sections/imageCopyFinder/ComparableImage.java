@@ -1,6 +1,8 @@
 package sections.imageCopyFinder;
 
 import universal.tools.imagetools.bufferedimagetools.BufferedImageScale;
+import universal.tools.imagetools.bufferedimagetools.HSB;
+import universal.tools.imagetools.bufferedimagetools.RGB;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -15,6 +17,8 @@ public class ComparableImage {
     private BufferedImage smallImage;
     //file containing image
     private File imageFile;
+
+    private HSB hsb;
 
 
     private int width;
@@ -32,7 +36,16 @@ public class ComparableImage {
         width = fullSizeImage.getWidth();
         height = fullSizeImage.getHeight();
 
+        RGB rgb = new RGB(BufferedImageScale.getScaledDownImage(smallImage, 1).getRGB(0, 0));
+        System.out.println(rgb.r + " " + rgb.g + " " + rgb.b);
+        hsb = rgb.toHSB();
+        System.out.println(hsb.H);
+
         fullSizeImage = null;
+    }
+
+    public HSB getHsb() {
+        return hsb;
     }
 
     public BufferedImage getPreview() {

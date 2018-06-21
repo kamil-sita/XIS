@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class ImageComparator extends ProgressReporter {
     //Minimum similarity of hues for given pair to be considered similar:
-    private static final double MAXIMUM_HUE_DIFFERENCE = 0.3;
+    private static final double MAXIMUM_HUE_DIFFERENCE = 0.1;
 
     //Minimum similarity for given pair to even be considered similar
     private static final double MINIMUM_SIMILARITY = 0.90;
@@ -81,13 +81,13 @@ public class ImageComparator extends ProgressReporter {
 
 
             reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
-
             System.out.println(i+ "/" + files.length);
             i++;
             BufferedImage bufferedImage;
             bufferedImage = BufferedImageIO.getImage(file);
             if (bufferedImage != null) {
                 try {
+                    //optimalizing this part with multithreading seems not to be worth it, based on my tests
                     ComparableImage comparableImage = new ComparableImage(file, bufferedImage);
                     comparableImage.generateData(GENERATED_MINIATURE_SIZE);
                     bufferedImage = null;
@@ -156,8 +156,6 @@ public class ImageComparator extends ProgressReporter {
                     if (similarity >= MINIMUM_SIMILARITY) {
                         imagePairs.add(new ComparableImagePair(image1, image2, similarity));
                     }
-                } else {
-                    System.out.println(image1.getHsb().hueDifference(image2.getHsb()) );
                 }
 
 

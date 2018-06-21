@@ -37,9 +37,7 @@ public class ComparableImage {
         height = fullSizeImage.getHeight();
 
         RGB rgb = new RGB(BufferedImageScale.getScaledDownImage(smallImage, 1).getRGB(0, 0));
-        System.out.println(rgb.r + " " + rgb.g + " " + rgb.b);
         hsb = rgb.toHSB();
-        System.out.println(hsb.H);
 
         fullSizeImage = null;
     }

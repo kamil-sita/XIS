@@ -57,6 +57,7 @@ public class View2Controller {
     void hideButtonPress(ActionEvent event) {
         int index = getSelectedItemIndex();
         imagePairs.remove(hoveredElement);
+        displayPairsWithSimilarityOver(lastSimilarity);
         selectItemAtIndex(index);
     }
 

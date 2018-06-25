@@ -23,20 +23,17 @@ public class Main extends Application {
         stage.setMinWidth(800);
         stage.show();
 
-        stage.widthProperty().addListener((obs, oldVal, newVal) -> MainViewController.onWindowSizeChange());
+        stage.widthProperty().addListener((obs, oldVal, newVal) -> windowSizeChange());
 
-        stage.heightProperty().addListener((obs, oldVal, newVal) -> MainViewController.onWindowSizeChange());
+        stage.heightProperty().addListener((obs, oldVal, newVal) -> windowSizeChange());
 
         //TODO add/fix window maximalization listener - > windows don't scale well after maximalization
-        stage.maximizedProperty().addListener(new ChangeListener<Boolean>() {
+        stage.maximizedProperty().addListener((ov, t, t1) -> windowSizeChange());
 
-            @Override
-            public void changed(ObservableValue<? extends Boolean> ov, Boolean t, Boolean t1) {
-                System.out.println("max");
-                MainViewController.onWindowSizeChange();
-            }
-        });
+    }
 
+    private void windowSizeChange() {
+        MainViewController.onWindowSizeChange();
     }
 
 }

@@ -4,6 +4,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import sections.Notifier;
+import sections.main.MainViewController;
 import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
 import universal.tools.imagetools.bufferedimagetools.BufferedImageToFXImage;
 
@@ -23,8 +26,13 @@ public class ImageInfoViewController {
     @FXML
     private Label sizeValue;
 
-    public void setFileInformation(File file) {
+    private AnchorPane iivcAnchorPane;
+    private Notifier notifier;
+
+    public void initialize(File file, AnchorPane anchorPane) {
         if (file == null) return;
+
+        iivcAnchorPane = anchorPane;
 
         nameValue.setText(file.getName());
         double length = file.length();
@@ -34,6 +42,17 @@ public class ImageInfoViewController {
         } else  {
             sizeValue.setText(String.format("%.3f", length / unit / unit) + "MB");
         }
+
+        notifier = (width, height) -> {
+            System.out.println("NOTIFIED");
+            iivcAnchorPane.setPrefWidth(width/2);
+            iivcAnchorPane.setMaxWidth(width/2);
+            //imageView.setFitWidth(width/2);
+        };
+
+        MainViewController.addNotifier(notifier);
+        MainViewController.reloadView();
+
         loadImage(file);
     }
 
@@ -47,6 +66,10 @@ public class ImageInfoViewController {
             });
 
         }).start();
+    }
+
+    public void remove() {
+        MainViewController.removeNotifier(notifier);
     }
 
 }

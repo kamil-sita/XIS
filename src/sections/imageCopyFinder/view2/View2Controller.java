@@ -162,8 +162,8 @@ public class View2Controller {
         imc1 = im1.getController();
         imc2 = im2.getController();
 
-        imc1.setFileInformation(comparableImagePair.getComparableImage1().getFile());
-        imc2.setFileInformation(comparableImagePair.getComparableImage2().getFile());
+        imc1.initialize(comparableImagePair.getComparableImage1().getFile(), im1.getUserInterface());
+        imc2.initialize(comparableImagePair.getComparableImage2().getFile(), im2.getUserInterface());
 
         leftImageAnchorPane.getChildren().setAll((Node) im1.getUserInterface());
         rightImageAnchorPane.getChildren().setAll((Node) im2.getUserInterface());

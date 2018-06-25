@@ -7,9 +7,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import sections.Notifier;
 import sections.SubUserInterface;
 import sections.imageCopyFinder.ImageCopyFinder;
 import sections.welcomePage.WelcomePage;
+
+import java.util.ArrayList;
 
 
 public class MainViewController {
@@ -21,6 +24,8 @@ public class MainViewController {
     private static ScrollPane scrollPaneGlobal;
     private static SubUserInterface currentModule;
     private static ProgressBar progressBarGlobal;
+
+    private static ArrayList<Notifier> notifiers = new ArrayList<>();
 
     public static ImageCopyFinder imageCopyFinder;
 
@@ -98,6 +103,9 @@ public class MainViewController {
      */
     public static void onWindowSizeChange() {
         resizeAnchorPane();
+        for (Notifier notifier : notifiers) {
+            notifier.notify(scrollPaneGlobal.getViewportBounds().getWidth(), scrollPaneGlobal.getViewportBounds().getHeight());
+        }
     }
 
     /**
@@ -118,5 +126,13 @@ public class MainViewController {
     private static void resizeAnchorPane() {
         if (currentVistaGlobal == null) return;
         currentVistaGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
+    }
+
+    public static void addNotifier(Notifier notifier) {
+        notifiers.add(notifier);
+    }
+
+    public static void removeNotifier(Notifier notifier) {
+        notifiers.remove(notifier);
     }
 }

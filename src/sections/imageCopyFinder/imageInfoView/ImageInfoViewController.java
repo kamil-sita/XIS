@@ -52,18 +52,24 @@ public class ImageInfoViewController {
 
             final int HEIGHT_DIFFERENCE = 460; //const that is "just okay", to calculate height of images.
 
-            double ratio = bufferedImage.getWidth()/bufferedImage.getHeight();
+            double ratio = (bufferedImage.getWidth()*1.0)/(1.0*bufferedImage.getHeight());
+
+            System.out.println("RAtio:" + ratio);
 
             double imgHeight = height - HEIGHT_DIFFERENCE;
-            double maxWidth = (width-25)/2;
+            double maxWidth = (width-50)/2.0;
 
             double imgWidth = imgHeight * ratio;
 
             if (imgWidth > maxWidth) {
-                ratio = imgWidth / maxWidth;
-                imgWidth /= ratio;
-                imgHeight /= ratio;
+                System.out.println("recounting");
+                ratio = maxWidth / imgWidth;
+                imgWidth *= ratio;
+                imgHeight *= ratio;
             }
+
+            System.out.println("Original: " + bufferedImage.getWidth() + " : " +  bufferedImage.getHeight());
+            System.out.println("Proposed: " + imgWidth + " : " + imgHeight);
 
             imageView.setFitWidth(imgWidth);
             imageView.setFitHeight(imgHeight);
@@ -82,6 +88,7 @@ public class ImageInfoViewController {
             Platform.runLater(() -> {
                 imageView.setImage(BufferedImageToFXImage.toFxImage(bufferedImage));
                 dimensionsValue.setText("(" + bufferedImage.getWidth() + "x" + bufferedImage.getHeight() + ")");
+                MainViewController.reloadView();
             });
 
         }).start();

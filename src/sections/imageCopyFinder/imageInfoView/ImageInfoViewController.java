@@ -16,6 +16,7 @@ import java.io.File;
 public class ImageInfoViewController {
     @FXML
     private ImageView imageView;
+    private BufferedImage bufferedImage;
 
     @FXML
     private Label nameValue;
@@ -44,10 +45,29 @@ public class ImageInfoViewController {
         }
 
         notifier = (width, height) -> {
-            System.out.println("NOTIFIED");
+            System.out.println("NOTIFIED " + width + " : " + height);
             iivcAnchorPane.setPrefWidth(width/2);
             iivcAnchorPane.setMaxWidth(width/2);
-            //imageView.setFitWidth(width/2);
+
+            if (bufferedImage == null) return;
+
+            final int HEIGHT_DIFFERENCE = 460; //const that is "just okay", to calculate height of images.
+
+            double ratio = bufferedImage.getWidth()/bufferedImage.getHeight();
+
+            double imgHeight = height - HEIGHT_DIFFERENCE;
+            double maxWidth = (width-25)/2;
+
+            double imgWidth = imgHeight * ratio;
+
+            if (imgWidth > maxWidth) {
+                ratio = imgWidth / maxWidth;
+                imgWidth /= ratio;
+                imgHeight /= ratio;
+            }
+
+            imageView.setFitWidth(imgWidth);
+            imageView.setFitHeight(imgHeight);
         };
 
         MainViewController.addNotifier(notifier);
@@ -58,11 +78,11 @@ public class ImageInfoViewController {
 
     private void loadImage(File resourceFile) {
         new Thread(() -> {
-            BufferedImage bi = BufferedImageIO.getImage(resourceFile);
-            if (bi == null) return;
+            bufferedImage = BufferedImageIO.getImage(resourceFile);
+            if (bufferedImage == null) return;
             Platform.runLater(() -> {
-                imageView.setImage(BufferedImageToFXImage.toFxImage(bi));
-                dimensionsValue.setText("(" + bi.getWidth() + "x" + bi.getHeight() + ")");
+                imageView.setImage(BufferedImageToFXImage.toFxImage(bufferedImage));
+                dimensionsValue.setText("(" + bufferedImage.getWidth() + "x" + bufferedImage.getHeight() + ")");
             });
 
         }).start();

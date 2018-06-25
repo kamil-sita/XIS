@@ -9,13 +9,15 @@ import sections.main.MainViewController;
 
 public class Main extends Application {
 
+    private static Stage stage;
 
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
-    public void start(Stage stage) throws Exception{
+    public void start(Stage stageI) throws Exception{
+        stage = stageI;
         Parent root = FXMLLoader.load(getClass().getResource("sections/main/mainView.fxml"));
         stage.setTitle("XIS pre-alpha");
         stage.setScene(new Scene (root, 1280, 800));
@@ -23,13 +25,14 @@ public class Main extends Application {
         stage.setMinWidth(800);
         stage.show();
 
-        stage.widthProperty().addListener((obs, oldVal, newVal) -> windowSizeChange());
+        addResizingListener((obs, oldVal, newVal) -> windowSizeChange());
+    }
 
-        stage.heightProperty().addListener((obs, oldVal, newVal) -> windowSizeChange());
-
+    public static void addResizingListener(ChangeListener listener) {
+        stage.widthProperty().addListener(listener);
+        stage.heightProperty().addListener(listener);
         //TODO add/fix window maximalization listener - > windows don't scale well after maximalization
-        stage.maximizedProperty().addListener((ov, t, t1) -> windowSizeChange());
-
+        stage.maximizedProperty().addListener(listener);
     }
 
     private void windowSizeChange() {

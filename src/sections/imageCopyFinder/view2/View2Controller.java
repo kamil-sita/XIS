@@ -25,6 +25,9 @@ public class View2Controller {
     private ComparableImagePair hoveredElement;
     private String deleteLocation;
 
+    private ImageInfoViewController oldController1;
+    private ImageInfoViewController oldController2;
+
     @FXML
     private ListView<ComparableImagePair> comparableImagePairListView;
 
@@ -150,6 +153,15 @@ public class View2Controller {
 
 
     private void setImageAnchorPanes(ComparableImagePair comparableImagePair) {
+
+        if (oldController1 != null) {
+            oldController1.remove();
+        }
+
+        if (oldController2 != null) {
+            oldController2.remove();
+        }
+
         ImageInfoView im1;
         ImageInfoView im2;
 
@@ -167,6 +179,9 @@ public class View2Controller {
 
         leftImageAnchorPane.getChildren().setAll((Node) im1.getUserInterface());
         rightImageAnchorPane.getChildren().setAll((Node) im2.getUserInterface());
+
+        oldController1 = imc1;
+        oldController2 = imc2;
 
     }
 

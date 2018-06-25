@@ -45,7 +45,6 @@ public class ImageInfoViewController {
         }
 
         notifier = (width, height) -> {
-            System.out.println("NOTIFIED " + width + " : " + height);
             iivcAnchorPane.setPrefWidth(width/2);
             iivcAnchorPane.setMaxWidth(width/2);
 

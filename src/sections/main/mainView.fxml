@@ -17,7 +17,7 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainView.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.main.MainViewController">
    <children>
-      <GridPane VBox.vgrow="ALWAYS">
+      <GridPane fx:id="gridPane" VBox.vgrow="ALWAYS">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="100.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="ALWAYS" minWidth="628.0" />
@@ -26,7 +26,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TilePane maxWidth="200.0" minWidth="0.0" prefWidth="200.0" styleClass="tile-pane">
+            <TilePane fx:id="tilePane" maxWidth="200.0" minWidth="0.0" prefHeight="574.0" prefWidth="232.0" styleClass="tile-pane">
                <children>
                   <Button mnemonicParsing="false" onAction="#mainPress" prefHeight="42.0" prefWidth="200.0" text="Main" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="ScannerHelper" />

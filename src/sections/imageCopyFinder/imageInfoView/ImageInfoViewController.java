@@ -54,7 +54,6 @@ public class ImageInfoViewController {
 
             double ratio = (bufferedImage.getWidth()*1.0)/(1.0*bufferedImage.getHeight());
 
-            System.out.println("RAtio:" + ratio);
 
             double imgHeight = height - HEIGHT_DIFFERENCE;
             double maxWidth = (width-50)/2.0;
@@ -62,14 +61,10 @@ public class ImageInfoViewController {
             double imgWidth = imgHeight * ratio;
 
             if (imgWidth > maxWidth) {
-                System.out.println("recounting");
                 ratio = maxWidth / imgWidth;
                 imgWidth *= ratio;
                 imgHeight *= ratio;
             }
-
-            System.out.println("Original: " + bufferedImage.getWidth() + " : " +  bufferedImage.getHeight());
-            System.out.println("Proposed: " + imgWidth + " : " + imgHeight);
 
             imageView.setFitWidth(imgWidth);
             imageView.setFitHeight(imgHeight);

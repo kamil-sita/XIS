@@ -7,6 +7,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
 import sections.Notifier;
 import sections.SubUserInterface;
 import sections.imageCopyFinder.ImageCopyFinder;
@@ -16,6 +18,8 @@ import java.util.ArrayList;
 
 
 public class MainViewController {
+
+    private static MainViewController mainViewController;
 
     //static elements
     private static Label labelStatusGlobal;
@@ -31,6 +35,12 @@ public class MainViewController {
 
 
     //JavaFX Elements
+
+    @FXML
+    private GridPane gridPane;
+
+    @FXML
+    private TilePane tilePane;
 
     @FXML
     private AnchorPane vistaHolder;
@@ -69,6 +79,7 @@ public class MainViewController {
      */
     @FXML
     public void initialize() {
+        mainViewController = this;
         labelStatusGlobal = labelStatus;
         vistaHolderGlobal = vistaHolder;
         scrollPaneGlobal = scrollPane;

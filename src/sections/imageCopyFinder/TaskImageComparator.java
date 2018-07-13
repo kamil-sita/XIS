@@ -9,8 +9,8 @@ public final class TaskImageComparator extends Task<ImageComparator> {
     private ImageComparator imageComparator;
     private String fileFolder;
 
-    public TaskImageComparator(String fileFolder) {
-        imageComparator = new ImageComparator();
+    public TaskImageComparator(String fileFolder, int miniatureSize) {
+        imageComparator = new ImageComparator(miniatureSize);
         this.fileFolder = fileFolder;
     }
 

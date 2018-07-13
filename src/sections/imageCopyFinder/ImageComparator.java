@@ -17,7 +17,7 @@ public final class ImageComparator extends ProgressReporter {
     //Maximum proportions difference for pair to be considered similar
     private static final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
     //Size of generated miniature of image
-    private static final int GENERATED_MINIATURE_SIZE = 512; //TODO: changeable?
+    private int generatedMiniatureSize;
 
     //how much of progress is being done in first phase
     private static final double FIRST_PHASE_WEIGHT = 0.7;
@@ -29,6 +29,9 @@ public final class ImageComparator extends ProgressReporter {
 
     private boolean initialized = false;
 
+    public ImageComparator(int generatedMiniatureSize) {
+        this.generatedMiniatureSize = generatedMiniatureSize;
+    }
 
     public ArrayList<ComparableImagePair> getImagePairs() {
         return imagePairs;
@@ -89,7 +92,7 @@ public final class ImageComparator extends ProgressReporter {
                 try {
                     //optimalizing this part with multithreading seems not to be worth it, based on my tests
                     ComparableImage comparableImage = new ComparableImage(file, bufferedImage);
-                    comparableImage.generateData(GENERATED_MINIATURE_SIZE);
+                    comparableImage.generateData(generatedMiniatureSize);
                     bufferedImage = null;
                     images.add(comparableImage);
                 } catch (Exception e) {
@@ -173,7 +176,7 @@ public final class ImageComparator extends ProgressReporter {
      * @return % of similarity between images.
      */
 
-    public static double compareImages(ComparableImage image1, ComparableImage image2) {
+    public double compareImages(ComparableImage image1, ComparableImage image2) {
         double image1Proportion = (image1.getHeight() * 1.0)/(image1.getWidth() * 1.0);
         double image2Proportion = (image2.getHeight() * 1.0)/(image2.getWidth() * 1.0);
 
@@ -185,8 +188,8 @@ public final class ImageComparator extends ProgressReporter {
 
         double equality = 0;
 
-        for (int x = 0; x < GENERATED_MINIATURE_SIZE; x++) {
-            for (int y = 0; y < GENERATED_MINIATURE_SIZE; y++) {
+        for (int x = 0; x < generatedMiniatureSize; x++) {
+            for (int y = 0; y < generatedMiniatureSize; y++) {
 
                 RGB rgb1 = new RGB(image1.getPreview().getRGB(x, y));
                 RGB rgb2 = new RGB(image2.getPreview().getRGB(x, y));
@@ -196,7 +199,7 @@ public final class ImageComparator extends ProgressReporter {
             }
         }
 
-        return equality / (GENERATED_MINIATURE_SIZE * GENERATED_MINIATURE_SIZE);
+        return equality / (generatedMiniatureSize * generatedMiniatureSize);
     }
 
     public boolean isInitialized() {

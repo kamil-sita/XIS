@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ImageComparator extends ProgressReporter {
+public final class ImageComparator extends ProgressReporter {
     //Minimum similarity of hues for given pair to be considered similar:
     private static final double MAXIMUM_HUE_DIFFERENCE = 0.1;
 
@@ -17,7 +17,7 @@ public class ImageComparator extends ProgressReporter {
     //Maximum proportions difference for pair to be considered similar
     private static final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
     //Size of generated miniature of image
-    private static final int GENERATED_MINIATURE_SIZE = 256; //TODO: changeable?
+    private static final int GENERATED_MINIATURE_SIZE = 512; //TODO: changeable?
 
     //how much of progress is being done in first phase
     private static final double FIRST_PHASE_WEIGHT = 0.7;

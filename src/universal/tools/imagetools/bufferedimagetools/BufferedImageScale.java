@@ -2,7 +2,7 @@ package universal.tools.imagetools.bufferedimagetools;
 
 import java.awt.image.BufferedImage;
 
-public class BufferedImageScale {
+public final class BufferedImageScale {
 
 
     public static BufferedImage generatePreviewImage (BufferedImage source, final int SIZE) {
@@ -21,7 +21,6 @@ public class BufferedImageScale {
 
         BufferedImage output = new BufferedImage(targetWidth, targetHeight, source.getType());
 
-        //todo are they the same?
         int scaleX = source.getWidth()/targetWidth;
         int scaleY = source.getHeight()/targetHeight;
 

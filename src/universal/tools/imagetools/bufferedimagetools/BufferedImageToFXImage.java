@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 
 import java.awt.image.BufferedImage;
 
-public class BufferedImageToFXImage {
+public final class BufferedImageToFXImage {
     public static Image toFxImage(BufferedImage bi) {
         return SwingFXUtils.toFXImage(bi, null);
     }

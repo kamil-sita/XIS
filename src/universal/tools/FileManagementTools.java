@@ -2,7 +2,7 @@ package universal.tools;
 
 import java.io.File;
 
-public class FileManagementTools {
+public final class FileManagementTools {
 
     public static void moveFile(File file, String deleteDirectory) {
         if (!new File(deleteDirectory).exists()) {

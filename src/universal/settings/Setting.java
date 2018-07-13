@@ -1,6 +1,6 @@
 package universal.settings;
 
-public class Setting {
+public final class Setting {
 
     private String setting; //name of setting
 

@@ -17,7 +17,7 @@ import sections.welcomePage.WelcomePage;
 import java.util.ArrayList;
 
 
-public class MainViewController {
+public final class MainViewController {
 
     private static MainViewController mainViewController;
 

@@ -13,7 +13,7 @@ import universal.tools.imagetools.bufferedimagetools.BufferedImageToFXImage;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public class ImageInfoViewController {
+public final class ImageInfoViewController {
     @FXML
     private ImageView imageView;
     private BufferedImage bufferedImage;

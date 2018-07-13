@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sections.main.MainViewController;
 
-public class Main extends Application {
+public final class Main extends Application {
 
     private static Stage stage;
 

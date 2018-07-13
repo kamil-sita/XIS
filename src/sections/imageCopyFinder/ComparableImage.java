@@ -10,7 +10,7 @@ import java.io.File;
 /**
  * ComparableImage, used to compare images.
  */
-public class ComparableImage {
+public final class ComparableImage {
     //original full-sized image
     private BufferedImage fullSizeImage;
     //scaled down image, to speed up calculations

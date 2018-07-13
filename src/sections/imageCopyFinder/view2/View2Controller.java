@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import static universal.tools.FileManagementTools.moveFile;
 
-public class View2Controller {
+public final class View2Controller {
 
     private ArrayList<ComparableImagePair> imagePairs;
     private ComparableImagePair hoveredElement;

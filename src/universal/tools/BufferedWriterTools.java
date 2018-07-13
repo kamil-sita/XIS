@@ -2,7 +2,7 @@ package universal.tools;
 
 import java.io.BufferedWriter;
 
-public class BufferedWriterTools {
+public final class BufferedWriterTools {
 
     public static void writeIgnoreExceptions (BufferedWriter bw, String text) {
         try {

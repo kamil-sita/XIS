@@ -12,7 +12,7 @@ import sections.main.MainViewController;
 
 import java.awt.*;
 
-public class View1Controller {
+public final class View1Controller {
 
     @FXML
     private TextField folderLocationTextField;

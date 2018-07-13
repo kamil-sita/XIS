@@ -6,7 +6,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class SettingsIO {
+public final class SettingsIO {
     /**
      * Saves settings to given file
      * @param usp settings

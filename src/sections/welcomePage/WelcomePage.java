@@ -7,7 +7,7 @@ import sections.SubUserInterface;
 import java.io.IOException;
 import java.net.URL;
 
-public class WelcomePage implements SubUserInterface {
+public final class WelcomePage implements SubUserInterface {
 
     private static final String LOCATION = "sections/welcomePage/welcomePage.fxml";
     private static AnchorPane anchorPane;

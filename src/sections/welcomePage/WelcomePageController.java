@@ -8,6 +8,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.TilePane;
 import sections.imageCopyFinder.ImageCopyFinder;
 
-public class WelcomePageController {
+public final class WelcomePageController {
 
 }

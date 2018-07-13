@@ -4,7 +4,7 @@ import javafx.concurrent.Task;
 
 import java.io.File;
 
-public class TaskImageComparator extends Task<ImageComparator> {
+public final class TaskImageComparator extends Task<ImageComparator> {
 
     private ImageComparator imageComparator;
     private String fileFolder;

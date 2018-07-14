@@ -10,6 +10,7 @@ public final class TaskImageComparator extends Task<ImageComparator> {
     private String fileFolder;
 
     public TaskImageComparator(String fileFolder, int miniatureSize) {
+        System.out.println("miniature size: " + miniatureSize);
         imageComparator = new ImageComparator(miniatureSize);
         this.fileFolder = fileFolder;
     }

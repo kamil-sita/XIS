@@ -1,6 +1,5 @@
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -38,5 +37,4 @@ public final class Main extends Application {
     private void windowSizeChange() {
         MainViewController.onWindowSizeChange();
     }
-
 }

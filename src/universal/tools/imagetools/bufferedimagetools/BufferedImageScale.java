@@ -10,7 +10,7 @@ public final class BufferedImageScale {
      * Scales down image
      * @param source input BufferedImage
      * @param SIZE size of scaled down image
-     * @return
+     * @return scaled down image
      */
 
     public static BufferedImage getScaledDownImage(BufferedImage source, final int SIZE) {

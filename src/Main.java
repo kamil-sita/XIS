@@ -27,11 +27,9 @@ public final class Main extends Application {
         addResizingListener((obs, oldVal, newVal) -> windowSizeChange());
     }
 
-    public static void addResizingListener(ChangeListener listener) {
+    public static void addResizingListener(ChangeListener<? super Number> listener) {
         stage.widthProperty().addListener(listener);
         stage.heightProperty().addListener(listener);
-        //TODO add/fix window maximalization listener - > windows don't scale well after maximalization
-        stage.maximizedProperty().addListener(listener);
     }
 
     private void windowSizeChange() {

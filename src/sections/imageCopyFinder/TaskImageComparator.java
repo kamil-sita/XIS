@@ -8,11 +8,13 @@ public final class TaskImageComparator extends Task<ImageComparator> {
 
     private ImageComparator imageComparator;
     private String fileFolder;
+    private boolean geometricalMode;
 
-    public TaskImageComparator(String fileFolder, int miniatureSize) {
+    public TaskImageComparator(String fileFolder, int miniatureSize, boolean geometricalMode) {
         System.out.println("miniature size: " + miniatureSize);
         imageComparator = new ImageComparator(miniatureSize);
         this.fileFolder = fileFolder;
+        this.geometricalMode = geometricalMode;
     }
 
     public ImageComparator call() {
@@ -29,7 +31,7 @@ public final class TaskImageComparator extends Task<ImageComparator> {
             imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NOT_FOLDER);
         }
 
-        boolean status = imageComparator.initialize(folder);
+        boolean status = imageComparator.initialize(folder, geometricalMode);
 
         if (!status) {
             imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NO_IMAGES_IN_DIRECTORY);

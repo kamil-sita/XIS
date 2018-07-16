@@ -60,8 +60,8 @@ public class RGB {
         totalSimilarity -= Math.abs(b - secondColor.b)/255.0;
 
         return totalSimilarity/3.0;
-
     }
+
 
     public HSB toHSB() {
         float[] hsb = new float[3];

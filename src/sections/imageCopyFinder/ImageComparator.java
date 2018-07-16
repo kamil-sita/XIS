@@ -43,12 +43,12 @@ public final class ImageComparator extends ProgressReporter {
      * @return true if initialized
      */
 
-    public boolean initialize(File folder) {
+    public boolean initialize(File folder, boolean geometricalMode) {
         if (!loadFiles(folder)) {
             reportProgress("No files found");
             return false;
         }
-        findPairs();
+        findPairs(geometricalMode);
         return true;
     }
 
@@ -113,7 +113,7 @@ public final class ImageComparator extends ProgressReporter {
      * finds pairs of similar images
      */
 
-    private void findPairs() {
+    private void findPairs(boolean geometricalMode) {
         imagePairs = new ArrayList<>();
 
         long time = System.nanoTime();
@@ -154,7 +154,9 @@ public final class ImageComparator extends ProgressReporter {
                 ComparableImage image2 = images.get(j);
 
                 if (image1.getHsb().hueDifference(image2.getHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
-                    double similarity = compareImages(image1, image2);
+                    double similarity = compareImages(image1, image2, geometricalMode);
+
+                    System.out.println(similarity);
 
                     if (similarity >= MINIMUM_SIMILARITY) {
                         imagePairs.add(new ComparableImagePair(image1, image2, similarity));
@@ -176,7 +178,8 @@ public final class ImageComparator extends ProgressReporter {
      * @return % of similarity between images.
      */
 
-    public double compareImages(ComparableImage image1, ComparableImage image2) {
+    public double compareImages(ComparableImage image1, ComparableImage image2, boolean geometricalMode) {
+        final double POWER = 1.25;
         double image1Proportion = (image1.getHeight() * 1.0)/(image1.getWidth() * 1.0);
         double image2Proportion = (image2.getHeight() * 1.0)/(image2.getWidth() * 1.0);
 
@@ -194,12 +197,20 @@ public final class ImageComparator extends ProgressReporter {
                 RGB rgb1 = new RGB(image1.getPreview().getRGB(x, y));
                 RGB rgb2 = new RGB(image2.getPreview().getRGB(x, y));
 
-                equality += rgb1.compareToRGB(rgb2);
+                if (geometricalMode) {
+                    equality += Math.pow(1 - rgb1.compareToRGB(rgb2), POWER);
+                } else {
+                    equality += rgb1.compareToRGB(rgb2);
+                }
 
             }
         }
 
-        return equality / (generatedMiniatureSize * generatedMiniatureSize);
+        if (geometricalMode) {
+            return 1 - Math.pow(equality/(generatedMiniatureSize * generatedMiniatureSize), 1/POWER);
+        } else {
+            return equality / (generatedMiniatureSize * generatedMiniatureSize);
+        }
     }
 
     public boolean isInitialized() {

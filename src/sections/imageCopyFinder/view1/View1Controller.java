@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import sections.imageCopyFinder.ImageComparator;
@@ -19,6 +20,9 @@ public final class View1Controller {
     @FXML
     private ComboBox<Integer> imageSizeComboBox;
 
+    @FXML
+    private CheckBox checkBoxGeometricalMode;
+
     private ImageComparator imageComparator = null;
 
 
@@ -26,12 +30,17 @@ public final class View1Controller {
     public void initialize() {
         Platform.runLater(() -> {
             imageSizeComboBox.getItems().addAll(4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048);
+            imageSizeComboBox.getSelectionModel().select(6);
         });
     }
 
     @FXML
     private void runButtonPress(ActionEvent event) {
-        TaskImageComparator tic = new TaskImageComparator(folderLocationTextField.getText(), imageSizeComboBox.getValue());
+        TaskImageComparator tic = new TaskImageComparator(
+                folderLocationTextField.getText(),
+                imageSizeComboBox.getValue(),
+                checkBoxGeometricalMode.isSelected()
+        );
         tic.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                 event1 -> {
                     imageComparator = tic.getValue();

@@ -29,12 +29,10 @@
             <TilePane fx:id="tilePane" maxWidth="200.0" minWidth="0.0" prefHeight="574.0" prefWidth="232.0" styleClass="tile-pane">
                <children>
                   <Button mnemonicParsing="false" onAction="#mainPress" prefHeight="42.0" prefWidth="200.0" text="Main" />
-                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="ScannerHelper" />
-                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="LoSTIC" />
-                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="SpritesheetBuilder" />
-                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Ulam" />
-                  <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="ImageCopyFinder" />
-                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Sorter" />
+                  <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="Image copy finder" />
+                  <Button mnemonicParsing="false" onAction="#scannerToNotePress" prefHeight="42.0" prefWidth="200.0" text="Scanner to note" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Image compression" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Spritesheet builder" />
                </children>
             </TilePane>
             <GridPane prefHeight="523.0" prefWidth="644.0" GridPane.columnIndex="1">

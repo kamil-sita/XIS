@@ -5,12 +5,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sections.main.MainViewController;
+import sections.scannerToNote.ScannerToNoteConverter;
 
 public final class Main extends Application {
 
     private static Stage stage;
 
     public static void main(String[] args) {
+        //new ScannerToNoteConverter().convert();
         launch(args);
     }
 

@@ -72,6 +72,11 @@ public final class MainViewController {
         setStatus("imageCopyFinder module loaded");
     }
 
+    @FXML
+    void scannerToNotePress(ActionEvent event) {
+
+    }
+
     //Other methods
 
     /**

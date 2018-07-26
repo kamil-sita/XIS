@@ -51,7 +51,6 @@ public class RGB {
      * Compares two colors, using r g b channels
      * @return % of similarity (100% - equal)
      */
-
     public double compareToRGB(RGB secondColor) {
         double totalSimilarity = 3.0;
 
@@ -62,10 +61,59 @@ public class RGB {
         return totalSimilarity/3.0;
     }
 
+    public double getDistanceFrom(RGB rgb) {
+        return Math.sqrt(squared(r - rgb.r) + squared(g - rgb.g) + squared(b - rgb.b));
+    }
+
+    private double squared(double value) {
+        return value * value;
+    }
+
 
     public HSB toHSB() {
         float[] hsb = new float[3];
         Color.RGBtoHSB(r, g, b, hsb);
         return new HSB(hsb[0], hsb[1], hsb[2]);
+    }
+
+    public RGB getCopy() {
+        return new RGB(r, g, b, a);
+    }
+
+    public void reduceDepth(int bitDepth) {
+        int depth = getDepthConst(bitDepth);
+        r = r & depth;
+        g = g & depth;
+        b = b & depth;
+    }
+
+    private int getDepthConst(int bitDepth) {
+        switch (bitDepth) {
+            case 8:
+                return 0b11111111;
+            case 7:
+                return 0b11111110;
+            case 6:
+                return 0b11111100;
+            case 5:
+                return 0b11111000;
+            case 4:
+                return 0b11110000;
+            case 3:
+                return 0b11100000;
+            case 2:
+                return 0b11000000;
+            case 1:
+                return 0b10000000;
+            case 0:
+                return 0b00000000;
+            default:
+                return 0b00000000;
+
+        }
+    }
+
+    public String toString() {
+        return "RGB: r: " + r + ", g: " + g + ", b: " + b;
     }
 }

@@ -1,5 +1,7 @@
 package universal.tools.imagetools.bufferedimagetools;
 
+import java.awt.*;
+
 public class HSB {
     public double H;
     public double S;
@@ -17,6 +19,10 @@ public class HSB {
 
     public double hueDifference(HSB otherHsb) {
         return Math.abs(H - otherHsb.H);
+    }
+
+    public RGB toRGB() {
+        return new RGB(Color.HSBtoRGB((float) H, (float) S, (float) B));
     }
 
 }

@@ -1,21 +1,22 @@
-package sections.scannerToNote;
+package sections.scannertonote;
 
-import pl.kamilsitarski.simplekmeans.SimpleKMeansData;
+import pl.ksitarski.simplekmeans.KMeansData;
 import universal.tools.imagetools.bufferedimagetools.RGB;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class KmeansRgb implements SimpleKMeansData {
+public class RgbKmeansContainer implements KMeansData {
 
-    private RGB rgb;
+    private RGB rgbValue;
 
-    public KmeansRgb(RGB rgb) {
-        this.rgb = rgb;
+    public RgbKmeansContainer(RGB rgb) {
+        this.rgbValue = rgb;
     }
 
     @Override
-    public SimpleKMeansData getNewWithRandomData() {
-        return new KmeansRgb(new RGB(
+    public KMeansData getNewWithRandomData() {
+        return new RgbKmeansContainer(new RGB(
                 (int) (Math.random() * 255),
                 (int) (Math.random() * 255),
                 (int) (Math.random() * 255)
@@ -23,12 +24,35 @@ public class KmeansRgb implements SimpleKMeansData {
     }
 
     @Override
-    public double distanceTo(SimpleKMeansData simpleKMeansData) {
-        return rgb.getDistanceFrom(((KmeansRgb) simpleKMeansData).rgb);
+    public double distanceTo(KMeansData simpleKMeansData) {
+        return rgbValue.getDistanceFrom(((RgbKmeansContainer) simpleKMeansData).rgbValue);
     }
 
     @Override
-    public SimpleKMeansData meanOfList(List<SimpleKMeansData> list) {
-        return null;
+    public KMeansData meanOfList(List<KMeansData> list) {
+        if (list == null || list.size() == 0) return null;
+        RGB rgb = new RGB(0, 0 ,0);
+        for (KMeansData simpleKMeansData : list) {
+            RGB rgbElement = ((RgbKmeansContainer) simpleKMeansData).rgbValue;
+            rgb.r += rgbElement.r;
+            rgb.g += rgbElement.g;
+            rgb.b += rgbElement.b;
+        }
+        rgb.r /= list.size();
+        rgb.g /= list.size();
+        rgb.b /= list.size();
+        return new RgbKmeansContainer(rgb);
+    }
+
+    public RGB getRgb() {
+        return rgbValue;
+    }
+
+    public static List<RGB> toRgbList(List<RgbKmeansContainer> rgbContainerList) {
+        List<RGB> rgbList = new ArrayList<>();
+        for (RgbKmeansContainer rgbContainer : rgbContainerList) {
+            rgbList.add(rgbContainer.getRgb());
+        }
+        return rgbList;
     }
 }

@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sections.main.MainViewController;
-import sections.scannerToNote.ScannerToNoteConverter;
+import sections.scannertonote.ScannerToNoteConverter;
 
 public final class Main extends Application {
 

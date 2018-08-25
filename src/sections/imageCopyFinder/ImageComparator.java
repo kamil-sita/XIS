@@ -213,10 +213,6 @@ public final class ImageComparator extends ProgressReporter {
         }
     }
 
-    public boolean isInitialized() {
-        return initialized;
-    }
-
     public ImageComparatorStatus getStatus() {
         return status;
     }

@@ -7,28 +7,15 @@ import sections.SubUserInterface;
 import java.io.IOException;
 import java.net.URL;
 
-public final class ImageCopyFinder implements SubUserInterface {
+public final class ImageCopyFinder extends SubUserInterface {
 
     private static final String LOCATION_VIEW1 = "sections/imageCopyFinder/view1/view1.fxml";
     private static final String LOCATION_VIEW2 = "sections/imageCopyFinder/view2/view2.fxml";
-    private static AnchorPane anchorPane;
     private static ImageComparator imageComparator;
     private static String deleteDirectory;
 
-    public AnchorPane getUserInterface() {
-        if (anchorPane == null) {
-            setInterface(LOCATION_VIEW1);
-        }
-        return anchorPane;
-    }
-
-    private void setInterface(String location) {
-        URL url = SubUserInterface.class.getClassLoader().getResource(location);
-        try {
-            anchorPane = FXMLLoader.load(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ImageCopyFinder() {
+        this.defaultLocation = LOCATION_VIEW1;
     }
 
     public void setInterface(ImageCopyFinderViews view) {

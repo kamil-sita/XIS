@@ -7,7 +7,7 @@ import sections.SubUserInterface;
 import java.io.IOException;
 import java.net.URL;
 
-public final class ImageInfoView implements SubUserInterface {
+public final class ImageInfoView extends SubUserInterface {
     private static final String LOCATION = "imageInfoView.fxml";
     private AnchorPane anchorPane;
     private ImageInfoViewController imageInfoViewController;

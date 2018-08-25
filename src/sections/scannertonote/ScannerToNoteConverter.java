@@ -15,7 +15,7 @@ public class ScannerToNoteConverter {
 
     public BufferedImage convert() {
 
-        final int COLORS = 6;
+        final int COLORS = 256;
         final int DEPTH = 6;
         final int ITERATIONS = 64;
 

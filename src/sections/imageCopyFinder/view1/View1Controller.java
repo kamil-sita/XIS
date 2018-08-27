@@ -29,7 +29,8 @@ public final class View1Controller {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            imageSizeComboBox.getItems().addAll(4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048);
+            //adding scaling option and selecting default
+            imageSizeComboBox.getItems().addAll(4, 8, 16, 32, 64, 128, 256, 512); //todo this line will throw exception, not sure why
             imageSizeComboBox.getSelectionModel().select(6);
         });
     }

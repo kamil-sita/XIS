@@ -4,9 +4,7 @@ import sections.SubUserInterface;
 
 public final class WelcomePage extends SubUserInterface {
 
-    private static final String LOCATION = "sections/welcomePage/welcomePage.fxml";
-
     public WelcomePage() {
-        this.defaultLocation = LOCATION;
+        this.defaultLocation = "sections/welcomePage/welcomePage.fxml";
     }
 }

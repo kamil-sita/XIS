@@ -39,7 +39,7 @@ public final class ComparableImage {
         RGB rgb = new RGB(BufferedImageScale.getScaledDownImage(smallImage, 1).getRGB(0, 0));
         hsb = rgb.toHSB();
 
-        fullSizeImage = null;
+        fullSizeImage = null; //so it's easier to know for GC
     }
 
     public HSB getHsb() {

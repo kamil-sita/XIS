@@ -90,10 +90,10 @@ public final class ImageComparator extends ProgressReporter {
             bufferedImage = BufferedImageIO.getImage(file);
             if (bufferedImage != null) {
                 try {
-                    //optimalizing this part with multithreading seems not to be worth it, based on my tests
+                    //optimizing this part with multithreading seems not to be worth it, based on my tests
                     ComparableImage comparableImage = new ComparableImage(file, bufferedImage);
                     comparableImage.generateData(generatedMiniatureSize);
-                    bufferedImage = null;
+                    bufferedImage = null; //so it's easier to know for the garbage collector
                     images.add(comparableImage);
                 } catch (Exception e) {
                     e.printStackTrace();

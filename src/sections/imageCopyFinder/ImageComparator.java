@@ -1,6 +1,6 @@
 package sections.imageCopyFinder;
 
-import sections.ProgressReporter;
+import sections.UserFeedback;
 import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
 import universal.tools.imagetools.bufferedimagetools.RGB;
 
@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public final class ImageComparator extends ProgressReporter {
+public final class ImageComparator {
     //Minimum similarity of hues for given pair to be considered similar:
     private static final double MAXIMUM_HUE_DIFFERENCE = 0.1;
 
@@ -45,7 +45,7 @@ public final class ImageComparator extends ProgressReporter {
 
     public boolean initialize(File folder, boolean geometricalMode) {
         if (!loadFiles(folder)) {
-            reportProgress("No files found");
+            UserFeedback.reportProgress("No files found");
             return false;
         }
         findPairs(geometricalMode);
@@ -59,7 +59,7 @@ public final class ImageComparator extends ProgressReporter {
      */
 
     private boolean loadFiles(File folder) {
-        reportProgress("Finding files in folder");
+        UserFeedback.reportProgress("Finding files in folder");
         images = new ArrayList<>();
         File[] files = folder.listFiles();
         if (files == null) return false;
@@ -76,14 +76,14 @@ public final class ImageComparator extends ProgressReporter {
                 double dt = System.nanoTime() - time;
                 dt = dt * (files.length - i) / (i);
                 dt /= 1000000000;
-                reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
+                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
             } else {
-                reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + ")");
+                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + ")");
             }
 
 
 
-            reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
+            UserFeedback.reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
             System.out.println(i+ "/" + files.length);
             i++;
             BufferedImage bufferedImage;
@@ -140,12 +140,12 @@ public final class ImageComparator extends ProgressReporter {
                 dt = dt * area2/area1;
                 dt /= 1000000000;
 
-                reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
+                UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
             } else {
-                reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
+                UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
             }
 
-            reportProgress(FIRST_PHASE_WEIGHT + (1 - FIRST_PHASE_WEIGHT) * i/(images.size() * 1.0));
+            UserFeedback.reportProgress(FIRST_PHASE_WEIGHT + (1 - FIRST_PHASE_WEIGHT) * i/(images.size() * 1.0));
 
             ComparableImage image1 = images.get(i);
 
@@ -167,7 +167,7 @@ public final class ImageComparator extends ProgressReporter {
 
             }
         }
-        reportProgress("Images compared");
+        UserFeedback.reportProgress("Images compared");
 
     }
 

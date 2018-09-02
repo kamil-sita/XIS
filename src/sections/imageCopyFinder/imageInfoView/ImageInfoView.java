@@ -5,6 +5,7 @@ import javafx.scene.layout.AnchorPane;
 import sections.SubUserInterface;
 
 import java.io.IOException;
+import java.net.URL;
 
 public final class ImageInfoView extends SubUserInterface {
     private static final String LOCATION = "imageInfoView.fxml";
@@ -24,6 +25,7 @@ public final class ImageInfoView extends SubUserInterface {
 
     private void load() {
         if (loaded) return;
+        URL url = SubUserInterface.class.getClassLoader().getResource(LOCATION);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             anchorPane = fxmlLoader.load(getClass().getResource(LOCATION).openStream());

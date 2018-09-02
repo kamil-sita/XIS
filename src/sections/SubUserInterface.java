@@ -11,24 +11,19 @@ public abstract class SubUserInterface {
     private AnchorPane anchorPane = null;
     protected String defaultLocation = null;
 
-    /**
-     *
-     * @return AnchorPane that is this user interface
-     */
     public AnchorPane getUserInterface() {
-        return lazyLoadAnchorPane();
+        if (anchorPane == null) {
+            setInterface(defaultLocation);
+        }
+        return anchorPane;
     }
 
-    protected AnchorPane lazyLoadAnchorPane() {
-        if (anchorPane != null) {
-            return anchorPane;
-        }
-        URL url = SubUserInterface.class.getClassLoader().getResource(defaultLocation);
+    protected void setInterface(String location) {
+        URL url = SubUserInterface.class.getClassLoader().getResource(location);
         try {
             anchorPane = FXMLLoader.load(url);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return anchorPane;
     }
 }

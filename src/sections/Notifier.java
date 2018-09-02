@@ -1,7 +1,7 @@
 package sections;
 
 /**
- * Class that will notify class with changes to width and height of containing pane.
+ * Class that can be used to notify of changes of window size
  */
 public interface Notifier {
     void notify (double width, double height);

@@ -19,8 +19,6 @@ import java.util.ArrayList;
 
 public final class MainViewController {
 
-    private static MainViewController mainViewController;
-
     //static elements
     private static Label labelStatusGlobal;
     private static AnchorPane vistaHolderGlobal;
@@ -57,9 +55,9 @@ public final class MainViewController {
     //Actions methods
 
     @FXML
-    void mainPress(ActionEvent event) {
+    void mainPagePress(ActionEvent event) {
         WelcomePage welcomePage = new WelcomePage();
-        changeVista(welcomePage);
+        changeVistoTo(welcomePage);
         currentModule = welcomePage;
         setStatus("welcome page loaded");
     }
@@ -67,7 +65,7 @@ public final class MainViewController {
     @FXML
     void imageCopyFinderPress(ActionEvent event) {
         imageCopyFinder = new ImageCopyFinder();
-        changeVista(imageCopyFinder);
+        changeVistoTo(imageCopyFinder);
         currentModule = imageCopyFinder;
         setStatus("imageCopyFinder module loaded");
     }
@@ -84,12 +82,11 @@ public final class MainViewController {
      */
     @FXML
     public void initialize() {
-        mainViewController = this;
         labelStatusGlobal = labelStatus;
         vistaHolderGlobal = vistaHolder;
         scrollPaneGlobal = scrollPane;
         progressBarGlobal = progressBar;
-        mainPress(null);
+        mainPagePress(null);
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             MainViewController.onWindowSizeChange();
         });
@@ -100,14 +97,14 @@ public final class MainViewController {
      * Changes vista (main AnchorPane where content is displayed)
      * @param mt module with AnchorPane
      */
-    public static void changeVista(SubUserInterface mt) {
+    public static void changeVistoTo(SubUserInterface mt) {
         currentVistaGlobal = mt.getUserInterface();
         vistaHolderGlobal.getChildren().setAll((Node) mt.getUserInterface());
         onWindowSizeChange();
     }
 
     /**
-     * Sets status (Label) in bottom left label
+     * Sets status (Label) in bottom left corner
      * @param text text of label
      */
     public static void setStatus(String text) {
@@ -118,7 +115,7 @@ public final class MainViewController {
      * Function called when Stage changes it's size
      */
     public static void onWindowSizeChange() {
-        resizeAnchorPane();
+        resizeVista();
         for (Notifier notifier : notifiers) {
             notifier.notify(scrollPaneGlobal.getViewportBounds().getWidth(), scrollPaneGlobal.getViewportBounds().getHeight());
         }
@@ -128,7 +125,7 @@ public final class MainViewController {
      * Reloads anchorPane from last used class implementing SubUserInterface
      */
     public static void reloadView() {
-        changeVista(currentModule);
+        changeVistoTo(currentModule);
         onWindowSizeChange();
     }
 
@@ -139,7 +136,7 @@ public final class MainViewController {
     /**
      * Changes preferred width of vista (AnchorPane) so it scales properly with stage size
      */
-    private static void resizeAnchorPane() {
+    private static void resizeVista() {
         if (currentVistaGlobal == null) return;
         currentVistaGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
     }

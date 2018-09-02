@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScannerToNoteConverter {
+public class ScannerToNoteConv {
 
     public BufferedImage convert() {
 

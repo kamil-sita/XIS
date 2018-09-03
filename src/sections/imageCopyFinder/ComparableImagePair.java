@@ -23,11 +23,11 @@ public final class ComparableImagePair {
         return (cip.equals(comparableImage1)||cip.equals(comparableImage2));
     }
 
-    public ComparableImage getComparableImage1() {
+    public ComparableImage getComparableImageLeft() {
         return comparableImage1;
     }
 
-    public ComparableImage getComparableImage2() {
+    public ComparableImage getComparableImageRight() {
         return comparableImage2;
     }
 

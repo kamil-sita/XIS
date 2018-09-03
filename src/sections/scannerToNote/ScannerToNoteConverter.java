@@ -35,11 +35,11 @@ public class ScannerToNoteConverter {
         }
 
         //get sample data by getting every 4th pixel (~25% of original)
-        List<RgbKmeansCont> rgbList = new ArrayList<>();
+        List<RgbContainer> rgbList = new ArrayList<>();
 
         for (int y = 0; y < input.getHeight(); y += 4) {
             for (int x = 0; x < input.getWidth(); x += 4) {
-                rgbList.add(new RgbKmeansCont(new RGB(input.getRGB(x, y))));
+                rgbList.add(new RgbContainer(new RGB(input.getRGB(x, y))));
             }
         }
 
@@ -56,13 +56,13 @@ public class ScannerToNoteConverter {
 
 
 
-        KMeans<RgbKmeansCont> kMeans = new KMeans(COLORS, rgbList);
+        KMeans<RgbContainer> kMeans = new KMeans(COLORS, rgbList);
 
         kMeans.iterateWithThreads(ITERATIONS, 32);
 
-        List<RgbKmeansCont> results = kMeans.getResults();
+        List<RgbContainer> results = kMeans.getResults();
 
-        for (RgbKmeansCont rgbContainer : results) {
+        for (RgbContainer rgbContainer : results) {
             System.out.println(rgbContainer.getRgb());
         }
 
@@ -70,7 +70,7 @@ public class ScannerToNoteConverter {
         //    kMeansPoints.addRgb(BACKGROUND_COLOR);
         //}
 
-        BufferedImagePalette.replace(input, RgbKmeansCont.toRgbList(results));
+        BufferedImagePalette.replace(input, RgbContainer.toRgbList(results));
         //if (SCALE_BRIGHTNESS) {
         //    BufferedImagePalette.scaleBrightness(input, kMeansPoints);
         //}

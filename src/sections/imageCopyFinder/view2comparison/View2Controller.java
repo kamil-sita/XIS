@@ -25,8 +25,6 @@ public final class View2Controller {
     private ComparableImagePair hoveredElement;
     private String deleteLocation;
 
-    private ImageInfoViewController oldController1;
-    private ImageInfoViewController oldController2;
 
     @FXML
     private ListView<ComparableImagePair> comparableImagePairListView;
@@ -45,14 +43,14 @@ public final class View2Controller {
     @FXML
     void deleteLeftPress(ActionEvent event) {
         int index = getSelectedItemIndex();
-        delete(hoveredElement.getComparableImage1());
+        delete(hoveredElement.getComparableImageLeft());
         selectItemAtIndex(index);
     }
 
     @FXML
     void deleteRightPress(ActionEvent event) {
         int index = getSelectedItemIndex();
-        delete(hoveredElement.getComparableImage2());
+        delete(hoveredElement.getComparableImageRight());
         selectItemAtIndex(index);
     }
 
@@ -148,45 +146,34 @@ public final class View2Controller {
         if (comparableImagePair == null) return;
         if (hoveredElement == comparableImagePair) return;
         hoveredElement = comparableImagePair;
-        setImageAnchorPanes(comparableImagePair);
+        setNewImageAnchorPanes(comparableImagePair);
     }
 
 
-    private void setImageAnchorPanes(ComparableImagePair comparableImagePair) {
 
-        if (oldController1 != null) {
-            oldController1.removeItsNotifier();
+    private ArrayList<ImageInfoViewController> oldNotifiers = new ArrayList();
+
+    //after selecting ComparableImagePair, the AnchorPanes on the bottom will be updated
+    private void setNewImageAnchorPanes(ComparableImagePair comparableImagePair) {
+        removeOldNotifiers();
+
+        setImageAnchorPane(leftImageAnchorPane, comparableImagePair.getComparableImageLeft());
+        setImageAnchorPane(rightImageAnchorPane, comparableImagePair.getComparableImageRight());
+    }
+
+    private void removeOldNotifiers() {
+        for (var imageInfoViewController : oldNotifiers) {
+            imageInfoViewController.removeItsNotifier();
         }
+        oldNotifiers.clear();
+    }
 
-        if (oldController2 != null) {
-            oldController2.removeItsNotifier();
-        }
-
-        ImageInfoView im1;
-        ImageInfoView im2;
-
-        ImageInfoViewController imc1;
-        ImageInfoViewController imc2;
-
-        im1 = new ImageInfoView();
-        im2 = new ImageInfoView();
-
-        imc1 = im1.getController();
-        imc2 = im2.getController();
-
-        System.out.println(imc1 + " " + imc2);
-        System.out.println(comparableImagePair + " " + im1 + " " + im2);
-        System.out.println(im1.getUserInterface() + " " + im2.getUserInterface());
-
-        imc1.initialize(comparableImagePair.getComparableImage1().getFile(), im1.getUserInterface());
-        imc2.initialize(comparableImagePair.getComparableImage2().getFile(), im2.getUserInterface());
-
-        leftImageAnchorPane.getChildren().setAll((Node) im1.getUserInterface());
-        rightImageAnchorPane.getChildren().setAll((Node) im2.getUserInterface());
-
-        oldController1 = imc1;
-        oldController2 = imc2;
-
+    private void setImageAnchorPane(AnchorPane anchorPane, ComparableImage comparableImage) {
+        var imageInfoView = new ImageInfoView();
+        var infoViewController = imageInfoView.getController();
+        infoViewController.initialize(comparableImage.getFile(), imageInfoView.getUserInterface());
+        anchorPane.getChildren().setAll((Node) imageInfoView.getUserInterface());
+        oldNotifiers.add(infoViewController);
     }
 
 

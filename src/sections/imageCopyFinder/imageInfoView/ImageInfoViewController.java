@@ -66,8 +66,7 @@ public final class ImageInfoViewController {
 
             final int HEIGHT_DIFFERENCE = 460; //const that is "just okay", to calculate height of images.
 
-            double ratio = (bufferedImage.getWidth()*1.0)/(1.0*bufferedImage.getHeight());
-
+            double ratio = (bufferedImage.getWidth() * 1.0)/(1.0 * bufferedImage.getHeight());
 
             double imgHeight = height - HEIGHT_DIFFERENCE;
             double maxWidth = (width-50)/2.0;

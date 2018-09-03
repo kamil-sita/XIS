@@ -55,4 +55,12 @@ public class RgbContainer implements KMeansData {
         }
         return rgbList;
     }
+
+    public RgbContainer copy() {
+        return new RgbContainer(this.rgbValue);
+    }
+
+    public void reduceDepth(int depth) {
+        rgbValue.reduceDepth(depth);
+    }
 }

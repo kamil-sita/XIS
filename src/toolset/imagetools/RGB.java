@@ -116,4 +116,5 @@ public class RGB {
     public String toString() {
         return "RGB: r: " + r + ", g: " + g + ", b: " + b;
     }
+
 }

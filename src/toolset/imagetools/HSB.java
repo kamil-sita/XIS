@@ -17,8 +17,16 @@ public class HSB {
         this.B = B;
     }
 
-    public double hueDifference(HSB otherHsb) {
+    public double hueDiff(HSB otherHsb) {
         return Math.abs(H - otherHsb.H);
+    }
+
+    public double saturationDiff(HSB otherHsb) {
+        return Math.abs(S - otherHsb.S);
+    }
+
+    public double brightnessDiff(HSB otherHsb) {
+        return Math.abs(B - otherHsb.B);
     }
 
     public RGB toRGB() {

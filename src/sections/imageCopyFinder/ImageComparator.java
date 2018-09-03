@@ -154,7 +154,7 @@ public final class ImageComparator {
 
                 ComparableImage image2 = images.get(j);
 
-                if (image1.getHsb().hueDifference(image2.getHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
+                if (image1.getHsb().hueDiff(image2.getHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
                     double similarity = compareImages(image1, image2, geometricalMode);
 
                     System.out.println(similarity);

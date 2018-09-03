@@ -12,6 +12,7 @@ import javafx.scene.layout.TilePane;
 import sections.Notifier;
 import sections.SubUserInterface;
 import sections.imageCopyFinder.ImageCopyFinder;
+import sections.scannertonote.ScannerToNote;
 import sections.welcomePage.WelcomePage;
 
 import java.util.ArrayList;
@@ -74,7 +75,10 @@ public final class MainViewController {
 
     @FXML
     void scannerToNotePress(ActionEvent event) {
-
+        var scannerToNote = new ScannerToNote();
+        changeVista(scannerToNote);
+        currentModule = scannerToNote;
+        setStatus("loaded");
     }
 
     //Other methods

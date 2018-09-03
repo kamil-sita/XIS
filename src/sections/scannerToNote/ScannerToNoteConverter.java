@@ -46,19 +46,16 @@ public class ScannerToNoteConverter {
 
         var kMeans = new KMeans<>(COLORS, rgbList);
 
-        kMeans.iterateWithThreads(ITERATIONS, 32);
+        kMeans.iterate(ITERATIONS);
 
         List<RgbContainer> results = kMeans.getResults();
-
-        for (RgbContainer rgbContainer : results) {
-            System.out.println(rgbContainer.getRgb());
-        }
 
         if (filterBackground) {
             results.add(new RgbContainer(backgroundColor));
         }
 
         BufferedImagePalette.replace(input, RgbContainer.toRgbList(results));
+
         if (scaleBrightness) {
             var rgbs = new ArrayList<RGB>();
             for (var rgbContainer : results) {

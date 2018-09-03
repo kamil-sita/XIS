@@ -1,5 +1,8 @@
 package sections.imageCopyFinder;
 
+/**
+ * Pair of comparable images
+ */
 public final class ComparableImagePair {
 
     private ComparableImage comparableImage1;

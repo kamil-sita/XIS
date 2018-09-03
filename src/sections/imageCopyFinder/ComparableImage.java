@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * ComparableImage, used to compare images.
+ * ComparableImage is image that can be compared by ImageComparator
  */
 public final class ComparableImage {
     //original full-sized image

@@ -6,6 +6,9 @@ import sections.SubUserInterface;
 
 import java.io.IOException;
 
+
+//I tried to refactor this class, but is seems that changing the way controller is obtained results in nullpointerexception
+//not sure why, will try again some time
 public final class ImageInfoView extends SubUserInterface {
     private static final String LOCATION = "imageInfoView.fxml";
     private AnchorPane anchorPane;

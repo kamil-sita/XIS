@@ -8,6 +8,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * ImageComparator compares images and for images that have more than MINIMUM_SIMILARITY similarity, outputs them into list of ComparableImagePairs
+ */
 public final class ImageComparator {
     //Minimum similarity of hues for given pair to be considered similar:
     private static final double MAXIMUM_HUE_DIFFERENCE = 0.1;
@@ -27,7 +30,6 @@ public final class ImageComparator {
 
     private ImageComparatorStatus status;
 
-    private boolean initialized = false;
 
     public ImageComparator(int generatedMiniatureSize) {
         this.generatedMiniatureSize = generatedMiniatureSize;
@@ -103,7 +105,6 @@ public final class ImageComparator {
         }
 
         if (images.size() > 0) {
-            initialized = true;
             return true;
         }
         else return false;
@@ -222,6 +223,6 @@ public final class ImageComparator {
     }
 
     public enum ImageComparatorStatus {
-        SUCCESFUL, NO_IMAGES_IN_DIRECTORY, NOT_FOLDER, IO_ERROR, NO_PAIRS
+        SUCCESSFUL, NO_IMAGES_IN_DIRECTORY, NOT_FOLDER, IO_ERROR, NO_PAIRS
     }
 }

@@ -155,11 +155,11 @@ public final class View2Controller {
     private void setImageAnchorPanes(ComparableImagePair comparableImagePair) {
 
         if (oldController1 != null) {
-            oldController1.remove();
+            oldController1.removeItsNotifier();
         }
 
         if (oldController2 != null) {
-            oldController2.remove();
+            oldController2.removeItsNotifier();
         }
 
         ImageInfoView im1;
@@ -173,6 +173,10 @@ public final class View2Controller {
 
         imc1 = im1.getController();
         imc2 = im2.getController();
+
+        System.out.println(imc1 + " " + imc2);
+        System.out.println(comparableImagePair + " " + im1 + " " + im2);
+        System.out.println(im1.getUserInterface() + " " + im2.getUserInterface());
 
         imc1.initialize(comparableImagePair.getComparableImage1().getFile(), im1.getUserInterface());
         imc2.initialize(comparableImagePair.getComparableImage2().getFile(), im2.getUserInterface());

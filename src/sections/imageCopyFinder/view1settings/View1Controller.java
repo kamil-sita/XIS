@@ -28,9 +28,13 @@ public final class View1Controller {
 
     @FXML
     public void initialize() {
+        addImageSizes();
+    }
+
+    private void addImageSizes() {
         Platform.runLater(() -> {
             //adding scaling option and selecting default
-            imageSizeComboBox.getItems().addAll(4, 8, 16, 32, 64, 128, 256, 512); //todo this line will throw exception, not sure why
+            imageSizeComboBox.getItems().addAll(4, 8, 16, 32, 64, 128, 256, 512); //this line will throw exception, not sure why
             imageSizeComboBox.getSelectionModel().select(6);
         });
     }
@@ -45,18 +49,18 @@ public final class View1Controller {
         tic.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                 event1 -> {
                     imageComparator = tic.getValue();
-                    finished();
+                    onFinish();
                 }
         );
 
         new Thread(tic).start();
     }
 
-    private void finished() {
+    private void onFinish() {
         if (imageComparator == null) {
             throw new RuntimeException("UnexpectedError: imageComparator not initialized");
         }
-        if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESFUL) {
+        if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESSFUL) {
             ImageCopyFinder.setImageComparator(imageComparator);
             ImageCopyFinder.setDeleteDirectory(folderLocationTextField.getText() + System.getProperty("file.separator") + "markedForDeletion" + System.getProperty("file.separator"));
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);

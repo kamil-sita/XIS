@@ -27,15 +27,27 @@ public final class ImageInfoViewController {
     @FXML
     private Label sizeValue;
 
-    private AnchorPane iivcAnchorPane;
+    private AnchorPane thisAnchorPane;
     private Notifier notifier;
 
+    /**
+     * Initializes imageInfoViewController with its file and its AnchorPane
+     * @param file
+     * @param anchorPane
+     */
     public void initialize(File file, AnchorPane anchorPane) {
-        if (file == null) return;
-
-        iivcAnchorPane = anchorPane;
+        if (file == null) throw new IllegalArgumentException();
+        thisAnchorPane = anchorPane;
 
         nameValue.setText(file.getName());
+        getAndFormatFileSize(file);
+
+        addNotifierToMakeImageFitWindow();
+
+        loadImageInBackground(file);
+    }
+
+    private void getAndFormatFileSize(File file) {
         double length = file.length();
         final int unit = 1024;
         if (length < unit * unit) {
@@ -43,10 +55,12 @@ public final class ImageInfoViewController {
         } else  {
             sizeValue.setText(String.format("%.3f", length / unit / unit) + "MB");
         }
+    }
 
+    private void addNotifierToMakeImageFitWindow() {
         notifier = (width, height) -> {
-            iivcAnchorPane.setPrefWidth(width/2);
-            iivcAnchorPane.setMaxWidth(width/2);
+            thisAnchorPane.setPrefWidth(width/2);
+            thisAnchorPane.setMaxWidth(width/2);
 
             if (bufferedImage == null) return;
 
@@ -69,14 +83,11 @@ public final class ImageInfoViewController {
             imageView.setFitWidth(imgWidth);
             imageView.setFitHeight(imgHeight);
         };
-
         MainViewController.addNotifier(notifier);
         MainViewController.reloadView();
-
-        loadImageOnOtherThread(file);
     }
 
-    private void loadImageOnOtherThread(File resourceFile) {
+    private void loadImageInBackground(File resourceFile) {
         new Thread(() -> {
             bufferedImage = BufferedImageIO.getImage(resourceFile);
             if (bufferedImage == null) return;
@@ -89,7 +100,7 @@ public final class ImageInfoViewController {
         }).start();
     }
 
-    public void remove() {
+    public void removeItsNotifier() {
         MainViewController.removeNotifier(notifier);
     }
 

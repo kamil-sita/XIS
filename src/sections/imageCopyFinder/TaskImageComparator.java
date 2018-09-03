@@ -41,7 +41,7 @@ public final class TaskImageComparator extends Task<ImageComparator> {
         if (imageComparator.getImagePairs().size() == 0) {
             imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NO_PAIRS);
         } else {
-            imageComparator.setStatus(ImageComparator.ImageComparatorStatus.SUCCESFUL);
+            imageComparator.setStatus(ImageComparator.ImageComparatorStatus.SUCCESSFUL);
         }
 
         return imageComparator;

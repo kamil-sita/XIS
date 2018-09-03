@@ -17,7 +17,7 @@ import sections.imageCopyFinder.imageInfoView.ImageInfoViewController;
 
 import java.util.ArrayList;
 
-import static universal.tools.FileManagementTools.moveFile;
+import static toolset.FileManagementTools.moveFile;
 
 public final class View2Controller {
 

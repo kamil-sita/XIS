@@ -1,8 +1,8 @@
 package sections.imageCopyFinder;
 
 import sections.UserFeedback;
-import universal.tools.imagetools.BufferedImageIO;
-import universal.tools.imagetools.RGB;
+import toolset.imagetools.BufferedImageIO;
+import toolset.imagetools.RGB;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

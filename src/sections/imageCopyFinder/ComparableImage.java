@@ -1,8 +1,8 @@
 package sections.imageCopyFinder;
 
-import universal.tools.imagetools.BufferedImageScale;
-import universal.tools.imagetools.HSB;
-import universal.tools.imagetools.RGB;
+import toolset.imagetools.BufferedImageScale;
+import toolset.imagetools.HSB;
+import toolset.imagetools.RGB;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

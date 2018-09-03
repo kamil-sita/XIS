@@ -1,4 +1,4 @@
-package universal.tools.imagetools;
+package toolset.imagetools;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

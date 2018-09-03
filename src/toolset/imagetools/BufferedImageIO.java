@@ -1,4 +1,4 @@
-package universal.tools.imagetools;
+package toolset.imagetools;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

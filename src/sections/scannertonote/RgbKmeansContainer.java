@@ -1,7 +1,7 @@
 package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeansData;
-import universal.tools.imagetools.RGB;
+import toolset.imagetools.RGB;
 
 import java.util.ArrayList;
 import java.util.List;

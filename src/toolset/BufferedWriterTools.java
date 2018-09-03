@@ -1,4 +1,4 @@
-package universal.tools;
+package toolset;
 
 import java.io.BufferedWriter;
 

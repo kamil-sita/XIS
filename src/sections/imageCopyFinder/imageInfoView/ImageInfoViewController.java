@@ -7,8 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import sections.Notifier;
 import sections.main.MainViewController;
-import universal.tools.imagetools.BufferedImageIO;
-import universal.tools.imagetools.BufferedImageToFXImage;
+import toolset.imagetools.BufferedImageIO;
+import toolset.imagetools.BufferedImageToFXImage;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -73,10 +73,10 @@ public final class ImageInfoViewController {
         MainViewController.addNotifier(notifier);
         MainViewController.reloadView();
 
-        loadImage(file);
+        loadImageOnOtherThread(file);
     }
 
-    private void loadImage(File resourceFile) {
+    private void loadImageOnOtherThread(File resourceFile) {
         new Thread(() -> {
             bufferedImage = BufferedImageIO.getImage(resourceFile);
             if (bufferedImage == null) return;

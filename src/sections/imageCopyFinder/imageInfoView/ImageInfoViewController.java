@@ -7,8 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import sections.Notifier;
 import sections.main.MainViewController;
-import universal.tools.imagetools.bufferedimagetools.BufferedImageIO;
-import universal.tools.imagetools.bufferedimagetools.BufferedImageToFXImage;
+import universal.tools.imagetools.BufferedImageIO;
+import universal.tools.imagetools.BufferedImageToFXImage;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

@@ -12,9 +12,14 @@ public abstract class SubUserInterface {
     protected String defaultLocation = null;
 
     public AnchorPane getUserInterface() {
-        if (anchorPane == null) {
-            setInterface(defaultLocation);
+        return lazyLoad();
+    }
+
+    protected AnchorPane lazyLoad() {
+        if (anchorPane != null) {
+            return anchorPane;
         }
+        setInterface(defaultLocation);
         return anchorPane;
     }
 

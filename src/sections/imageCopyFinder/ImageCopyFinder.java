@@ -1,16 +1,11 @@
 package sections.imageCopyFinder;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
 import sections.SubUserInterface;
-
-import java.io.IOException;
-import java.net.URL;
 
 public final class ImageCopyFinder extends SubUserInterface {
 
-    private static final String LOCATION_VIEW1 = "sections/imageCopyFinder/view1/view1.fxml";
-    private static final String LOCATION_VIEW2 = "sections/imageCopyFinder/view2/view2.fxml";
+    private static final String LOCATION_VIEW1 = "sections/imageCopyFinder/view1settings/view1.fxml";
+    private static final String LOCATION_VIEW2 = "sections/imageCopyFinder/view2comparison/view2.fxml";
     private static ImageComparator imageComparator;
     private static String deleteDirectory;
 

@@ -1,4 +1,4 @@
-package sections.imageCopyFinder.view1;
+package sections.imageCopyFinder.view1settings;
 
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;

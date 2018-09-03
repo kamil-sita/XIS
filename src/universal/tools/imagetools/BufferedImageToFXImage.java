@@ -1,4 +1,4 @@
-package universal.tools.imagetools.bufferedimagetools;
+package universal.tools.imagetools;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;

@@ -1,8 +1,8 @@
 package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeans;
-import universal.tools.imagetools.bufferedimagetools.BufferedImagePalette;
-import universal.tools.imagetools.bufferedimagetools.RGB;
+import universal.tools.imagetools.BufferedImagePalette;
+import universal.tools.imagetools.RGB;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

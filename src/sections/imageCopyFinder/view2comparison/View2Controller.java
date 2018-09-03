@@ -1,4 +1,4 @@
-package sections.imageCopyFinder.view2;
+package sections.imageCopyFinder.view2comparison;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import sections.Notifier;
+import sections.NotifierFactory;
 import sections.main.MainViewController;
 import toolset.imagetools.BufferedImageIO;
 import toolset.imagetools.BufferedImageToFXImage;
@@ -58,30 +59,7 @@ public final class ImageInfoViewController {
     }
 
     private void addNotifierToMakeImageFitWindow() {
-        notifier = (width, height) -> {
-            thisAnchorPane.setPrefWidth(width/2);
-            thisAnchorPane.setMaxWidth(width/2);
-
-            if (bufferedImage == null) return;
-
-            final int HEIGHT_DIFFERENCE = 460; //const that is "just okay", to calculate height of images.
-
-            double ratio = (bufferedImage.getWidth() * 1.0)/(1.0 * bufferedImage.getHeight());
-
-            double imgHeight = height - HEIGHT_DIFFERENCE;
-            double maxWidth = (width-50)/2.0;
-
-            double imgWidth = imgHeight * ratio;
-
-            if (imgWidth > maxWidth) {
-                ratio = maxWidth / imgWidth;
-                imgWidth *= ratio;
-                imgHeight *= ratio;
-            }
-
-            imageView.setFitWidth(imgWidth);
-            imageView.setFitHeight(imgHeight);
-        };
+        notifier = NotifierFactory.scalingImageNotifier(thisAnchorPane, bufferedImage, imageView, 460);
         MainViewController.addNotifier(notifier);
         MainViewController.reloadView();
     }

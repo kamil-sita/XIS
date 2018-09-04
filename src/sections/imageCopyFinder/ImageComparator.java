@@ -74,16 +74,11 @@ public final class ImageComparator {
         //TODO maybe do it multithreaded? - at least scaling down
         for (File file : files) {
             if (i >= 10) {
-                //calculating estimated time left
-                double dt = System.nanoTime() - time;
-                dt = dt * (files.length - i) / (i);
-                dt /= 1000000000;
+                double dt = getApproximateTimeLeftFileLoading(i, time, files.length - i);
                 UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
             } else {
                 UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + ")");
             }
-
-
 
             UserFeedback.reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
             System.out.println(i+ "/" + files.length);
@@ -110,6 +105,14 @@ public final class ImageComparator {
         else return false;
     }
 
+    private double getApproximateTimeLeftFileLoading(int i, long time, int i2) {
+        //calculating estimated time left
+        double dt = System.nanoTime() - time;
+        dt = dt * (i2) / (i);
+        dt /= 1000000000;
+        return dt;
+    }
+
     /**
      * finds pairs of similar images
      */
@@ -121,26 +124,7 @@ public final class ImageComparator {
 
         for (int i = 0; i < images.size(); i++) {
             if (i >= 10) {
-                //calculating estimated time left
-                //if you were to plot comparisons for x-th iteration, formula would go somewhat like this: f(x) = size - x
-                //calculating integral of it would be too boring, so instead we will calculate
-                //two areas of rectangles
-
-                //rectangle 1
-                int base1 = i;
-                int height1 = (2 * images.size() - i)/2;
-
-                //rectangle 2
-                int base2 = images.size() - i;
-                int height2 = (images.size() - i)/2;
-
-                int area1 = base1 * height1;
-                int area2 = base2 * height2;
-
-                double dt = System.nanoTime() - time;
-                dt = dt * area2/area1;
-                dt /= 1000000000;
-
+                double dt = getApproximateTimeLeftComparing(time, i);
                 UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
             } else {
                 UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
@@ -170,6 +154,29 @@ public final class ImageComparator {
         }
         UserFeedback.reportProgress("Images compared");
 
+    }
+
+    private double getApproximateTimeLeftComparing(long time, int i) {
+        //calculating estimated time left
+        //if you were to plot comparisons for x-th iteration, formula would go somewhat like this: f(x) = size - x
+        //calculating integral of it would be too boring, so instead we will calculate
+        //two areas of rectangles
+
+        //rectangle 1
+        int base1 = i;
+        int height1 = (2 * images.size() - i)/2;
+
+        //rectangle 2
+        int base2 = images.size() - i;
+        int height2 = (images.size() - i)/2;
+
+        int area1 = base1 * height1;
+        int area2 = base2 * height2;
+
+        double dt = System.nanoTime() - time;
+        dt = dt * area2/area1;
+        dt /= 1000000000;
+        return dt;
     }
 
     /**
@@ -223,6 +230,23 @@ public final class ImageComparator {
     }
 
     public enum ImageComparatorStatus {
-        SUCCESSFUL, NO_IMAGES_IN_DIRECTORY, NOT_FOLDER, IO_ERROR, NO_PAIRS
+        SUCCESSFUL, NO_IMAGES_IN_DIRECTORY, NOT_FOLDER, IO_ERROR, NO_PAIRS;
+
+        @Override
+        public String toString() {
+            switch (this) {
+                case SUCCESSFUL:
+                    return "Success";
+                case NO_IMAGES_IN_DIRECTORY:
+                    return "No images found in this directory";
+                case NOT_FOLDER:
+                    return "Not a folder";
+                case IO_ERROR:
+                    return "General I/O error";
+                case NO_PAIRS:
+                    return "No pairs of images found";
+            }
+            return "???";
+        }
     }
 }

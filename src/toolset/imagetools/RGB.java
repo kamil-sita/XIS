@@ -117,4 +117,19 @@ public class RGB {
         return "RGB: r: " + r + ", g: " + g + ", b: " + b;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) return false;
+        if (o instanceof RGB) {
+            var orgb = (RGB) o;
+            return r == orgb.r && g == orgb.g && b == orgb.b && a == orgb.a;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return toInt();
+    }
+
 }

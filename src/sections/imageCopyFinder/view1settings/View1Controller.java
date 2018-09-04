@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import sections.UserFeedback;
 import sections.imageCopyFinder.ImageComparator;
 import sections.imageCopyFinder.ImageCopyFinder;
 import sections.imageCopyFinder.TaskImageComparator;
@@ -66,7 +67,7 @@ public final class View1Controller {
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
             MainViewController.reloadView();
         } else {
-            System.out.println(imageComparator.getStatus());
+            UserFeedback.popup(imageComparator.getStatus().toString());
         }
 
 

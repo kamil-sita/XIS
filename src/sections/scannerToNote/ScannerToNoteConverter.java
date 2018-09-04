@@ -89,8 +89,10 @@ public class ScannerToNoteConverter {
         var entries = rgbWithOccurrences.entrySet();
         int mostCommonOccurrences = -1;
         var mostCommon = rgbs.get(0).getRgb();
+        var entriesArray = entries.toArray();
 
-        for (var entry : (Map.Entry<RGB, Integer>[]) entries.toArray()) {
+        for (var entryo : entriesArray) {
+            var entry = (Map.Entry<RGB, Integer>) entryo;
             if (entry.getValue() > mostCommonOccurrences) {
                 mostCommonOccurrences = entry.getValue();
                 mostCommon = entry.getKey();

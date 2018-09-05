@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.scannertonote.ScannerToNoteController">
+<AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.scannertonote.ScannerToNoteController">
    <children>
-      <Button layoutX="14.0" layoutY="74.0" mnemonicParsing="false" onAction="#loadFilePress" text="load file" />
-      <Button layoutX="89.0" layoutY="74.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" />
-      <TextField fx:id="colors" layoutX="14.0" layoutY="25.0" text="colors" />
-      <Button layoutX="552.0" layoutY="74.0" mnemonicParsing="false" onAction="#runButton" text="run" />
-      <ImageView fx:id="imagePreview" fitHeight="464.0" fitWidth="404.0" layoutX="75.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="120.0" />
+      <Button layoutX="14.0" layoutY="74.0" mnemonicParsing="false" onAction="#loadFilePress" text="load file" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="42.0" />
+      <Button layoutX="82.0" layoutY="42.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="42.0" />
+      <TextField fx:id="colors" layoutX="14.0" layoutY="25.0" text="colors" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
+      <Button layoutX="156.0" layoutY="42.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="42.0" />
+      <ImageView fx:id="imagePreview" fitHeight="464.0" fitWidth="404.0" layoutX="75.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="80.0" />
+      <CheckBox fx:id="isolateBackground" layoutX="166.0" layoutY="11.0" mnemonicParsing="false" text="isolate background" />
+      <CheckBox fx:id="correctBrightness" layoutX="303.0" layoutY="11.0" mnemonicParsing="false" text="correct brightness" />
    </children>
 </AnchorPane>

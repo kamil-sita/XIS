@@ -59,7 +59,7 @@ public final class ImageInfoViewController {
     }
 
     private void addNotifierToMakeImageFitWindow() {
-        notifier = NotifierFactory.scalingImageNotifier(thisAnchorPane, bufferedImage, imageView, 460);
+        notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imageView, 460,50, 2.0);
         MainViewController.addNotifier(notifier);
         MainViewController.reloadView();
     }

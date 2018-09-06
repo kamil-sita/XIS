@@ -171,7 +171,7 @@ public final class View2Controller {
     private void setImageAnchorPane(AnchorPane anchorPane, ComparableImage comparableImage) {
         var imageInfoView = new ImageInfoView();
         var infoViewController = imageInfoView.getController();
-        infoViewController.initialize(comparableImage.getFile(), imageInfoView.getUserInterface());
+        infoViewController.initialize(comparableImage.getFile());
         anchorPane.getChildren().setAll((Node) imageInfoView.getUserInterface());
         oldNotifiers.add(infoViewController);
     }

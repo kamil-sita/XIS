@@ -1,9 +1,11 @@
 package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeans;
+import sections.UserFeedback;
 import toolset.imagetools.BufferedImagePalette;
 import toolset.imagetools.RGB;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,23 +14,23 @@ import java.util.Map;
 
 public class ScannerToNoteConverter {
 
-    public static BufferedImage convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness) {
+    public static BufferedImage convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors) {
+        if (colors <= 0) return null;
 
-        final int COLORS = 256;
         final int DEPTH = 6;
-        final int ITERATIONS = 64;
+        final int ITERATIONS = 32;
 
         final double MINIMUM_BRIGHTNESS_DIFFERENCE = 0.25;
         final double MINIMUM_SATURATION_DIFFERENCE = 0.25;
 
-        input = copyImage(input);
+        var inputCpy = copyImage(input);
 
         //get sample data by getting every 16 pixel (~6% of original)
         List<RgbContainer> rgbList = new ArrayList<>();
 
-        for (int y = 0; y < input.getHeight(); y += 4) {
-            for (int x = 0; x < input.getWidth(); x += 4) {
-                rgbList.add(new RgbContainer(new RGB(input.getRGB(x, y))));
+        for (int y = 0; y < inputCpy.getHeight(); y += 4) {
+            for (int x = 0; x < inputCpy.getWidth(); x += 4) {
+                rgbList.add(new RgbContainer(new RGB(inputCpy.getRGB(x, y))));
             }
         }
 
@@ -44,7 +46,10 @@ public class ScannerToNoteConverter {
             filterBackgroungByBrightnessAndSaturation(rgbList, backgroundColor, MINIMUM_BRIGHTNESS_DIFFERENCE, MINIMUM_SATURATION_DIFFERENCE);
         }
 
-        var kMeans = new KMeans<>(COLORS, rgbList);
+        var kMeans = new KMeans<>(colors, rgbList);
+        kMeans.setOnUpdate(() -> {
+            UserFeedback.reportProgress(kMeans.getProgress());
+        }, false);
 
         kMeans.iterate(ITERATIONS);
 
@@ -54,17 +59,17 @@ public class ScannerToNoteConverter {
             results.add(new RgbContainer(backgroundColor));
         }
 
-        BufferedImagePalette.replace(input, RgbContainer.toRgbList(results));
+        BufferedImagePalette.replace(inputCpy, RgbContainer.toRgbList(results));
 
         if (scaleBrightness) {
             var rgbs = new ArrayList<RGB>();
             for (var rgbContainer : results) {
                 rgbs.add(rgbContainer.getRgb());
             }
-            BufferedImagePalette.scaleBrightness(input, rgbs);
+            BufferedImagePalette.scaleBrightness(inputCpy, rgbs);
         }
 
-        return input;
+        return inputCpy;
     }
 
     private static List<RgbContainer> getCopyOf(List<RgbContainer> rgbContainers) {
@@ -102,8 +107,12 @@ public class ScannerToNoteConverter {
         return mostCommon;
     }
 
-    private static BufferedImage copyImage(BufferedImage bufferedImage) {
-        return bufferedImage.getSubimage(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+    private static BufferedImage copyImage(BufferedImage input) {
+        BufferedImage imageCopy = new BufferedImage(input.getWidth(), input.getHeight(), input.getType());
+        Graphics2D g = imageCopy.createGraphics();
+        g.drawImage(input, 0, 0, null);
+        g.dispose();
+        return imageCopy;
     }
 
     private static void filterBackgroungByBrightnessAndSaturation(List<RgbContainer> rgbContainerList, RGB backgroundColor, double minBrightnessDiff, double minSaturationDiff) {

@@ -1,37 +1,49 @@
 package sections.imageCopyFinder;
 
 import javafx.concurrent.Task;
+import sections.UserFeedback;
 
 import java.io.File;
 
 public final class TaskImageComparator extends Task<ImageComparator> {
 
     private ImageComparator imageComparator;
-    private String fileFolder;
+    private String[] fileFolders;
     private boolean geometricalMode;
 
-    public TaskImageComparator(String fileFolder, int miniatureSize, boolean geometricalMode) {
+    public TaskImageComparator(String[] fileFolders, int miniatureSize, boolean geometricalMode) {
         System.out.println("miniature size: " + miniatureSize);
         imageComparator = new ImageComparator(miniatureSize);
-        this.fileFolder = fileFolder;
+        this.fileFolders = fileFolders;
         this.geometricalMode = geometricalMode;
     }
 
     public ImageComparator call() {
-        File folder;
-        try {
-            folder = new File(fileFolder);
-        } catch (Exception e) {
-            imageComparator.setStatus(ImageComparator.ImageComparatorStatus.IO_ERROR);
-            e.printStackTrace();
-            return imageComparator;
+        File[] folders = new File[fileFolders.length];
+        System.out.println(fileFolders.length);
+
+        for (int i = 0; i < fileFolders.length; i++) {
+            String s = fileFolders[i];
+            File folder;
+            try {
+                folder = new File(s);
+            } catch (Exception e) {
+                imageComparator.setStatus(ImageComparator.ImageComparatorStatus.IO_ERROR);
+                UserFeedback.popup("IOException caused by: " + s);
+                return imageComparator;
+            }
+
+            if (!folder.isDirectory()) {
+                imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NOT_FOLDER);
+                UserFeedback.popup("Not a folder: " + s);
+            }
+            folders[i] = folder;
         }
 
-        if (!folder.isDirectory()) {
-            imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NOT_FOLDER);
-        }
+        System.out.println("x");
 
-        boolean status = imageComparator.initialize(folder, geometricalMode);
+
+        boolean status = imageComparator.initialize(folders, geometricalMode);
 
         if (!status) {
             imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NO_IMAGES_IN_DIRECTORY);
@@ -44,10 +56,6 @@ public final class TaskImageComparator extends Task<ImageComparator> {
             imageComparator.setStatus(ImageComparator.ImageComparatorStatus.SUCCESSFUL);
         }
 
-        return imageComparator;
-    }
-
-    public ImageComparator getImageComparator() {
         return imageComparator;
     }
 }

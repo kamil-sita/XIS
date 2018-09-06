@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import sections.UserFeedback;
 import sections.imageCopyFinder.ImageComparator;
 import sections.imageCopyFinder.ImageCopyFinder;
@@ -16,7 +16,7 @@ import sections.main.MainViewController;
 public final class View1Controller {
 
     @FXML
-    private TextField folderLocationTextField;
+    private TextArea folderLocations;
 
     @FXML
     private ComboBox<Integer> imageSizeComboBox;
@@ -43,7 +43,7 @@ public final class View1Controller {
     @FXML
     private void runButtonPress(ActionEvent event) {
         TaskImageComparator tic = new TaskImageComparator(
-                folderLocationTextField.getText(),
+                folderLocations.getText().split("\n"),
                 imageSizeComboBox.getValue(),
                 checkBoxGeometricalMode.isSelected()
         );
@@ -63,7 +63,7 @@ public final class View1Controller {
         }
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESSFUL) {
             ImageCopyFinder.setImageComparator(imageComparator);
-            ImageCopyFinder.setDeleteDirectory(folderLocationTextField.getText() + System.getProperty("file.separator") + "markedForDeletion" + System.getProperty("file.separator"));
+            ImageCopyFinder.setDeleteDirectory(folderLocations.getText() + System.getProperty("file.separator") + "markedForDeletion" + System.getProperty("file.separator"));
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
             MainViewController.reloadView();
         } else {

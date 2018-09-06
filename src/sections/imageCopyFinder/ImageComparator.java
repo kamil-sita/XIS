@@ -7,6 +7,7 @@ import toolset.imagetools.RGB;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * ImageComparator compares images and for images that have more than MINIMUM_SIMILARITY similarity, outputs them into list of ComparableImagePairs
@@ -41,12 +42,12 @@ public final class ImageComparator {
 
     /**
      * Runs image comparator
-     * @param folder
+     * @param folders
      * @return true if initialized
      */
 
-    public boolean initialize(File folder, boolean geometricalMode) {
-        if (!loadFiles(folder)) {
+    public boolean initialize(File[] folders, boolean geometricalMode) {
+        if (!loadFiles(folders)) {
             UserFeedback.reportProgress("No files found");
             return false;
         }
@@ -56,16 +57,22 @@ public final class ImageComparator {
 
     /**
      * Initializes ImageComparator - finds all images in given folder.
-     * @param folder folder containing files to compare
+     * @param folders folders containing files to compare
      * @return true if initialized
      */
 
-    private boolean loadFiles(File folder) {
+    private boolean loadFiles(File[] folders) {
         UserFeedback.reportProgress("Finding files in folder");
         images = new ArrayList<>();
-        File[] files = folder.listFiles();
-        if (files == null) return false;
-        if (files.length == 0) return false;
+        ArrayList<File> files = new ArrayList<>();
+        for (int i = 0; i < folders.length; i++) {
+            File[] filesToAdd = folders[i].listFiles();
+            files.addAll(Arrays.asList(filesToAdd));
+        }
+
+        if (files.size() == 0) return false;
+
+        System.out.println(files.size());
 
         int i = 0;
         long time = System.nanoTime();
@@ -74,14 +81,14 @@ public final class ImageComparator {
         //TODO maybe do it multithreaded? - at least scaling down
         for (File file : files) {
             if (i >= 10) {
-                double dt = getApproximateTimeLeftFileLoading(i, time, files.length - i);
-                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
+                double dt = getApproximateTimeLeftFileLoading(i, time, files.size() - i);
+                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
             } else {
-                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.length + ")");
+                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + ")");
             }
 
-            UserFeedback.reportProgress(i/(1.0 * files.length) * FIRST_PHASE_WEIGHT);
-            System.out.println(i+ "/" + files.length);
+            UserFeedback.reportProgress(i/(1.0 * files.size()) * FIRST_PHASE_WEIGHT);
+            System.out.println(i+ "/" + files.size());
             i++;
             BufferedImage bufferedImage;
             bufferedImage = BufferedImageIO.getImage(file);
@@ -90,7 +97,7 @@ public final class ImageComparator {
                     //optimizing this part with multithreading seems not to be worth it, based on my tests
                     ComparableImage comparableImage = new ComparableImage(file, bufferedImage);
                     comparableImage.generateData(generatedMiniatureSize);
-                    bufferedImage = null; //so it's easier to know for the garbage collector
+                    bufferedImage = null; //so it's maybe easier for the garbage collector
                     images.add(comparableImage);
                 } catch (Exception e) {
                     e.printStackTrace();

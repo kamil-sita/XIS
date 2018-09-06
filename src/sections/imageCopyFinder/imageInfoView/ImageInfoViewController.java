@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import sections.Notifier;
 import sections.NotifierFactory;
 import sections.main.MainViewController;
@@ -28,24 +27,34 @@ public final class ImageInfoViewController {
     @FXML
     private Label sizeValue;
 
-    private AnchorPane thisAnchorPane;
+    @FXML
+    private Label parentName;
+
     private Notifier notifier;
 
     /**
      * Initializes imageInfoViewController with its file and its AnchorPane
      * @param file
-     * @param anchorPane
      */
-    public void initialize(File file, AnchorPane anchorPane) {
+    public void initialize(File file) {
         if (file == null) throw new IllegalArgumentException();
-        thisAnchorPane = anchorPane;
 
         nameValue.setText(file.getName());
+        setParentName(file);
         getAndFormatFileSize(file);
 
         addNotifierToMakeImageFitWindow();
 
         loadImageInBackground(file);
+    }
+
+    private void setParentName(File file) {
+        File parentFile = file.getParentFile();
+        if (parentFile == null) {
+            parentName.setText("Can't retrieve");
+        } else {
+            parentName.setText(parentFile.getName());
+        }
     }
 
     private void getAndFormatFileSize(File file) {

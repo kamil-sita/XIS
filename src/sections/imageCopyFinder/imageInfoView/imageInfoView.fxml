@@ -3,15 +3,17 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane minWidth="295.0" prefHeight="401.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imageCopyFinder.imageInfoView.ImageInfoViewController">
+<AnchorPane minWidth="295.0" prefHeight="385.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imageCopyFinder.imageInfoView.ImageInfoViewController">
 <children>
-    <ImageView fx:id="imageView" fitHeight="281.0" fitWidth="281.0" layoutX="21.0" layoutY="106.0" pickOnBounds="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="106.0" />
-    <Separator layoutX="7.0" layoutY="95.0" prefHeight="3.0" prefWidth="281.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="95.0" />
-    <Label layoutX="14.0" layoutY="21.0" text="Name" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="21.0" />
-    <Label layoutX="14.0" layoutY="40.0" text="Dimensions" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="40.0" />
-    <Label layoutX="14.0" layoutY="59.0" text="Size" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="59.0" />
-    <Label fx:id="nameValue" layoutX="86.0" layoutY="21.0" text="NameValue" textAlignment="RIGHT" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="21.0" />
-    <Label fx:id="dimensionsValue" layoutX="86.0" layoutY="40.0" text="Loading..." textAlignment="RIGHT" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="40.0" />
-    <Label fx:id="sizeValue" layoutX="86.0" layoutY="59.0" text="SizeValue" textAlignment="RIGHT" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="59.0" />
+    <ImageView fx:id="imageView" fitHeight="281.0" fitWidth="281.0" layoutX="21.0" layoutY="106.0" pickOnBounds="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="100.0" />
+    <Separator layoutX="7.0" layoutY="95.0" prefHeight="3.0" prefWidth="281.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="90.0" />
+    <Label layoutX="14.0" layoutY="21.0" styleClass="caption" text="Name" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="7.0" />
+    <Label layoutX="14.0" layoutY="59.0" styleClass="caption" text="Dimensions" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="45.0" />
+    <Label layoutX="14.0" layoutY="78.0" styleClass="caption" text="Size" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="64.0" />
+    <Label fx:id="nameValue" layoutX="86.0" layoutY="21.0" text="NameValue" textAlignment="RIGHT" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="7.0" />
+    <Label fx:id="dimensionsValue" layoutX="86.0" layoutY="59.0" text="Loading..." textAlignment="RIGHT" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="45.0" />
+    <Label fx:id="sizeValue" layoutX="86.0" layoutY="78.0" text="SizeValue" textAlignment="RIGHT" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="64.0" />
+      <Label layoutX="14.0" layoutY="38.0" styleClass="caption" text="Parent" textAlignment="RIGHT" AnchorPane.topAnchor="26.0" />
+      <Label fx:id="parentName" layoutX="96.0" layoutY="31.0" text="ParentValue" textAlignment="RIGHT" AnchorPane.leftAnchor="86.0" AnchorPane.topAnchor="26.0" />
 </children>
 </AnchorPane>

@@ -33,4 +33,9 @@ public class HSB {
         return new RGB(Color.HSBtoRGB((float) H, (float) S, (float) B));
     }
 
+    @Override
+    public String toString() {
+        return "HSB: h: " + H + ", s: " + S + ", b: " + B;
+    }
+
 }

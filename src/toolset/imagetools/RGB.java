@@ -1,6 +1,8 @@
 package toolset.imagetools;
 
 
+import sections.scannertonote.RgbContainer;
+
 import java.awt.*;
 
 /**
@@ -130,6 +132,10 @@ public class RGB {
     @Override
     public int hashCode() {
         return toInt();
+    }
+
+    public RgbContainer inContainer() {
+        return new RgbContainer(this);
     }
 
 }

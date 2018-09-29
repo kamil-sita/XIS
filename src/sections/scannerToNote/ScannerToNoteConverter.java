@@ -3,9 +3,9 @@ package sections.scannertonote;
 import pl.ksitarski.simplekmeans.KMeans;
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImagePalette;
+import toolset.imagetools.BufferedImageVarious;
 import toolset.imagetools.RGB;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class ScannerToNoteConverter {
         final int DEPTH = 5;
         final int ITERATIONS = 128;
 
-        var inputCopy = copyImage(input);
+        var inputCopy = BufferedImageVarious.copyImage(input);
 
         //get sample data by getting every 16th pixel (~6% of original)
         List<RgbContainer> rgbList = new ArrayList<>();
@@ -106,14 +106,6 @@ public class ScannerToNoteConverter {
         }
 
         return mostCommon;
-    }
-
-    private static BufferedImage copyImage(BufferedImage input) {
-        BufferedImage imageCopy = new BufferedImage(input.getWidth(), input.getHeight(), input.getType());
-        Graphics2D g = imageCopy.createGraphics();
-        g.drawImage(input, 0, 0, null);
-        g.dispose();
-        return imageCopy;
     }
 
     private static void filterOutBackgroundByBrightnessAndSaturation(List<RgbContainer> rgbContainerList, RGB backgroundColor, double minBrightnessDiff, double minSaturationDiff) {

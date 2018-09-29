@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import sections.Notifier;
 import sections.SubUserInterface;
+import sections.highpassfilter.HighPassFilter;
 import sections.imageCopyFinder.ImageCopyFinder;
 import sections.scannertonote.ScannerToNote;
 import sections.welcomePage.WelcomePage;
@@ -78,7 +79,15 @@ public final class MainViewController {
         var scannerToNote = new ScannerToNote();
         changeVista(scannerToNote);
         currentModule = scannerToNote;
-        setStatus("loaded");
+        setStatus("scanner to note module loaded");
+    }
+
+    @FXML
+    void highPassFilterPress(ActionEvent event) {
+        var highPassFilter = new HighPassFilter();
+        changeVista(highPassFilter);
+        currentModule = highPassFilter;
+        setStatus("high pass filter module loaded");
     }
 
     //Other methods

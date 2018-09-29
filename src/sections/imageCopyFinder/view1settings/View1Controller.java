@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import sections.UserFeedback;
 import sections.imageCopyFinder.ImageComparator;
 import sections.imageCopyFinder.ImageCopyFinder;
@@ -23,6 +24,10 @@ public final class View1Controller {
 
     @FXML
     private CheckBox checkBoxGeometricalMode;
+
+    @FXML
+    private TextField deleteFolder;
+
 
     private ImageComparator imageComparator = null;
 
@@ -63,7 +68,7 @@ public final class View1Controller {
         }
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESSFUL) {
             ImageCopyFinder.setImageComparator(imageComparator);
-            ImageCopyFinder.setDeleteDirectory(folderLocations.getText() + System.getProperty("file.separator") + "markedForDeletion" + System.getProperty("file.separator"));
+            ImageCopyFinder.setDeleteDirectory(deleteFolder.toString());
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
             MainViewController.reloadView();
         } else {

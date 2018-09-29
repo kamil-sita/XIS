@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,12 @@ public final class ScannerToNoteController {
 
     @FXML
     private CheckBox correctBrightness;
+
+    @FXML
+    private Slider brightnessDiffSlider;
+
+    @FXML
+    private Slider saturationDiffSlider;
 
 
     Notifier notifier;
@@ -78,7 +85,9 @@ public final class ScannerToNoteController {
             } catch (Exception e) {
                 //
             }
-            processedImage = ScannerToNoteConverter.convert(inputImage, isolateBackground.isSelected(), correctBrightness.isSelected(), colorCount);
+            processedImage = ScannerToNoteConverter.convert(inputImage, isolateBackground.isSelected(), correctBrightness.isSelected(), colorCount,
+                    brightnessDiffSlider.getValue()/100.0,
+                    saturationDiffSlider.getValue()/100.0);
             Platform.runLater(() -> setNewImage(processedImage));
         }).start();
 
@@ -91,7 +100,7 @@ public final class ScannerToNoteController {
 
     private void reAddNotifier() {
         MainViewController.removeNotifier(notifier);
-        notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 100, 0, 1.0);
+        notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 130, 0, 1.0);
         MainViewController.addNotifier(notifier);
     }
 

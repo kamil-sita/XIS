@@ -12,5 +12,7 @@
       <CheckBox fx:id="checkBoxGeometricalMode" layoutX="14.0" layoutY="102.0" mnemonicParsing="false" selected="true" text="Geometrical mode" />
       <Label layoutX="23.0" layoutY="126.0" text="Geometrical mode shows images with slight differences as much more similar that images with bigger differences" />
       <TextArea fx:id="folderLocations" layoutX="14.0" layoutY="176.0" prefHeight="113.0" prefWidth="1158.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="176.0" />
+      <Label layoutX="14.0" layoutY="300.0" styleClass="caption" text="Move deleted to" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="300.0" />
+      <TextField fx:id="deleteFolder" layoutX="24.0" layoutY="329.0" prefHeight="25.0" prefWidth="1158.0" />
 </children>
 </AnchorPane>

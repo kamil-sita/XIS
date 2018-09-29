@@ -14,26 +14,26 @@ import java.util.Map;
 
 public class ScannerToNoteConverter {
 
-    public static BufferedImage convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors) {
+    public static BufferedImage convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff) {
+
         if (colors <= 0) return null;
 
-        final int DEPTH = 6;
-        final int ITERATIONS = 32;
+        final int DEPTH = 5;
+        final int ITERATIONS = 128;
 
-        final double MINIMUM_BRIGHTNESS_DIFFERENCE = 0.25;
-        final double MINIMUM_SATURATION_DIFFERENCE = 0.25;
+        var inputCopy = copyImage(input);
 
-        var inputCpy = copyImage(input);
-
-        //get sample data by getting every 16 pixel (~6% of original)
+        //get sample data by getting every 16th pixel (~6% of original)
         List<RgbContainer> rgbList = new ArrayList<>();
 
-        for (int y = 0; y < inputCpy.getHeight(); y += 4) {
-            for (int x = 0; x < inputCpy.getWidth(); x += 4) {
-                rgbList.add(new RgbContainer(new RGB(inputCpy.getRGB(x, y))));
+        for (int y = 0; y < inputCopy.getHeight(); y += 4) {
+            for (int x = 0; x < inputCopy.getWidth(); x += 4) {
+                var rgb = new RGB(inputCopy.getRGB(x, y));
+                rgbList.add(rgb.inContainer());
             }
         }
 
+        //reducing bitrate of selected sample data
         final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = getCopyOf(rgbList);
         for (var rgb : SAMPLE_WITH_REDUCED_BITRATE) {
             rgb.reduceDepth(DEPTH);
@@ -41,9 +41,10 @@ public class ScannerToNoteConverter {
 
         RGB backgroundColor = null;
 
+
         if (filterBackground) {
             backgroundColor = getMostCommon(SAMPLE_WITH_REDUCED_BITRATE);
-            filterBackgroungByBrightnessAndSaturation(rgbList, backgroundColor, MINIMUM_BRIGHTNESS_DIFFERENCE, MINIMUM_SATURATION_DIFFERENCE);
+            filterOutBackgroundByBrightnessAndSaturation(rgbList, backgroundColor, brightnessDiff, saturationDiff);
         }
 
         var kMeans = new KMeans<>(colors, rgbList);
@@ -59,17 +60,17 @@ public class ScannerToNoteConverter {
             results.add(new RgbContainer(backgroundColor));
         }
 
-        BufferedImagePalette.replace(inputCpy, RgbContainer.toRgbList(results));
+        BufferedImagePalette.replace(inputCopy, RgbContainer.toRgbList(results));
 
         if (scaleBrightness) {
             var rgbs = new ArrayList<RGB>();
             for (var rgbContainer : results) {
                 rgbs.add(rgbContainer.getRgb());
             }
-            BufferedImagePalette.scaleBrightness(inputCpy, rgbs);
+            BufferedImagePalette.scaleBrightness(inputCopy, rgbs);
         }
 
-        return inputCpy;
+        return inputCopy;
     }
 
     private static List<RgbContainer> getCopyOf(List<RgbContainer> rgbContainers) {
@@ -115,18 +116,18 @@ public class ScannerToNoteConverter {
         return imageCopy;
     }
 
-    private static void filterBackgroungByBrightnessAndSaturation(List<RgbContainer> rgbContainerList, RGB backgroundColor, double minBrightnessDiff, double minSaturationDiff) {
+    private static void filterOutBackgroundByBrightnessAndSaturation(List<RgbContainer> rgbContainerList, RGB backgroundColor, double minBrightnessDiff, double minSaturationDiff) {
         var hsbBackground = backgroundColor.toHSB();
         for (int i = 0; i < rgbContainerList.size(); i++) {
             var rgbC = rgbContainerList.get(i);
             var rgb = rgbC.getRgb();
             var hsb = rgb.toHSB();
-            if (hsb.brightnessDiff(hsbBackground) > minBrightnessDiff) {
+            if (hsb.brightnessDiff(hsbBackground) < minBrightnessDiff) {
                 rgbContainerList.remove(i);
                 i--;
                 continue;
             }
-            if (hsb.saturationDiff(hsbBackground) > minSaturationDiff) {
+            if (hsb.saturationDiff(hsbBackground) < minSaturationDiff) {
                 rgbContainerList.remove(i);
                 i--;
             }

@@ -6,6 +6,8 @@ import toolset.imagetools.RGB;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.Math.*;
+
 public class RgbContainer implements KMeansData {
 
     private RGB rgbValue;
@@ -17,16 +19,26 @@ public class RgbContainer implements KMeansData {
     @Override
     public KMeansData getNewWithRandomData() {
         return new RgbContainer(new RGB(
-                (int) (Math.random() * 255),
-                (int) (Math.random() * 255),
-                (int) (Math.random() * 255)
+                (int) (random() * 255),
+                (int) (random() * 255),
+                (int) (random() * 255)
         ));
     }
 
     @Override
     public double distanceTo(KMeansData simpleKMeansData) {
-        return rgbValue.getDistanceFrom(((RgbContainer) simpleKMeansData).rgbValue);
+        if (false) {
+            var hsb = ((RgbContainer) simpleKMeansData).rgbValue.toHSB();
+            var hsb1 = rgbValue.toHSB();
+
+            return sqrt(pow(hsb.B - hsb1.B, 2) + pow(hsb.S - hsb1.S, 2) + pow(hsb.H - hsb1.H, 2));
+        } else {
+            return rgbValue.getDistanceFrom(((RgbContainer) simpleKMeansData).rgbValue);
+        }
+
     }
+
+
 
     @Override
     public KMeansData meanOfList(List<KMeansData> list) {

@@ -9,8 +9,12 @@
       <Button layoutX="82.0" layoutY="42.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="42.0" />
       <TextField fx:id="colors" layoutX="14.0" layoutY="25.0" text="colors" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
       <Button layoutX="156.0" layoutY="42.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="42.0" />
-      <ImageView fx:id="imagePreview" fitHeight="464.0" fitWidth="404.0" layoutX="75.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="80.0" />
-      <CheckBox fx:id="isolateBackground" layoutX="166.0" layoutY="11.0" mnemonicParsing="false" text="isolate background" />
-      <CheckBox fx:id="correctBrightness" layoutX="303.0" layoutY="11.0" mnemonicParsing="false" text="correct brightness" />
+      <ImageView fx:id="imagePreview" fitHeight="464.0" fitWidth="404.0" layoutX="75.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="110.0" />
+      <CheckBox fx:id="isolateBackground" layoutX="166.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="isolate background" />
+      <CheckBox fx:id="correctBrightness" layoutX="303.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="correct brightness" />
+      <Slider fx:id="brightnessDiffSlider" layoutX="139.0" layoutY="79.0" showTickLabels="true" showTickMarks="true" value="15.0" AnchorPane.leftAnchor="139.0" AnchorPane.topAnchor="79.0" />
+      <Label layoutX="14.0" layoutY="77.0" text="Brightness difference" />
+      <Slider fx:id="saturationDiffSlider" layoutX="413.0" layoutY="80.0" showTickLabels="true" showTickMarks="true" value="15.0" />
+      <Label layoutX="288.0" layoutY="78.0" text="Saturation difference" />
    </children>
 </AnchorPane>

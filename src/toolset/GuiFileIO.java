@@ -11,30 +11,40 @@ import java.io.File;
 public class GuiFileIO {
 
     private static String[] extensionList;
+    private static File lastFileDirectory = null;
 
-    //getting image with native gui
+    /**
+     * Loading image with native gui
+     * @return loaded buffered image
+     */
     public static BufferedImage getImage() {
-        generateFormats();
+        lazyGenerateFormats();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Image File");
+        fileChooser.setTitle("Open image from ile");
+        fileChooser.setInitialDirectory(lastFileDirectory);
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Supported images", extensionList),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         File file = fileChooser.showOpenDialog(stage);
+        lastFileDirectory = file.getParentFile();
 
         return BufferedImageIO.getImage(file);
     }
 
-    //saving image with native gui
+    /**
+     * Save image with native gui
+     * @param image image to save
+     */
     public static void saveImage(BufferedImage image) {
-        generateFormats();
+        lazyGenerateFormats();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save image");
+        fileChooser.setTitle("Save image to file");
+        fileChooser.setInitialDirectory(lastFileDirectory);
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Supported images", extensionList),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
@@ -47,10 +57,10 @@ public class GuiFileIO {
                 e.printStackTrace();
             }
         }
-
+        lastFileDirectory = file.getParentFile();
     }
 
-    private static void generateFormats() {
+    private static void lazyGenerateFormats() {
         if (extensionList != null) return;
 
         extensionList = ImageIO.getReaderFormatNames();

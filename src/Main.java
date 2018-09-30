@@ -11,7 +11,6 @@ public final class Main extends Application {
     private static Stage stage;
 
     public static void main(String[] args) {
-        //new ScannerToNoteConverter().convert();
         launch(args);
     }
 

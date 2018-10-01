@@ -57,7 +57,8 @@ public class GuiFileIO {
                 e.printStackTrace();
             }
         }
-        lastFileDirectory = file.getParentFile();
+        if (file != null) lastFileDirectory = file.getParentFile();
+
     }
 
     private static void lazyGenerateFormats() {

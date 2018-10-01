@@ -8,6 +8,17 @@ public class Blur {
 
     public static BufferedImage simpleBlur(BufferedImage input) {
 
+        var convolveOp = new ConvolveOp(new Kernel(3, 3, new float[] {
+                0.05f, 0.15f, 0.05f,
+                0.15f, 0.20f, 0.15f,
+                0.05f, 0.15f, 0.05f
+        }));
+
+        return convolveOp.filter(input, null);
+    }
+
+    public static BufferedImage simpleGaussianBlur(BufferedImage input) {
+
         //kernel is based on sample gaussian kernel on wikipedia
         var convolveOp = new ConvolveOp(new Kernel(7, 7, new float[] {
                 0.00000067f, 0.00002292f, 0.00019117f, 0.00038771f, 0.00019117f, 0.00002292f, 0.00000067f,

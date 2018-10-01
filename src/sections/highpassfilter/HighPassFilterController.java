@@ -3,6 +3,7 @@ package sections.highpassfilter;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.Notifier;
@@ -25,6 +26,8 @@ public final class HighPassFilterController {
     @FXML
     private ImageView imagePreview;
 
+    @FXML
+    private CheckBox scaleContrast;
 
     Notifier notifier;
 
@@ -67,7 +70,8 @@ public final class HighPassFilterController {
             } catch (Exception e) {
                 //
             }
-            var output = HighPassFilterConverter.convert(inputImage, blurValue);
+            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleContrast.isSelected()).getBufferedImage();
+            processedImage = output;
             Platform.runLater(() -> setNewImage(output));
         }).start();
 

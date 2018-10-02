@@ -80,6 +80,7 @@ public final class HighPassFilterController {
     private void setNewImage(BufferedImage bufferedImage) {
         imagePreview.setImage(BufferedImageToFXImage.toFxImage(bufferedImage));
         reAddNotifier();
+        MainViewController.onWindowSizeChange();
     }
 
     private void reAddNotifier() {

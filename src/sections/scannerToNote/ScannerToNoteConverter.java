@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ScannerToNoteConverter {
+public final class ScannerToNoteConverter {
 
     public static BufferedImage convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff) {
 
@@ -23,11 +23,11 @@ public class ScannerToNoteConverter {
 
         var inputCopy = BufferedImageVarious.copyImage(input);
 
-        //get sample data by getting every 16th pixel (~6% of original)
+        //get sample data by getting every 6th pixel (~16% of original)
         List<RgbContainer> rgbList = new ArrayList<>();
 
-        for (int y = 0; y < inputCopy.getHeight(); y += 4) {
-            for (int x = 0; x < inputCopy.getWidth(); x += 4) {
+        for (int y = 0; y < inputCopy.getHeight(); y += 3) {
+            for (int x = 0; x < inputCopy.getWidth(); x += 2) {
                 var rgb = new RGB(inputCopy.getRGB(x, y));
                 rgbList.add(rgb.inContainer());
             }
@@ -47,7 +47,14 @@ public class ScannerToNoteConverter {
             filterOutBackgroundByBrightnessAndSaturation(rgbList, backgroundColor, brightnessDiff, saturationDiff);
         }
 
+        if (rgbList.size() == 0) {
+            UserFeedback.popup("Not enough colors in the image. Consider turning off 'isolate background' option, if enabled.");
+            return null;
+        }
+
+
         var kMeans = new KMeans<>(colors, rgbList);
+
         kMeans.setOnUpdate(() -> {
             UserFeedback.reportProgress(kMeans.getProgress());
         }, false);

@@ -16,7 +16,10 @@ public final class UserFeedback {
     }
 
     public static void popup(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.CLOSE);
-        alert.show();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.CLOSE);
+            alert.show();
+        });
+
     }
 }

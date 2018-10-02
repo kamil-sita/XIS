@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 public final class BufferedImageToFXImage {
     public static Image toFxImage(BufferedImage bi) {
+        if (bi == null) return null;
         return SwingFXUtils.toFXImage(bi, null);
     }
 }

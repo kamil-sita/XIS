@@ -8,7 +8,7 @@ import java.util.List;
 
 import static java.lang.Math.*;
 
-public class RgbContainer implements KMeansData {
+public final class RgbContainer implements KMeansData {
 
     private RGB rgbValue;
 

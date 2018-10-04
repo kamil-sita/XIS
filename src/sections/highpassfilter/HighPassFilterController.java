@@ -27,7 +27,7 @@ public final class HighPassFilterController {
     private ImageView imagePreview;
 
     @FXML
-    private CheckBox scaleContrast;
+    private CheckBox scaleBrightness;
 
     Notifier notifier;
 
@@ -70,7 +70,7 @@ public final class HighPassFilterController {
             } catch (Exception e) {
                 //
             }
-            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleContrast.isSelected()).getBufferedImage();
+            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected()).getBufferedImage();
             processedImage = output;
             Platform.runLater(() -> setNewImage(output));
         }).start();
@@ -85,7 +85,7 @@ public final class HighPassFilterController {
 
     private void reAddNotifier() {
         MainViewController.removeNotifier(notifier);
-        notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 130, 0, 1.0);
+        notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 90, 10, 1.0);
         MainViewController.addNotifier(notifier);
     }
 

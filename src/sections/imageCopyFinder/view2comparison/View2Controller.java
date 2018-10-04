@@ -83,7 +83,6 @@ public final class View2Controller {
                         } else {
                             setText(comparableImagePair.toString());
                         }
-
                     }
                 }
         );

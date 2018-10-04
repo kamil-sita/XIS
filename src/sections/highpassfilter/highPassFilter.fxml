@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.highpassfilter.HighPassFilterController">
    <children>
-      <Button layoutX="7.0" layoutY="82.0" mnemonicParsing="false" onAction="#loadFilePress" text="load file" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="82.0" />
-      <Button layoutX="82.0" layoutY="82.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="82.0" />
-      <TextField fx:id="blur" layoutX="14.0" layoutY="25.0" text="blur" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
-      <Button layoutX="156.0" layoutY="82.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="82.0" />
-      <ImageView fx:id="imagePreview" fitHeight="464.0" fitWidth="404.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="789.0" AnchorPane.topAnchor="115.0" />
-      <Separator layoutX="12.0" layoutY="120.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="110.0" />
-      <CheckBox fx:id="scaleContrast" layoutX="173.0" layoutY="11.0" mnemonicParsing="false" text="scale contrast" />
+      <Button layoutX="7.0" layoutY="40.0" mnemonicParsing="false" onAction="#loadFilePress" text="load file" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="40.0" />
+      <Button layoutX="82.0" layoutY="40.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="40.0" />
+      <TextField fx:id="blur" layoutX="14.0" layoutY="25.0" text="blur strength" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
+      <Button layoutX="156.0" layoutY="40.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="40.0" />
+      <ImageView fx:id="imagePreview" fitHeight="510.0" fitWidth="475.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="718.0" AnchorPane.topAnchor="80.0" />
+      <Separator layoutX="12.0" layoutY="73.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="73.0" />
+      <CheckBox fx:id="scaleBrightness" layoutX="173.0" layoutY="11.0" mnemonicParsing="false" text="scale brightness" />
    </children>
 </AnchorPane>

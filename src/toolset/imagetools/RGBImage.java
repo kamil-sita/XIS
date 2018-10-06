@@ -6,9 +6,6 @@ public class RGBImage {
 
     private RGB[][] image;
 
-    private double minSaturation = 1000;
-    private double maxSaturation = -1;
-
     private double minBrightness = 1000;
     private double maxBrightness = -1;
 
@@ -25,12 +22,6 @@ public class RGBImage {
         image[y][x] = rgb;
         var hsb = rgb.toHSB();
 
-        if (hsb.S < minSaturation) {
-            minSaturation = hsb.S;
-        }
-        if (hsb.S > maxSaturation) {
-            maxSaturation = hsb.S;
-        }
 
         if (hsb.B < minBrightness) {
             minBrightness= hsb.B;
@@ -51,23 +42,19 @@ public class RGBImage {
         return out;
     }
 
-    public void scaleBrightnessAndSaturation() {
+    public void scaleBrightness() {
         var multBrightness = 1.0/(maxBrightness - minBrightness);
-        var multSaturation = 1.0/(maxSaturation - minSaturation);
 
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
                 var hsb = image[y][x].toHSB();
                 hsb.B = (hsb.B - minBrightness) * multBrightness;
-                hsb.S = (hsb.S - minSaturation) * multSaturation;
                 image[y][x] = hsb.toRGB();
             }
         }
     }
 
     public void resetContrastCounters() {
-        minSaturation = 1000;
-        maxSaturation = -1;
         minBrightness = 1000;
         maxBrightness = -1;
     }

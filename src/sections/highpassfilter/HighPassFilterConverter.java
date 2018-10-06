@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 public final class HighPassFilterConverter {
 
-    public static RGBImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightnessAndSaturation) {
+    public static RGBImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness) {
         var blurredImage = BufferedImageVarious.copyImage(bufferedImage);
         int i = 0;
         UserFeedback.reportProgress(i/(blurPasses + 2.0));
@@ -24,7 +24,7 @@ public final class HighPassFilterConverter {
                 BufferedImageVarious.copyImage(bufferedImage), blurredImage);
         UserFeedback.reportProgress((i+1)/(blurPasses + 2.0));
 
-        if (scaleBrightnessAndSaturation) output.scaleBrightnessAndSaturation();
+        if (scaleBrightness) output.scaleBrightness();
         UserFeedback.reportProgress(1);
 
         return output;

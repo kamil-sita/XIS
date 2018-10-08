@@ -10,7 +10,7 @@
       <TextField fx:id="colors" layoutX="14.0" layoutY="25.0" text="colors" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
       <Button layoutX="156.0" layoutY="82.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="82.0" />
       <ImageView fx:id="imagePreview" fitHeight="464.0" fitWidth="404.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="789.0" AnchorPane.topAnchor="115.0" />
-      <CheckBox fx:id="isolateBackground" layoutX="166.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="isolate background" />
+      <CheckBox fx:id="isolateBackground" layoutX="166.0" layoutY="11.0" mnemonicParsing="false" onAction="#isolateBackgroundAction" selected="true" text="isolate background" />
       <CheckBox fx:id="correctBrightness" layoutX="303.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="correct brightness" />
       <Slider fx:id="brightnessDiffSlider" layoutX="139.0" layoutY="43.0" showTickLabels="true" showTickMarks="true" value="15.0" AnchorPane.leftAnchor="139.0" AnchorPane.topAnchor="43.0" />
       <Label layoutX="14.0" layoutY="41.0" text="Brightness difference" />

@@ -7,7 +7,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
@@ -29,9 +28,6 @@ public final class ScannerToNoteController {
     private ImageView imagePreview;
 
     @FXML
-    private AnchorPane thisAnchorPane;
-
-    @FXML
     private CheckBox isolateBackground;
 
     @FXML
@@ -45,6 +41,12 @@ public final class ScannerToNoteController {
 
 
     Notifier notifier;
+
+    @FXML
+    void isolateBackgroundAction(ActionEvent event) {
+        brightnessDiffSlider.setDisable(!isolateBackground.isSelected());
+        saturationDiffSlider.setDisable(!isolateBackground.isSelected());
+    }
 
     @FXML
     void loadFilePress(ActionEvent event) {

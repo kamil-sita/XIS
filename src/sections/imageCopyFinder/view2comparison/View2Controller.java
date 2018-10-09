@@ -77,7 +77,6 @@ public final class View2Controller {
                     @Override
                     protected void updateItem(ComparableImagePair comparableImagePair, boolean empty) {
                         super.updateItem(comparableImagePair, empty);
-
                         if (empty || comparableImagePair == null) {
                             setText(null);
                         } else {
@@ -87,7 +86,7 @@ public final class View2Controller {
                 }
         );
         imagePairs = ImageCopyFinder.getImageComparator().getImagePairs();
-        displayPairsWithSimilarityOver(0.0); //all of them
+        displayAllImages();
         comparableImagePairListView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> elementHovered(newValue)
         );
@@ -121,6 +120,10 @@ public final class View2Controller {
         }
         displayPairsWithSimilarityOver(lastSimilarity);
         moveFile(cip.getFile(), deleteLocation);
+    }
+
+    private void displayAllImages() {
+        displayPairsWithSimilarityOver(0);
     }
 
     private void displayPairsWithSimilarityOver(double value) {

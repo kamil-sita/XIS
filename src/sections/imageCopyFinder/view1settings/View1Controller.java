@@ -29,9 +29,6 @@ public final class View1Controller {
     private TextField deleteFolder;
 
 
-    private ImageComparator imageComparator = null;
-
-
     @FXML
     public void initialize() {
         addImageSizes();
@@ -54,18 +51,15 @@ public final class View1Controller {
         );
         tic.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
                 event1 -> {
-                    imageComparator = tic.getValue();
-                    onFinish();
+                    var imageComparator = tic.getValue();
+                    onFinish(imageComparator);
                 }
         );
 
         new Thread(tic).start();
     }
 
-    private void onFinish() {
-        if (imageComparator == null) {
-            throw new RuntimeException("UnexpectedError: imageComparator not initialized");
-        }
+    private void onFinish(ImageComparator imageComparator) {
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESSFUL) {
             ImageCopyFinder.setImageComparator(imageComparator);
             ImageCopyFinder.setDeleteDirectory(deleteFolder.toString());
@@ -74,7 +68,5 @@ public final class View1Controller {
         } else {
             UserFeedback.popup(imageComparator.getStatus().toString());
         }
-
-
     }
 }

@@ -64,11 +64,11 @@ public final class HighPassFilterController {
             return;
         }
         new Thread(() -> {
-            int blurValue = 1;
+            int blurValue = 5;
             try {
                 blurValue = Integer.parseInt(blur.getText());
             } catch (Exception e) {
-                //
+                //failed parsing
             }
             var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected()).getBufferedImage();
             processedImage = output;

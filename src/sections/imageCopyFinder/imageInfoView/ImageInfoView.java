@@ -10,13 +10,12 @@ public final class ImageInfoView extends SubUserInterface {
     private static final String LOCATION = "imageInfoView.fxml";
     private AnchorPane anchorPane;
     private ImageInfoViewController imageInfoViewController;
-    private boolean loaded = false;
 
     public ImageInfoView() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
             anchorPane = fxmlLoader.load(getClass().getResource(LOCATION).openStream());
-            imageInfoViewController = (ImageInfoViewController) fxmlLoader.getController();
+            imageInfoViewController = fxmlLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();
         }

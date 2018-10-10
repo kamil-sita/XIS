@@ -75,8 +75,9 @@ public final class ImageInfoViewController {
 
     private void loadImageInBackground(File resourceFile) {
         new Thread(() -> {
-            bufferedImage = BufferedImageIO.getImage(resourceFile);
-            if (bufferedImage == null) return;
+            var optionalImage = BufferedImageIO.getImage(resourceFile);
+            if (!optionalImage.isPresent()) return;
+            bufferedImage = optionalImage.get();
             Platform.runLater(() -> {
                 imageView.setImage(BufferedImageToFXImage.toFxImage(bufferedImage));
                 dimensionsValue.setText("(" + bufferedImage.getWidth() + "x" + bufferedImage.getHeight() + ")");

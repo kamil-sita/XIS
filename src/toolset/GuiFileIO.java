@@ -7,6 +7,7 @@ import toolset.imagetools.BufferedImageIO;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Optional;
 
 public class GuiFileIO {
 
@@ -17,7 +18,7 @@ public class GuiFileIO {
      * Loading image with native gui
      * @return loaded buffered image
      */
-    public static BufferedImage getImage() {
+    public static Optional<BufferedImage> getImage() {
         lazyGenerateFormats();
 
         Stage stage = new Stage();

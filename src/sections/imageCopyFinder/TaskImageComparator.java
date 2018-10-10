@@ -12,7 +12,6 @@ public final class TaskImageComparator extends Task<ImageComparator> {
     private boolean geometricalMode;
 
     public TaskImageComparator(String[] fileFolders, int miniatureSize, boolean geometricalMode) {
-        System.out.println("miniature size: " + miniatureSize);
         imageComparator = new ImageComparator(miniatureSize);
         this.fileFolders = fileFolders;
         this.geometricalMode = geometricalMode;
@@ -20,7 +19,6 @@ public final class TaskImageComparator extends Task<ImageComparator> {
 
     public ImageComparator call() {
         File[] folders = new File[fileFolders.length];
-        System.out.println(fileFolders.length);
 
         for (int i = 0; i < fileFolders.length; i++) {
             String s = fileFolders[i];
@@ -39,8 +37,6 @@ public final class TaskImageComparator extends Task<ImageComparator> {
             }
             folders[i] = folder;
         }
-
-        System.out.println("x");
 
 
         boolean status = imageComparator.initialize(folders, geometricalMode);

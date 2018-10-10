@@ -4,7 +4,6 @@ import sections.UserFeedback;
 import toolset.imagetools.BufferedImageIO;
 import toolset.imagetools.RGB;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -88,28 +87,18 @@ public final class ImageComparator {
             }
 
             UserFeedback.reportProgress(i/(1.0 * files.size()) * FIRST_PHASE_WEIGHT);
-            System.out.println(i+ "/" + files.size());
             i++;
-            BufferedImage bufferedImage;
-            bufferedImage = BufferedImageIO.getImage(file);
-            if (bufferedImage != null) {
-                try {
-                    //optimizing this part with multithreading seems not to be worth it, based on my tests
-                    ComparableImage comparableImage = new ComparableImage(file, bufferedImage);
-                    comparableImage.generateData(generatedMiniatureSize);
-                    bufferedImage = null; //so it's maybe easier for the garbage collector
-                    images.add(comparableImage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            var optionalImage = BufferedImageIO.getImage(file);
+            if (optionalImage.isPresent()) {
+                ComparableImage comparableImage = new ComparableImage(file, optionalImage.get());
+                comparableImage.generateData(generatedMiniatureSize);
+                optionalImage = null; //so it's maybe easier for the garbage collector
+                images.add(comparableImage);
             }
 
         }
 
-        if (images.size() > 0) {
-            return true;
-        }
-        else return false;
+        return images.size() > 0;
     }
 
     private double getApproximateTimeLeftFileLoading(int i, long time, int i2) {

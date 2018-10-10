@@ -33,13 +33,16 @@ public final class HighPassFilterController {
 
     @FXML
     void loadFilePress(ActionEvent event) {
-        //opens image. If image == null, uses old image instead
         var oldInputImage = inputImage;
-        inputImage = GuiFileIO.getImage();
-        if (inputImage == null) inputImage = oldInputImage;
-        processedImage = inputImage;
+        var optionalInputImage = GuiFileIO.getImage();
+        if (!optionalInputImage.isPresent()) {
+            inputImage = oldInputImage;
+        } else {
+            inputImage = optionalInputImage.get();
+            processedImage = inputImage;
+            setNewImage(inputImage);
+        }
 
-        setNewImage(inputImage);
     }
 
     @FXML

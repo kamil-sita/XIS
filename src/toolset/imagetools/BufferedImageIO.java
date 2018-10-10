@@ -4,17 +4,18 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 public final class BufferedImageIO {
-    public static BufferedImage getImage(File file) {
+    public static Optional<BufferedImage> getImage(File file) {
         BufferedImage bufferedImage = null;
         try {
             bufferedImage = ImageIO.read(file);
         } catch (IOException e) {
-            return null;
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return bufferedImage;
+        return Optional.of(bufferedImage);
     }
 }

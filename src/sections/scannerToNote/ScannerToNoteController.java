@@ -18,8 +18,8 @@ import java.awt.image.BufferedImage;
 
 public final class ScannerToNoteController {
 
-    private BufferedImage inputImage;
-    private BufferedImage processedImage;
+    private BufferedImage plainImage = null;
+    private BufferedImage processedImage = null;
 
     @FXML
     private TextField colors;
@@ -51,21 +51,20 @@ public final class ScannerToNoteController {
     @FXML
     void loadFilePress(ActionEvent event) {
         //opens image. If image == null, uses old image instead
-        var oldInputImage = inputImage;
-        inputImage = GuiFileIO.getImage();
-        if (inputImage == null) inputImage = oldInputImage;
-        processedImage = inputImage;
-
-        setNewImage(inputImage);
+        var optionalInputImage = GuiFileIO.getImage();
+        if (optionalInputImage.isPresent()) {
+            plainImage = optionalInputImage.get();
+            processedImage = null;
+            setNewImage();
+        }
     }
 
     @FXML
     void saveFilePress(ActionEvent event) {
-        var imageToSave = processedImage != null ? processedImage : inputImage;
-        if (imageToSave == null) {
-            UserFeedback.popup("Can't save non-opened image.");
+        if (processedImage == null) {
+            UserFeedback.popup("Can't save non-processed image.");
         } else {
-            GuiFileIO.saveImage(imageToSave);
+            GuiFileIO.saveImage(processedImage);
         }
     }
 
@@ -76,7 +75,7 @@ public final class ScannerToNoteController {
 
     @FXML
     void runButton(ActionEvent event) {
-        if (inputImage == null) {
+        if (plainImage == null) {
             UserFeedback.popup("Can't run without loaded file");
             return;
         }
@@ -87,22 +86,23 @@ public final class ScannerToNoteController {
             } catch (Exception e) {
                 //
             }
-            processedImage = ScannerToNoteConverter.convert(inputImage, isolateBackground.isSelected(), correctBrightness.isSelected(), colorCount,
+            processedImage = ScannerToNoteConverter.convert(plainImage, isolateBackground.isSelected(), correctBrightness.isSelected(), colorCount,
                     brightnessDiffSlider.getValue()/100.0,
                     saturationDiffSlider.getValue()/100.0);
-            Platform.runLater(() -> setNewImage(processedImage));
+            Platform.runLater(this::setNewImage);
         }).start();
 
     }
 
-    private void setNewImage(BufferedImage bufferedImage) {
-        imagePreview.setImage(BufferedImageToFXImage.toFxImage(bufferedImage));
+    private void setNewImage() {
+        var imageToSet = processedImage != null ? processedImage : plainImage;
+        imagePreview.setImage(BufferedImageToFXImage.toFxImage(imageToSet));
         reAddNotifier();
     }
 
     private void reAddNotifier() {
         MainViewController.removeNotifier(notifier);
-        notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 130, 0, 1.0);
+        notifier = NotifierFactory.scalingImageNotifier(plainImage, imagePreview, 130, 0, 1.0);
         MainViewController.addNotifier(notifier);
         MainViewController.onWindowSizeChange();
     }

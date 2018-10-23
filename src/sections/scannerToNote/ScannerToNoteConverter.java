@@ -41,7 +41,6 @@ public final class ScannerToNoteConverter {
 
         RGB backgroundColor = null;
 
-
         if (filterBackground) {
             backgroundColor = getMostCommon(SAMPLE_WITH_REDUCED_BITRATE);
             filterOutBackgroundByBrightnessAndSaturation(rgbList, backgroundColor, brightnessDiff, saturationDiff);
@@ -52,16 +51,15 @@ public final class ScannerToNoteConverter {
             return null;
         }
 
-
         var kMeans = new KMeans<>(colors, rgbList);
 
         kMeans.setOnUpdate(() -> {
             UserFeedback.reportProgress(kMeans.getProgress());
-        }, false);
+        });
 
         kMeans.iterate(ITERATIONS);
 
-        List<RgbContainer> results = kMeans.getResults();
+        List<RgbContainer> results = kMeans.getCalculatedMeanPoints();
 
         if (filterBackground) {
             results.add(new RgbContainer(backgroundColor));

@@ -1,4 +1,4 @@
-package sections.xscnt;
+package sections.scannertonote;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

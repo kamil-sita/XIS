@@ -1,4 +1,4 @@
-package sections.xicf.imageInfoView;
+package sections.imagecopyfinder.imageInfoView;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

@@ -1,11 +1,11 @@
-package sections.xicf;
+package sections.imagecopyfinder;
 
 import sections.SubUserInterface;
 
 public final class ImageCopyFinder extends SubUserInterface {
 
-    private static final String LOCATION_VIEW1 = "sections/xicf/view1settings/view1.fxml";
-    private static final String LOCATION_VIEW2 = "sections/xicf/view2comparison/view2.fxml";
+    private static final String LOCATION_VIEW1 = "sections/imagecopyfinder/view1settings/view1.fxml";
+    private static final String LOCATION_VIEW2 = "sections/imagecopyfinder/view2comparison/view2.fxml";
     private static ImageComparator imageComparator;
     private static String deleteDirectory;
 

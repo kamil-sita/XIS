@@ -1,4 +1,4 @@
-package sections.welcomePage;
+package sections.defaultpage;
 
 public final class WelcomePageController {
 

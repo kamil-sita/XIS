@@ -12,9 +12,9 @@ import javafx.scene.layout.TilePane;
 import sections.Notifier;
 import sections.SubUserInterface;
 import sections.highpassfilter.HighPassFilter;
-import sections.xicf.ImageCopyFinder;
-import sections.xscnt.ScannerToNote;
-import sections.welcomePage.WelcomePage;
+import sections.imagecopyfinder.ImageCopyFinder;
+import sections.scannertonote.ScannerToNote;
+import sections.defaultpage.WelcomePage;
 
 import java.util.ArrayList;
 
@@ -71,7 +71,7 @@ public final class MainViewController {
         imageCopyFinder = new ImageCopyFinder();
         changeVista(imageCopyFinder);
         currentModule = imageCopyFinder;
-        setStatus("xicf module loaded");
+        setStatus("imagecopyfinder module loaded");
     }
 
     @FXML

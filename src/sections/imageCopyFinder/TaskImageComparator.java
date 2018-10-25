@@ -1,4 +1,4 @@
-package sections.xicf;
+package sections.imagecopyfinder;
 
 import javafx.concurrent.Task;
 import sections.UserFeedback;

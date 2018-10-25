@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="900.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imageCopyFinder.view2comparison.View2Controller">
+<AnchorPane prefHeight="900.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imagecopyfinder.view2comparison.View2Controller">
    <children>
       <ListView fx:id="comparableImagePairListView" layoutX="26.0" layoutY="41.0" prefHeight="205.0" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="41.0" />
       <Label layoutX="26.0" layoutY="14.0" styleClass="caption" text="Found copies:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />

@@ -1,4 +1,4 @@
-package sections.xicf.view1settings;
+package sections.imagecopyfinder.view1settings;
 
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
@@ -9,9 +9,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import sections.UserFeedback;
-import sections.xicf.ImageComparator;
-import sections.xicf.ImageCopyFinder;
-import sections.xicf.TaskImageComparator;
+import sections.imagecopyfinder.ImageComparator;
+import sections.imagecopyfinder.ImageCopyFinder;
+import sections.imagecopyfinder.TaskImageComparator;
 import sections.main.MainViewController;
 
 public final class View1Controller {

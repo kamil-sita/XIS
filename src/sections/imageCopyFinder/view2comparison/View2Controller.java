@@ -1,4 +1,4 @@
-package sections.imageCopyFinder.view2comparison;
+package sections.imagecopyfinder.view2comparison;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,11 +9,11 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.AnchorPane;
-import sections.imageCopyFinder.ComparableImage;
-import sections.imageCopyFinder.ComparableImagePair;
-import sections.imageCopyFinder.ImageCopyFinder;
-import sections.imageCopyFinder.imageInfoView.ImageInfoView;
-import sections.imageCopyFinder.imageInfoView.ImageInfoViewController;
+import sections.imagecopyfinder.ComparableImage;
+import sections.imagecopyfinder.ComparableImagePair;
+import sections.imagecopyfinder.ImageCopyFinder;
+import sections.imagecopyfinder.imageInfoView.ImageInfoView;
+import sections.imagecopyfinder.imageInfoView.ImageInfoViewController;
 
 import java.util.ArrayList;
 

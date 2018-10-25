@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.xscnt.ScannerToNoteController">
+<AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.scannertonote.ScannerToNoteController">
    <children>
       <Button layoutX="7.0" layoutY="82.0" mnemonicParsing="false" onAction="#loadFilePress" text="load file" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="82.0" />
       <Button layoutX="82.0" layoutY="82.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="82.0" />

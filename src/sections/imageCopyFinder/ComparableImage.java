@@ -1,4 +1,4 @@
-package sections.xicf;
+package sections.imagecopyfinder;
 
 import toolset.imagetools.BufferedImageScale;
 import toolset.imagetools.HSB;

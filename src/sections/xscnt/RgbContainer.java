@@ -1,4 +1,4 @@
-package sections.scannertonote;
+package sections.xscnt;
 
 import pl.ksitarski.simplekmeans.KMeansData;
 import toolset.imagetools.RGB;

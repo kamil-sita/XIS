@@ -1,4 +1,4 @@
-package sections.imageCopyFinder;
+package sections.xicf;
 
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImageIO;

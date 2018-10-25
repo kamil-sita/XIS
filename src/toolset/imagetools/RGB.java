@@ -1,7 +1,7 @@
 package toolset.imagetools;
 
 
-import sections.scannertonote.RgbContainer;
+import sections.xscnt.RgbContainer;
 
 import java.awt.*;
 

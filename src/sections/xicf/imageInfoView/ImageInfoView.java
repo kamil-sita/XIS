@@ -1,4 +1,4 @@
-package sections.imageCopyFinder.imageInfoView;
+package sections.xicf.imageInfoView;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;

@@ -1,4 +1,4 @@
-package sections.imageCopyFinder;
+package sections.xicf;
 
 /**
  * Pair of comparable images

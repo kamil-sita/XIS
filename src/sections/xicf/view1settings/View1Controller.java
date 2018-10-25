@@ -1,4 +1,4 @@
-package sections.imageCopyFinder.view1settings;
+package sections.xicf.view1settings;
 
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
@@ -9,9 +9,9 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import sections.UserFeedback;
-import sections.imageCopyFinder.ImageComparator;
-import sections.imageCopyFinder.ImageCopyFinder;
-import sections.imageCopyFinder.TaskImageComparator;
+import sections.xicf.ImageComparator;
+import sections.xicf.ImageCopyFinder;
+import sections.xicf.TaskImageComparator;
 import sections.main.MainViewController;
 
 public final class View1Controller {
@@ -37,8 +37,12 @@ public final class View1Controller {
     private void addImageSizes() {
         Platform.runLater(() -> {
             //adding scaling option and selecting default
-            imageSizeComboBox.getItems().addAll(4, 8, 16, 32, 64, 128, 256, 512); //this line will throw exception, not sure why
-            imageSizeComboBox.getSelectionModel().select(6);
+            try {
+                imageSizeComboBox.getItems().addAll(4, 8, 16, 32, 64, 128, 256, 512); //this line will throw exception, not sure why
+                imageSizeComboBox.getSelectionModel().select(6);
+            } catch (Exception e) {
+                //
+            }
         });
     }
 

@@ -6,7 +6,8 @@ import toolset.imagetools.RGB;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.*;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 public final class RgbContainer implements KMeansData {
 
@@ -14,15 +15,6 @@ public final class RgbContainer implements KMeansData {
 
     public RgbContainer(RGB rgb) {
         this.rgbValue = rgb;
-    }
-
-    @Override
-    public KMeansData getNewWithRandomData() {
-        return new RgbContainer(new RGB(
-                (int) (random() * 255),
-                (int) (random() * 255),
-                (int) (random() * 255)
-        ));
     }
 
     @Override
@@ -37,8 +29,6 @@ public final class RgbContainer implements KMeansData {
         }
 
     }
-
-
 
     @Override
     public KMeansData meanOfList(List<KMeansData> list) {

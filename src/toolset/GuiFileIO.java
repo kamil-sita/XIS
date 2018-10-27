@@ -30,7 +30,7 @@ public class GuiFileIO {
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         File file = fileChooser.showOpenDialog(stage);
-        lastFileDirectory = file.getParentFile();
+        if (file != null) lastFileDirectory = file.getParentFile();
 
         return BufferedImageIO.getImage(file);
     }

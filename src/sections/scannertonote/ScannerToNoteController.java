@@ -7,40 +7,31 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import sections.Notifier;
-import sections.NotifierFactory;
-import sections.UserFeedback;
+import sections.*;
 import sections.main.MainViewController;
 import toolset.GuiFileIO;
 import toolset.imagetools.BufferedImageToFXImage;
 
 import java.awt.image.BufferedImage;
+import java.util.Optional;
 
 public final class ScannerToNoteController {
 
+    Notifier notifier;
     private BufferedImage plainImage = null;
     private BufferedImage processedImage = null;
-
     @FXML
     private TextField colors;
-
     @FXML
     private ImageView imagePreview;
-
     @FXML
     private CheckBox isolateBackground;
-
     @FXML
     private CheckBox correctBrightness;
-
     @FXML
     private Slider brightnessDiffSlider;
-
     @FXML
     private Slider saturationDiffSlider;
-
-
-    Notifier notifier;
 
     @FXML
     void isolateBackgroundAction(ActionEvent event) {
@@ -79,18 +70,41 @@ public final class ScannerToNoteController {
             UserFeedback.popup("Can't run without loaded file");
             return;
         }
-        new Thread(() -> {
-            int colorCount = 5;
-            try {
-                colorCount = Integer.parseInt(colors.getText());
-            } catch (Exception e) {
-                //
+        OneBackgroundJobManager.setAndRunJob(new Interruptable() {
+
+            Optional<BufferedImage> optionalImage;
+
+            @Override
+            public Runnable getRunnable() {
+                return () -> {
+                    int colorCount = 5;
+                    try {
+                        colorCount = Integer.parseInt(colors.getText());
+                    } catch (Exception e) {
+                        //
+                    }
+
+                    optionalImage = ScannerToNoteConverter.convert(
+                            plainImage,
+                            isolateBackground.isSelected(),
+                            correctBrightness.isSelected(),
+                            colorCount,
+                            brightnessDiffSlider.getValue()/100.0,
+                            saturationDiffSlider.getValue()/100.0
+                    );
+                };
             }
-            processedImage = ScannerToNoteConverter.convert(plainImage, isolateBackground.isSelected(), correctBrightness.isSelected(), colorCount,
-                    brightnessDiffSlider.getValue()/100.0,
-                    saturationDiffSlider.getValue()/100.0);
-            Platform.runLater(this::setNewImage);
-        }).start();
+
+            @Override
+            public Runnable onFinish() {
+                return () -> {
+                    if (optionalImage.isPresent()) {
+                        processedImage = optionalImage.get();
+                        Platform.runLater(() -> setNewImage());
+                    }
+                };
+            }
+        });
 
     }
 

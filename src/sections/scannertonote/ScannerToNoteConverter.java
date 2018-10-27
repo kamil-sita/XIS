@@ -7,19 +7,16 @@ import toolset.imagetools.BufferedImageVarious;
 import toolset.imagetools.RGB;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class ScannerToNoteConverter {
 
-    public static BufferedImage convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff) {
+    public static Optional<BufferedImage> convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff) {
 
-        if (colors <= 0) return null;
+        if (colors <= 0) return Optional.empty();
 
         final int DEPTH = 5;
-        final int ITERATIONS = 128;
+        final int ITERATIONS = 32;
 
         var inputCopy = BufferedImageVarious.copyImage(input);
 
@@ -48,16 +45,24 @@ public final class ScannerToNoteConverter {
 
         if (rgbList.size() == 0) {
             UserFeedback.popup("Not enough colors in the image. Consider turning off 'isolate background' option, if enabled.");
-            return null;
+            return Optional.empty();
         }
 
         var kMeans = new KMeans<>(colors, rgbList);
+        var mainThread = Thread.currentThread();
 
         kMeans.setOnUpdate(() -> {
             UserFeedback.reportProgress(kMeans.getProgress());
+            if (mainThread.isInterrupted()) {
+                kMeans.abort();
+            }
         });
 
         kMeans.iterate(ITERATIONS);
+
+        if (mainThread.isInterrupted()) {
+            return Optional.empty();
+        }
 
         List<RgbContainer> results = kMeans.getCalculatedMeanPoints();
 
@@ -75,7 +80,11 @@ public final class ScannerToNoteConverter {
             BufferedImagePalette.scaleBrightness(inputCopy, rgbs);
         }
 
-        return inputCopy;
+        if (mainThread.isInterrupted()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(inputCopy);
     }
 
     private static List<RgbContainer> getCopyOf(List<RgbContainer> rgbContainers) {

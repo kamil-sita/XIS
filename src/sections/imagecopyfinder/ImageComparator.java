@@ -1,20 +1,19 @@
 package sections.imagecopyfinder;
 
 import sections.UserFeedback;
-import toolset.imagetools.BufferedImageIO;
 import toolset.imagetools.Rgb;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * ImageComparator compares images and for images that have more than MINIMUM_SIMILARITY similarity, outputs them into list of ComparableImagePairs
  */
 public final class ImageComparator {
+
     //Minimum similarity of hues for given pair to be considered similar:
     private static final double MAXIMUM_HUE_DIFFERENCE = 0.1;
-
     //Minimum similarity for given pair to even be considered similar
     private static final double MINIMUM_SIMILARITY = 0.90;
     //Maximum proportions difference for pair to be considered similar
@@ -22,11 +21,8 @@ public final class ImageComparator {
     //Size of generated miniature of image
     private int generatedMiniatureSize;
 
-    //how much of progress is being done in first phase
-    private static final double FIRST_PHASE_WEIGHT = 0.7;
-
-    private ArrayList<ComparableImage> images;
-    private ArrayList<ComparableImagePair> imagePairs;
+    private List<ComparableImage> images;
+    private List<ComparableImagePair> imagePairs;
 
     private ImageComparatorStatus status;
 
@@ -35,7 +31,7 @@ public final class ImageComparator {
         this.generatedMiniatureSize = generatedMiniatureSize;
     }
 
-    public ArrayList<ComparableImagePair> getImagePairs() {
+    public List<ComparableImagePair> getImagePairs() {
         return imagePairs;
     }
 
@@ -45,69 +41,17 @@ public final class ImageComparator {
      * @return true if initialized
      */
 
-    public boolean initialize(File[] folders, boolean geometricalMode) {
-        if (!loadFiles(folders)) {
-            UserFeedback.reportProgress("No files found");
-            return false;
+    public boolean initialize(File[] folders, boolean isGeometricalMode) {
+        var optionalImages = ComparableImagesIO.loadFiles(folders, generatedMiniatureSize);
+        if (optionalImages.isPresent()) {
+            images = optionalImages.get();
+            findPairs(isGeometricalMode);
+            return true;
         }
-        findPairs(geometricalMode);
-        return true;
+        UserFeedback.reportProgress("No images found");
+        return false;
     }
 
-    /**
-     * Initializes ImageComparator - finds all images in given folder.
-     * @param folders folders containing files to compare
-     * @return true if initialized
-     */
-
-    private boolean loadFiles(File[] folders) {
-        UserFeedback.reportProgress("Finding files in folder");
-        images = new ArrayList<>();
-        ArrayList<File> files = new ArrayList<>();
-        for (int i = 0; i < folders.length; i++) {
-            File[] filesToAdd = folders[i].listFiles();
-            files.addAll(Arrays.asList(filesToAdd));
-        }
-
-        if (files.size() == 0) return false;
-
-        System.out.println(files.size());
-
-        int i = 0;
-        long time = System.nanoTime();
-
-
-        //TODO maybe do it multithreaded? - at least scaling down
-        for (File file : files) {
-            if (i >= 10) {
-                double dt = getApproximateTimeLeftFileLoading(i, time, files.size() - i);
-                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
-            } else {
-                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + ")");
-            }
-
-            UserFeedback.reportProgress(i/(1.0 * files.size()) * FIRST_PHASE_WEIGHT);
-            i++;
-            var optionalImage = BufferedImageIO.getImage(file);
-            if (optionalImage.isPresent()) {
-                ComparableImage comparableImage = new ComparableImage(file, optionalImage.get());
-                comparableImage.generateData(generatedMiniatureSize);
-                optionalImage = null; //so it's maybe easier for the garbage collector
-                images.add(comparableImage);
-            }
-
-        }
-
-        return images.size() > 0;
-    }
-
-    private double getApproximateTimeLeftFileLoading(int i, long time, int i2) {
-        //calculating estimated time left
-        double dt = System.nanoTime() - time;
-        dt = dt * (i2) / (i);
-        dt /= 1000000000;
-        return dt;
-    }
 
     /**
      * finds pairs of similar images
@@ -126,7 +70,7 @@ public final class ImageComparator {
                 UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
             }
 
-            UserFeedback.reportProgress(FIRST_PHASE_WEIGHT + (1 - FIRST_PHASE_WEIGHT) * i/(images.size() * 1.0));
+            reportProgress(false, 1.0*i/images.size());
 
             ComparableImage image1 = images.get(i);
 
@@ -149,7 +93,15 @@ public final class ImageComparator {
             }
         }
         UserFeedback.reportProgress("Images compared");
+    }
 
+    private void reportProgress(boolean firstPhase, double percent) {
+        final double FIRST_PHASE_WEIGHT = 0.7;
+        if (firstPhase) {
+            UserFeedback.reportProgress(percent * FIRST_PHASE_WEIGHT);
+        } else {
+            UserFeedback.reportProgress(FIRST_PHASE_WEIGHT + (1-FIRST_PHASE_WEIGHT) * percent);
+        }
     }
 
     private double getApproximateTimeLeftComparing(long time, int i) {

@@ -16,12 +16,13 @@ import sections.imagecopyfinder.imageInfoView.ImageInfoView;
 import sections.imagecopyfinder.imageInfoView.ImageInfoViewController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static toolset.FileManagementTools.moveFile;
 
 public final class View2Controller {
 
-    private ArrayList<ComparableImagePair> imagePairs;
+    private List<ComparableImagePair> imagePairs;
     private ComparableImagePair hoveredElement;
     private String deleteLocation;
 

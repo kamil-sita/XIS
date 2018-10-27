@@ -6,7 +6,7 @@ import sections.scannertonote.RgbContainer;
 import java.awt.*;
 
 /**
- * Class representing color in RGB model
+ * Class representing pixel color in RGB model
  */
 public class Rgb {
 

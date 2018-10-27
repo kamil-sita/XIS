@@ -16,6 +16,7 @@ public final class BufferedImageIO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (bufferedImage == null) return Optional.empty();
         return Optional.of(bufferedImage);
     }
 }

@@ -42,9 +42,9 @@ public final class ImageComparator {
      */
 
     public boolean initialize(File[] folders, boolean isGeometricalMode) {
-        var optionalImages = ComparableImagesIO.loadFiles(folders, generatedMiniatureSize);
-        if (optionalImages.isPresent()) {
-            images = optionalImages.get();
+        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize);
+        if (!optionalImages.isEmpty()) {
+            images = optionalImages;
             findPairs(isGeometricalMode);
             return true;
         }

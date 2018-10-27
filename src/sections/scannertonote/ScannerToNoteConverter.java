@@ -20,27 +20,14 @@ public final class ScannerToNoteConverter {
 
         var inputCopy = BufferedImageVarious.copyImage(input);
 
-        //get sample data by getting every 6th pixel (~16% of original)
-        List<RgbContainer> rgbList = new ArrayList<>();
+        List<RgbContainer> rgbList = sampleData(inputCopy);
 
-        for (int y = 0; y < inputCopy.getHeight(); y += 3) {
-            for (int x = 0; x < inputCopy.getWidth(); x += 2) {
-                var rgb = new RGB(inputCopy.getRGB(x, y));
-                rgbList.add(rgb.inContainer());
-            }
-        }
+        final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = reduceBitrate(DEPTH, rgbList);
 
-        //reducing bitrate of selected sample data
-        final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = getCopyOf(rgbList);
-        for (var rgb : SAMPLE_WITH_REDUCED_BITRATE) {
-            rgb.reduceDepth(DEPTH);
-        }
-
-        RGB backgroundColor = null;
+        final RGB BACKGROUND_COLOR = filterBackground ? getMostCommon(SAMPLE_WITH_REDUCED_BITRATE) : null;
 
         if (filterBackground) {
-            backgroundColor = getMostCommon(SAMPLE_WITH_REDUCED_BITRATE);
-            filterOutBackgroundByBrightnessAndSaturation(rgbList, backgroundColor, brightnessDiff, saturationDiff);
+            filterOutBackgroundByBrightnessAndSaturation(rgbList, BACKGROUND_COLOR, brightnessDiff, saturationDiff);
         }
 
         if (rgbList.size() == 0) {
@@ -67,11 +54,21 @@ public final class ScannerToNoteConverter {
         List<RgbContainer> results = kMeans.getCalculatedMeanPoints();
 
         if (filterBackground) {
-            results.add(new RgbContainer(backgroundColor));
+            results.add(new RgbContainer(BACKGROUND_COLOR));
         }
 
         BufferedImagePalette.replace(inputCopy, RgbContainer.toRgbList(results));
 
+        scaleBrightnessIfNeeded(scaleBrightness, inputCopy, results);
+
+        if (mainThread.isInterrupted()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(inputCopy);
+    }
+
+    private static void scaleBrightnessIfNeeded(boolean scaleBrightness, BufferedImage inputCopy, List<RgbContainer> results) {
         if (scaleBrightness) {
             var rgbs = new ArrayList<RGB>();
             for (var rgbContainer : results) {
@@ -79,12 +76,25 @@ public final class ScannerToNoteConverter {
             }
             BufferedImagePalette.scaleBrightness(inputCopy, rgbs);
         }
+    }
 
-        if (mainThread.isInterrupted()) {
-            return Optional.empty();
+    private static List<RgbContainer> reduceBitrate(int DEPTH, List<RgbContainer> rgbList) {
+        final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = getCopyOf(rgbList);
+        for (var rgb : SAMPLE_WITH_REDUCED_BITRATE) {
+            rgb.reduceDepth(DEPTH);
         }
+        return SAMPLE_WITH_REDUCED_BITRATE;
+    }
 
-        return Optional.of(inputCopy);
+    private static List<RgbContainer> sampleData(BufferedImage inputCopy) {
+        List<RgbContainer> rgbList = new ArrayList<>();
+        for (int y = 0; y < inputCopy.getHeight(); y += 3) {
+            for (int x = 0; x < inputCopy.getWidth(); x += 2) {
+                var rgb = new RGB(inputCopy.getRGB(x, y));
+                rgbList.add(rgb.inContainer());
+            }
+        }
+        return rgbList;
     }
 
     private static List<RgbContainer> getCopyOf(List<RgbContainer> rgbContainers) {

@@ -8,29 +8,29 @@ import java.awt.*;
 /**
  * Class representing color in RGB model
  */
-public class RGB {
+public class Rgb {
 
     public int a = 255;
     public int r;
     public int g;
     public int b;
 
-    public RGB() {
+    public Rgb() {
 
     }
 
-    public RGB (int r, int g, int b) {
+    public Rgb(int r, int g, int b) {
         this.r = r;
         this.g = g;
         this.b = b;
     }
 
-    public RGB (int r, int g, int b, int a) {
+    public Rgb(int r, int g, int b, int a) {
         this(r, g, b);
         this.a = a;
     }
 
-    public RGB (int rgba) {
+    public Rgb(int rgba) {
         a = (rgba >> 24) & 0xFF;
         r = (rgba >> 16) & 0xFF;
         g = (rgba >> 8) & 0xFF;
@@ -53,7 +53,7 @@ public class RGB {
      * Compares two colors, using r g b channels
      * @return % of similarity (100% - equal)
      */
-    public double compareToRGB(RGB secondColor) {
+    public double compareToRGB(Rgb secondColor) {
         double totalSimilarity = 3.0;
 
         totalSimilarity -= Math.abs(r - secondColor.r)/255.0;
@@ -63,7 +63,7 @@ public class RGB {
         return totalSimilarity/3.0;
     }
 
-    public double getDistanceFrom(RGB rgb) {
+    public double getDistanceFrom(Rgb rgb) {
         return Math.sqrt(squared(r - rgb.r) + squared(g - rgb.g) + squared(b - rgb.b));
     }
 
@@ -72,14 +72,14 @@ public class RGB {
     }
 
 
-    public HSB toHSB() {
+    public Hsb toHSB() {
         float[] hsb = new float[3];
         Color.RGBtoHSB(r, g, b, hsb);
-        return new HSB(hsb[0], hsb[1], hsb[2]);
+        return new Hsb(hsb[0], hsb[1], hsb[2]);
     }
 
-    public RGB getCopy() {
-        return new RGB(r, g, b, a);
+    public Rgb getCopy() {
+        return new Rgb(r, g, b, a);
     }
 
     public void reduceDepth(int bitDepth) {
@@ -122,8 +122,8 @@ public class RGB {
     @Override
     public boolean equals(Object o) {
         if (o == null) return false;
-        if (o instanceof RGB) {
-            var orgb = (RGB) o;
+        if (o instanceof Rgb) {
+            var orgb = (Rgb) o;
             return r == orgb.r && g == orgb.g && b == orgb.b && a == orgb.a;
         }
         return false;

@@ -2,7 +2,7 @@ package sections.imagecopyfinder;
 
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImageIO;
-import toolset.imagetools.RGB;
+import toolset.imagetools.Rgb;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -198,8 +198,8 @@ public final class ImageComparator {
         for (int x = 0; x < generatedMiniatureSize; x++) {
             for (int y = 0; y < generatedMiniatureSize; y++) {
 
-                RGB rgb1 = new RGB(image1.getPreview().getRGB(x, y));
-                RGB rgb2 = new RGB(image2.getPreview().getRGB(x, y));
+                Rgb rgb1 = new Rgb(image1.getPreview().getRGB(x, y));
+                Rgb rgb2 = new Rgb(image2.getPreview().getRGB(x, y));
 
                 if (geometricalMode) {
                     equality += Math.pow(1 - rgb1.compareToRGB(rgb2), POWER);

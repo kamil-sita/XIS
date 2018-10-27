@@ -1,8 +1,8 @@
 package sections.imagecopyfinder;
 
 import toolset.imagetools.BufferedImageScale;
-import toolset.imagetools.HSB;
-import toolset.imagetools.RGB;
+import toolset.imagetools.Hsb;
+import toolset.imagetools.Rgb;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,7 +18,7 @@ public final class ComparableImage {
     //file containing image
     private File imageFile;
 
-    private HSB hsb;
+    private Hsb hsb;
 
 
     private int width;
@@ -36,13 +36,13 @@ public final class ComparableImage {
         width = fullSizeImage.getWidth();
         height = fullSizeImage.getHeight();
 
-        RGB rgb = new RGB(BufferedImageScale.getScaledDownImage(smallImage, 1).getRGB(0, 0));
+        Rgb rgb = new Rgb(BufferedImageScale.getScaledDownImage(smallImage, 1).getRGB(0, 0));
         hsb = rgb.toHSB();
 
         fullSizeImage = null; //so it's easier to know for GC
     }
 
-    public HSB getHsb() {
+    public Hsb getHsb() {
         return hsb;
     }
 

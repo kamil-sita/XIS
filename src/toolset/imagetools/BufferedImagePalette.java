@@ -8,15 +8,15 @@ import java.util.List;
 
 public class BufferedImagePalette {
 
-    public static void scaleBrightness(BufferedImage input, List<RGB> listOfColors) {
+    public static void scaleBrightness(BufferedImage input, List<Rgb> listOfColors) {
 
         var diffAndMultipleB = getDiffAndMultB(listOfColors);
         var diffAndMultipleS = getDiffAndMultS(listOfColors);
 
         for (int x = 0; x < input.getWidth(); x++) {
             for (int y = 0; y < input.getHeight(); y++) {
-                RGB rgb = new RGB(input.getRGB(x, y));
-                HSB hsb = rgb.toHSB();
+                Rgb rgb = new Rgb(input.getRGB(x, y));
+                Hsb hsb = rgb.toHSB();
                 hsb.S = (hsb.S - diffAndMultipleS.getKey()) * diffAndMultipleS.getValue();
                 hsb.B = (hsb.B - diffAndMultipleB.getKey()) * diffAndMultipleB.getValue();
                 input.setRGB(x, y, hsb.toRGB().toInt());
@@ -24,13 +24,13 @@ public class BufferedImagePalette {
         }
     }
 
-    private static Pair<Double, Double> getDiffAndMultB(List<RGB> rgbList) {
-        List<HSB> hsbList = new ArrayList<>();
+    private static Pair<Double, Double> getDiffAndMultB(List<Rgb> rgbList) {
+        List<Hsb> hsbList = new ArrayList<>();
         for (var rgb : rgbList) {
             hsbList.add(rgb.toHSB());
         }
 
-        hsbList.sort((HSB hsb, HSB hsb1) -> Double.compare(hsb.B, hsb1.B));
+        hsbList.sort((Hsb hsb, Hsb hsb1) -> Double.compare(hsb.B, hsb1.B));
 
         double diff = hsbList.get(0).B;
 
@@ -39,13 +39,13 @@ public class BufferedImagePalette {
         return new Pair<>(diff, mult);
     }
 
-    private static Pair<Double, Double> getDiffAndMultS(List<RGB> rgbList) {
-        List<HSB> hsbList = new ArrayList<>();
+    private static Pair<Double, Double> getDiffAndMultS(List<Rgb> rgbList) {
+        List<Hsb> hsbList = new ArrayList<>();
         for (var rgb : rgbList) {
             hsbList.add(rgb.toHSB());
         }
 
-        hsbList.sort((HSB hsb, HSB hsb1) -> Double.compare(hsb.S, hsb1.S));
+        hsbList.sort((Hsb hsb, Hsb hsb1) -> Double.compare(hsb.S, hsb1.S));
 
         double diff = hsbList.get(0).S;
 
@@ -54,22 +54,22 @@ public class BufferedImagePalette {
         return new Pair<>(diff, mult);
     }
 
-    public static void replace(BufferedImage input, List<RGB> rgbList) {
+    public static void replace(BufferedImage input, List<Rgb> rgbList) {
         for (int x = 0; x < input.getWidth(); x++) {
             for (int y = 0; y < input.getHeight(); y++) {
-                RGB originalRgb = new RGB(input.getRGB(x, y));
-                RGB rgbToReplaceWith;
+                Rgb originalRgb = new Rgb(input.getRGB(x, y));
+                Rgb rgbToReplaceWith;
                 rgbToReplaceWith = getClosestToFromList(rgbList, originalRgb);
                 input.setRGB(x, y, rgbToReplaceWith.toInt());
             }
         }
     }
 
-    private static RGB getClosestToFromList(List<RGB> rgbList, RGB target) {
-        RGB closest = null;
+    private static Rgb getClosestToFromList(List<Rgb> rgbList, Rgb target) {
+        Rgb closest = null;
         double distance = 0;
         for (int i = 0; i < rgbList.size(); i++) {
-            RGB rgb = rgbList.get(i);
+            Rgb rgb = rgbList.get(i);
             if (closest == null || target.getDistanceFrom(rgb) < distance) {
                 closest = rgb;
                 distance = target.getDistanceFrom(rgb);

@@ -4,7 +4,7 @@ import pl.ksitarski.simplekmeans.KMeans;
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImagePalette;
 import toolset.imagetools.BufferedImageVarious;
-import toolset.imagetools.RGB;
+import toolset.imagetools.Rgb;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -24,7 +24,7 @@ public final class ScannerToNoteConverter {
 
         final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = reduceBitrate(DEPTH, rgbList);
 
-        final RGB BACKGROUND_COLOR = filterBackground ? getMostCommon(SAMPLE_WITH_REDUCED_BITRATE) : null;
+        final Rgb BACKGROUND_COLOR = filterBackground ? getMostCommon(SAMPLE_WITH_REDUCED_BITRATE) : null;
 
         if (filterBackground) {
             filterOutBackgroundByBrightnessAndSaturation(rgbList, BACKGROUND_COLOR, brightnessDiff, saturationDiff);
@@ -70,7 +70,7 @@ public final class ScannerToNoteConverter {
 
     private static void scaleBrightnessIfNeeded(boolean scaleBrightness, BufferedImage inputCopy, List<RgbContainer> results) {
         if (scaleBrightness) {
-            var rgbs = new ArrayList<RGB>();
+            var rgbs = new ArrayList<Rgb>();
             for (var rgbContainer : results) {
                 rgbs.add(rgbContainer.getRgb());
             }
@@ -90,7 +90,7 @@ public final class ScannerToNoteConverter {
         List<RgbContainer> rgbList = new ArrayList<>();
         for (int y = 0; y < inputCopy.getHeight(); y += 3) {
             for (int x = 0; x < inputCopy.getWidth(); x += 2) {
-                var rgb = new RGB(inputCopy.getRGB(x, y));
+                var rgb = new Rgb(inputCopy.getRGB(x, y));
                 rgbList.add(rgb.inContainer());
             }
         }
@@ -105,9 +105,9 @@ public final class ScannerToNoteConverter {
         return copy;
     }
 
-    private static RGB getMostCommon(List<RgbContainer> rgbs) {
+    private static Rgb getMostCommon(List<RgbContainer> rgbs) {
         //counting occurrences
-        HashMap<RGB, Integer> rgbWithOccurrences = new HashMap<>();
+        HashMap<Rgb, Integer> rgbWithOccurrences = new HashMap<>();
         for (var rgb : rgbs) {
             if (rgbWithOccurrences.containsKey(rgb.getRgb())) {
                 int newVal = rgbWithOccurrences.get(rgb.getRgb()) + 1;
@@ -122,7 +122,7 @@ public final class ScannerToNoteConverter {
         var entriesArray = entries.toArray();
 
         for (var entryo : entriesArray) {
-            var entry = (Map.Entry<RGB, Integer>) entryo;
+            var entry = (Map.Entry<Rgb, Integer>) entryo;
             if (entry.getValue() > mostCommonOccurrences) {
                 mostCommonOccurrences = entry.getValue();
                 mostCommon = entry.getKey();
@@ -132,7 +132,7 @@ public final class ScannerToNoteConverter {
         return mostCommon;
     }
 
-    private static void filterOutBackgroundByBrightnessAndSaturation(List<RgbContainer> rgbContainerList, RGB backgroundColor, double minBrightnessDiff, double minSaturationDiff) {
+    private static void filterOutBackgroundByBrightnessAndSaturation(List<RgbContainer> rgbContainerList, Rgb backgroundColor, double minBrightnessDiff, double minSaturationDiff) {
         var hsbBackground = backgroundColor.toHSB();
         for (int i = 0; i < rgbContainerList.size(); i++) {
             var rgbC = rgbContainerList.get(i);

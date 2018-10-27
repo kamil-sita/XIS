@@ -2,35 +2,35 @@ package toolset.imagetools;
 
 import java.awt.*;
 
-public class HSB {
+public class Hsb {
     public double H;
     public double S;
     public double B;
 
-    public HSB() {
+    public Hsb() {
 
     }
 
-    public HSB(double H, double S, double B) {
+    public Hsb(double H, double S, double B) {
         this.H = H;
         this.S = S;
         this.B = B;
     }
 
-    public double hueDiff(HSB otherHsb) {
+    public double hueDiff(Hsb otherHsb) {
         return Math.abs(H - otherHsb.H);
     }
 
-    public double saturationDiff(HSB otherHsb) {
+    public double saturationDiff(Hsb otherHsb) {
         return Math.abs(S - otherHsb.S);
     }
 
-    public double brightnessDiff(HSB otherHsb) {
+    public double brightnessDiff(Hsb otherHsb) {
         return Math.abs(B - otherHsb.B);
     }
 
-    public RGB toRGB() {
-        return new RGB(Color.HSBtoRGB((float) H, (float) S, (float) B));
+    public Rgb toRGB() {
+        return new Rgb(Color.HSBtoRGB((float) H, (float) S, (float) B));
     }
 
     @Override

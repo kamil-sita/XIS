@@ -1,7 +1,7 @@
 package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeansData;
-import toolset.imagetools.RGB;
+import toolset.imagetools.Rgb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import static java.lang.Math.sqrt;
 
 public final class RgbContainer implements KMeansData {
 
-    private RGB rgbValue;
+    private Rgb rgbValue;
 
-    public RgbContainer(RGB rgb) {
+    public RgbContainer(Rgb rgb) {
         this.rgbValue = rgb;
     }
 
@@ -33,9 +33,9 @@ public final class RgbContainer implements KMeansData {
     @Override
     public KMeansData meanOfList(List<KMeansData> list) {
         if (list == null || list.size() == 0) return null;
-        RGB rgb = new RGB(0, 0 ,0);
+        Rgb rgb = new Rgb(0, 0 ,0);
         for (KMeansData simpleKMeansData : list) {
-            RGB rgbElement = ((RgbContainer) simpleKMeansData).rgbValue;
+            Rgb rgbElement = ((RgbContainer) simpleKMeansData).rgbValue;
             rgb.r += rgbElement.r;
             rgb.g += rgbElement.g;
             rgb.b += rgbElement.b;
@@ -46,12 +46,12 @@ public final class RgbContainer implements KMeansData {
         return new RgbContainer(rgb);
     }
 
-    public RGB getRgb() {
+    public Rgb getRgb() {
         return rgbValue;
     }
 
-    public static List<RGB> toRgbList(List<RgbContainer> rgbContainerList) {
-        List<RGB> rgbList = new ArrayList<>();
+    public static List<Rgb> toRgbList(List<RgbContainer> rgbContainerList) {
+        List<Rgb> rgbList = new ArrayList<>();
         for (RgbContainer rgbContainer : rgbContainerList) {
             rgbList.add(rgbContainer.getRgb());
         }

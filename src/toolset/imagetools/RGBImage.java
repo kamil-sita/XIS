@@ -4,21 +4,21 @@ import java.awt.image.BufferedImage;
 
 public class RGBImage {
 
-    private RGB[][] image;
+    private Rgb[][] image;
 
     private double minBrightness = 1000;
     private double maxBrightness = -1;
 
     public RGBImage(int width, int height) {
-        image = new RGB[height][width];
+        image = new Rgb[height][width];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                image[y][x] = new RGB();
+                image[y][x] = new Rgb();
             }
         }
     }
 
-    public void setRgb(int x, int y, RGB rgb) {
+    public void setRgb(int x, int y, Rgb rgb) {
         image[y][x] = rgb;
         var hsb = rgb.toHSB();
 

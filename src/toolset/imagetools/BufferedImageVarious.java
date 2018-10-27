@@ -17,7 +17,7 @@ public class BufferedImageVarious {
 
         for (int y = 0; y < input.getHeight(); y++) {
             for (int x = 0; x < input.getWidth(); x++) {
-                rgbimage.setRgb(x, y, new RGB(input.getRGB(x, y)));
+                rgbimage.setRgb(x, y, new Rgb(input.getRGB(x, y)));
             }
         }
 

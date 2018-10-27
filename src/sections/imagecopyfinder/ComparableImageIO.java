@@ -35,8 +35,7 @@ public class ComparableImageIO {
             i++;
             var optionalImage = BufferedImageIO.getImage(file);
             if (optionalImage.isPresent()) {
-                ComparableImage comparableImage = new ComparableImage(file, optionalImage.get());
-                comparableImage.generateData(generatedMiniatureSize);
+                ComparableImage comparableImage = new ComparableImage(file, optionalImage.get(), generatedMiniatureSize);
                 optionalImage = null; //so it's maybe easier for the garbage collector
                 images.add(comparableImage);
             }

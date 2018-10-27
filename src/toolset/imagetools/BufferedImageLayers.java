@@ -3,7 +3,7 @@ package toolset.imagetools;
 import java.awt.image.BufferedImage;
 
 public class BufferedImageLayers {
-    public static RGBImage divide(BufferedImage image0, BufferedImage image1) {
+    public static RgbImage divide(BufferedImage image0, BufferedImage image1) {
         var output = BufferedImageVarious.copyImageToRgbImage(image0);
         output.resetContrastCounters();
 

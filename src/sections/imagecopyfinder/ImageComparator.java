@@ -40,7 +40,6 @@ public final class ImageComparator {
      * @param folders
      * @return true if initialized
      */
-
     public boolean initialize(File[] folders, boolean isGeometricalMode) {
         var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize);
         if (!optionalImages.isEmpty()) {
@@ -63,14 +62,7 @@ public final class ImageComparator {
         long time = System.nanoTime();
 
         for (int i = 0; i < images.size(); i++) {
-            if (i >= 10) {
-                double dt = getApproximateTimeLeftComparing(time, i);
-                UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
-            } else {
-                UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
-            }
-
-            reportProgress(false, 1.0*i/images.size());
+            reportFindPairingProgress(time, i);
 
             ComparableImage image1 = images.get(i);
 
@@ -78,31 +70,32 @@ public final class ImageComparator {
 
                 ComparableImage image2 = images.get(j);
 
-                if (image1.getHsb().hueDiff(image2.getHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
-                    double similarity = compareImages(image1, image2, geometricalMode);
-
-                    System.out.println(similarity);
-
-                    if (similarity >= MINIMUM_SIMILARITY) {
-                        imagePairs.add(new ComparableImagePair(image1, image2, similarity));
-                    }
-                }
-
-
-
+                addPairIfSimilar(geometricalMode, image1, image2);
             }
         }
         UserFeedback.reportProgress("Images compared");
     }
 
-    private void reportProgress(boolean firstPhase, double percent) {
-        final double FIRST_PHASE_WEIGHT = 0.7;
-        if (firstPhase) {
-            UserFeedback.reportProgress(percent * FIRST_PHASE_WEIGHT);
-        } else {
-            UserFeedback.reportProgress(FIRST_PHASE_WEIGHT + (1-FIRST_PHASE_WEIGHT) * percent);
+    private void addPairIfSimilar(boolean geometricalMode, ComparableImage image1, ComparableImage image2) {
+        if (image1.getHsb().hueDiff(image2.getHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
+            double similarity = compareImages(image1, image2, geometricalMode);
+            if (similarity >= MINIMUM_SIMILARITY) {
+                imagePairs.add(new ComparableImagePair(image1, image2, similarity));
+            }
         }
     }
+
+    private void reportFindPairingProgress(long time, int i) {
+        if (i >= 10) {
+            double dt = getApproximateTimeLeftComparing(time, i);
+            UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
+        } else {
+            UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
+        }
+
+        UserFeedback.reportProgress((1.0*i)/images.size());
+    }
+
 
     private double getApproximateTimeLeftComparing(long time, int i) {
         //calculating estimated time left

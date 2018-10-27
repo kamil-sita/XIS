@@ -25,12 +25,10 @@ public final class ComparableImage {
     private int height;
 
 
-    public ComparableImage(File file, BufferedImage image) {
+    public ComparableImage(File file, BufferedImage image, final int COMPARED_IMAGE_SIZE) {
         imageFile = file;
         fullSizeImage = image;
-    }
 
-    public void generateData(final int COMPARED_IMAGE_SIZE) {
         smallImage = BufferedImageScale.getScaledDownImage(fullSizeImage, COMPARED_IMAGE_SIZE);
 
         width = fullSizeImage.getWidth();

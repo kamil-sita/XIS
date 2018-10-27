@@ -2,14 +2,14 @@ package toolset.imagetools;
 
 import java.awt.image.BufferedImage;
 
-public class RGBImage {
+public class RgbImage {
 
     private Rgb[][] image;
 
     private double minBrightness = 1000;
     private double maxBrightness = -1;
 
-    public RGBImage(int width, int height) {
+    public RgbImage(int width, int height) {
         image = new Rgb[height][width];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {

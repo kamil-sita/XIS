@@ -12,8 +12,8 @@ public class BufferedImageVarious {
         return imageCopy;
     }
 
-    public static RGBImage copyImageToRgbImage(BufferedImage input) {
-        var rgbimage = new RGBImage(input.getWidth(), input.getHeight());
+    public static RgbImage copyImageToRgbImage(BufferedImage input) {
+        var rgbimage = new RgbImage(input.getWidth(), input.getHeight());
 
         for (int y = 0; y < input.getHeight(); y++) {
             for (int x = 0; x < input.getWidth(); x++) {

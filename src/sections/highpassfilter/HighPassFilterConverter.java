@@ -4,13 +4,13 @@ import sections.UserFeedback;
 import toolset.imagetools.Blur;
 import toolset.imagetools.BufferedImageLayers;
 import toolset.imagetools.BufferedImageVarious;
-import toolset.imagetools.RGBImage;
+import toolset.imagetools.RgbImage;
 
 import java.awt.image.BufferedImage;
 
 public final class HighPassFilterConverter {
 
-    public static RGBImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness) {
+    public static RgbImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness) {
         var blurredImage = BufferedImageVarious.copyImage(bufferedImage);
         int i = 0;
         UserFeedback.reportProgress(i/(blurPasses + 2.0));

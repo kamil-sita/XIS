@@ -1,4 +1,4 @@
-package sections.imagecopyfinder.imageInfoView;
+package sections.imagecopyfinder.xcxc;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -7,7 +7,7 @@ import sections.SubUserInterface;
 import java.io.IOException;
 
 public final class ImageInfoView extends SubUserInterface {
-    private static final String LOCATION = "imageInfoView.fxml";
+    private static final String LOCATION = "xcxc.fxml";
     private AnchorPane anchorPane;
     private ImageInfoViewController imageInfoViewController;
 

@@ -12,8 +12,8 @@ import javafx.scene.layout.AnchorPane;
 import sections.imagecopyfinder.ComparableImage;
 import sections.imagecopyfinder.ComparableImagePair;
 import sections.imagecopyfinder.ImageCopyFinder;
-import sections.imagecopyfinder.imageInfoView.ImageInfoView;
-import sections.imagecopyfinder.imageInfoView.ImageInfoViewController;
+import sections.imagecopyfinder.xcxc.ImageInfoView;
+import sections.imagecopyfinder.xcxc.ImageInfoViewController;
 
 import java.util.ArrayList;
 import java.util.List;

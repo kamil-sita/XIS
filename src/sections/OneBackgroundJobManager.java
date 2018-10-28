@@ -22,6 +22,7 @@ public final class OneBackgroundJobManager {
     public static void interruptIfPossible() {
         try {
             if (currentJob != null) {
+                UserFeedback.reportProgress(0);
                 currentJob.interrupt();
             }
         } catch (Exception e) {

@@ -16,8 +16,6 @@ public final class ImageComparator {
     private static final double MAXIMUM_HUE_DIFFERENCE = 0.1;
     //Minimum similarity for given pair to even be considered similar
     private static final double MINIMUM_SIMILARITY = 0.90;
-    //Maximum proportions difference for pair to be considered similar
-    private static final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
     //Size of generated miniature of image
     private int generatedMiniatureSize;
 
@@ -129,14 +127,8 @@ public final class ImageComparator {
 
     public double compareImages(ComparableImage image1, ComparableImage image2, boolean geometricalMode) {
         final double POWER = 1.25;
-        double image1Proportion = (image1.getHeight() * 1.0)/(image1.getWidth() * 1.0);
-        double image2Proportion = (image2.getHeight() * 1.0)/(image2.getWidth() * 1.0);
 
-        double imagesProportion = image1Proportion/image2Proportion;
-        final double LOWER_PROPORTION_DIFFERENCE = 1/MAXIMUM_PROPORTIONS_DIFFERENCE;
-        if (!(LOWER_PROPORTION_DIFFERENCE <= imagesProportion && imagesProportion <= MAXIMUM_PROPORTIONS_DIFFERENCE)) {
-            return 0;
-        }
+        if (!proportionsAcceptable(image1, image2)) return 0;
 
         double equality = 0;
 
@@ -160,6 +152,17 @@ public final class ImageComparator {
         } else {
             return equality / (generatedMiniatureSize * generatedMiniatureSize);
         }
+    }
+
+    private boolean proportionsAcceptable(ComparableImage image1, ComparableImage image2) {
+        double imagesProportionRatio = image1.getProportion()/image2.getProportion();
+
+        final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
+        final double MINIMUM_PROPORTIONS_DIFFERENCE = 1.0/MAXIMUM_PROPORTIONS_DIFFERENCE;
+        if (MINIMUM_PROPORTIONS_DIFFERENCE <= imagesProportionRatio && imagesProportionRatio <= MAXIMUM_PROPORTIONS_DIFFERENCE) {
+            return true;
+        }
+        return false;
     }
 
     public ImageComparatorStatus getStatus() {

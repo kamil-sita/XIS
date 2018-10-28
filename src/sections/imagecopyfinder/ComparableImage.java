@@ -40,6 +40,10 @@ public final class ComparableImage {
         fullSizeImage = null; //so it's easier to know for GC
     }
 
+    public double getProportion() {
+        return (getHeight() * 1.0)/(getWidth() * 1.0);
+    }
+
     public Hsb getHsb() {
         return hsb;
     }

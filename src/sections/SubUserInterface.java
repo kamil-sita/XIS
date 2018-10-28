@@ -18,6 +18,7 @@ public abstract class SubUserInterface {
     protected String defaultLocation = null;
 
     public AnchorPane getUserInterface() {
+        OneBackgroundJobManager.interruptIfPossible();
         return lazyLoad();
     }
 

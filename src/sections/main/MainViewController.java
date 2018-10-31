@@ -11,10 +11,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import sections.Notifier;
 import sections.SubUserInterface;
+import sections.defaultpage.WelcomePage;
 import sections.highpassfilter.HighPassFilter;
+import sections.imagecompetition.ImageCompetition;
 import sections.imagecopyfinder.ImageCopyFinder;
 import sections.scannertonote.ScannerToNote;
-import sections.defaultpage.WelcomePage;
 
 import java.util.ArrayList;
 
@@ -89,6 +90,15 @@ public final class MainViewController {
         currentModule = highPassFilter;
         setStatus("high pass filter module loaded");
     }
+
+    @FXML
+    void imagesCompetitionPress(ActionEvent event) {
+        var imageCompetition = new ImageCompetition();
+        changeVista(imageCompetition);
+        currentModule = imageCompetition;
+        setStatus("image competition module loaded");
+    }
+
 
     //Other methods
 

@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BufferedImagePalette {
+public class BufferedImageColorPalette {
 
     public static void scaleBrightness(BufferedImage input, List<Rgb> listOfColors) {
 

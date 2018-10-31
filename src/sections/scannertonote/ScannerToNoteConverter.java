@@ -2,7 +2,7 @@ package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeans;
 import sections.UserFeedback;
-import toolset.imagetools.BufferedImagePalette;
+import toolset.imagetools.BufferedImageColorPalette;
 import toolset.imagetools.BufferedImageVarious;
 import toolset.imagetools.Rgb;
 
@@ -57,7 +57,7 @@ public final class ScannerToNoteConverter {
             results.add(new RgbContainer(BACKGROUND_COLOR));
         }
 
-        BufferedImagePalette.replace(inputCopy, RgbContainer.toRgbList(results));
+        BufferedImageColorPalette.replace(inputCopy, RgbContainer.toRgbList(results));
 
         scaleBrightnessIfNeeded(scaleBrightness, inputCopy, results);
 
@@ -74,7 +74,7 @@ public final class ScannerToNoteConverter {
             for (var rgbContainer : results) {
                 rgbs.add(rgbContainer.getRgb());
             }
-            BufferedImagePalette.scaleBrightness(inputCopy, rgbs);
+            BufferedImageColorPalette.scaleBrightness(inputCopy, rgbs);
         }
     }
 

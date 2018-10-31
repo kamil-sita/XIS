@@ -1,7 +1,7 @@
 package sections.highpassfilter;
 
 import sections.UserFeedback;
-import toolset.imagetools.Blur;
+import toolset.imagetools.BufferedImageBlur;
 import toolset.imagetools.BufferedImageLayers;
 import toolset.imagetools.BufferedImageVarious;
 import toolset.imagetools.RgbImage;
@@ -16,7 +16,7 @@ public final class HighPassFilterConverter {
         UserFeedback.reportProgress(i/(blurPasses + 2.0));
 
         for (i = 0; i < blurPasses; i++) {
-            blurredImage = Blur.simpleBlur(blurredImage);
+            blurredImage = BufferedImageBlur.simpleBlur(blurredImage);
             UserFeedback.reportProgress(i/(blurPasses + 2.0));
         }
 

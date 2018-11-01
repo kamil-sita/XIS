@@ -44,8 +44,8 @@ public class ComparableImageIO {
 
         return images;
     }
+
     private static double getApproximateTimeLeftFileLoading(int i, long time, int i2) {
-        //calculating estimated time left
         double dt = System.nanoTime() - time;
         dt = dt * (i2) / (i);
         dt /= 1000000000;

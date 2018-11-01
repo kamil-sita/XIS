@@ -4,26 +4,38 @@ import javax.imageio.ImageIO;
 
 public class Extensions {
 
-    private static String[] formats;
+    private static String[] starExtensions;
+    private static String[] extensions;
 
     private static void lazyGenerateFormats() {
-        if (formats != null) return;
+        if (starExtensions != null && extensions != null) return;
 
-        formats = ImageIO.getReaderFormatNames();
+        extensions = ImageIO.getReaderFormatNames();
+        starExtensions = ImageIO.getReaderFormatNames();
 
-        for (int i = 0; i < formats.length; i++) {
-            formats[i] = "*." + formats[i];
+        for (int i = 0; i < starExtensions.length; i++) {
+            starExtensions[i] = "*." + starExtensions[i];
+        }
+
+        for (var ex : extensions) {
+            System.out.println(ex);
         }
 
     }
 
     /**
-     * Gets image formats as supported by ImageIO.
+     * Gets image starExtensions as supported by ImageIO. Returns as "*.extension"
      */
-    public static String[] getImageFormats() {
-        if (formats == null) {
-            lazyGenerateFormats();
-        }
-        return formats;
+    public static String[] getStarExtensions() {
+        lazyGenerateFormats();
+        return starExtensions;
+    }
+
+    /**
+     * Gets image starExtensions as supported by ImageIO. Returns"extension"
+     */
+    public static String[] getExtensions() {
+        lazyGenerateFormats();
+        return extensions;
     }
 }

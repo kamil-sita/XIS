@@ -18,7 +18,7 @@ public class GuiFileIO {
      * @return loaded buffered image
      */
     public static Optional<BufferedImage> getImage() {
-        var formats = Extensions.getImageFormats();
+        var formats = Extensions.getStarExtensions();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
@@ -39,7 +39,7 @@ public class GuiFileIO {
      * @param image image to save
      */
     public static void saveImage(BufferedImage image) {
-        var formats = Extensions.getImageFormats();
+        var formats = Extensions.getStarExtensions();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();

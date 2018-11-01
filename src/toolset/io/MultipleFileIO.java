@@ -52,7 +52,8 @@ public class MultipleFileIO {
     }
 
     private static boolean isImage(File file) {
-        return true;
+        return Arrays.stream(Extensions.getExtensions()).map(x -> x.substring(1, x.length() - 1).toLowerCase())
+                .anyMatch(file.getName().toLowerCase()::endsWith);
     }
 
 

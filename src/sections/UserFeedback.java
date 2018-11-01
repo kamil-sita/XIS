@@ -3,7 +3,10 @@ package sections;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import sections.main.MainViewController;
+
+import java.util.Optional;
 
 
 public final class UserFeedback {
@@ -21,5 +24,13 @@ public final class UserFeedback {
             alert.show();
         });
 
+    }
+
+    public static Optional<String> getText(String title, String header, String context) {
+        TextInputDialog textInputDialog = new TextInputDialog();
+        textInputDialog.setTitle(title);
+        textInputDialog.setHeaderText(header);
+        textInputDialog.setContentText(context);
+        return textInputDialog.showAndWait();
     }
 }

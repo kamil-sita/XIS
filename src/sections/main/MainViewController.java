@@ -172,6 +172,7 @@ public final class MainViewController {
     }
 
     public static void removeNotifier(Notifier notifier) {
+        if (notifier == null) return;
         notifiers.remove(notifier);
     }
 }

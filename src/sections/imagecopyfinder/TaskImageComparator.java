@@ -1,9 +1,7 @@
 package sections.imagecopyfinder;
 
 import javafx.concurrent.Task;
-import sections.UserFeedback;
-
-import java.io.File;
+import toolset.io.MultipleFileIO;
 
 public final class TaskImageComparator extends Task<ImageComparator> {
 
@@ -18,26 +16,8 @@ public final class TaskImageComparator extends Task<ImageComparator> {
     }
 
     public ImageComparator call() {
-        File[] folders = new File[fileFolders.length];
 
-        for (int i = 0; i < fileFolders.length; i++) {
-            String s = fileFolders[i];
-            File folder;
-            try {
-                folder = new File(s);
-            } catch (Exception e) {
-                imageComparator.setStatus(ImageComparator.ImageComparatorStatus.IO_ERROR);
-                UserFeedback.popup("IOException caused by: " + s);
-                return imageComparator;
-            }
-
-            if (!folder.isDirectory()) {
-                imageComparator.setStatus(ImageComparator.ImageComparatorStatus.NOT_FOLDER);
-                UserFeedback.popup("Not a folder: " + s);
-            }
-            folders[i] = folder;
-        }
-
+        var folders = MultipleFileIO.getFoldersFromStrings(fileFolders);
 
         boolean status = imageComparator.initialize(folders, geometricalMode);
 

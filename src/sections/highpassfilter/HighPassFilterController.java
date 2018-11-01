@@ -10,8 +10,8 @@ import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
-import toolset.GuiFileIO;
 import toolset.imagetools.BufferedImageConvert;
+import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
 

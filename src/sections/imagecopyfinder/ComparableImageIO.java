@@ -2,10 +2,10 @@ package sections.imagecopyfinder;
 
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImageIO;
+import toolset.io.MultipleFileIO;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,7 +14,7 @@ public class ComparableImageIO {
     public static List<ComparableImage> loadFiles(File[] folders, int generatedMiniatureSize) {
         UserFeedback.reportProgress("Finding files in folder");
         var images = new ArrayList<ComparableImage>();
-        ArrayList<File> files = getFiles(folders);
+        List<File> files = MultipleFileIO.loadFilesFromFolders(folders);
 
         if (files.size() == 0) return Collections.emptyList();
 
@@ -44,16 +44,6 @@ public class ComparableImageIO {
 
         return images;
     }
-
-    private static ArrayList<File> getFiles(File[] folders) {
-        ArrayList<File> files = new ArrayList<>();
-        for (int i = 0; i < folders.length; i++) {
-            File[] filesToAdd = folders[i].listFiles();
-            files.addAll(Arrays.asList(filesToAdd));
-        }
-        return files;
-    }
-
     private static double getApproximateTimeLeftFileLoading(int i, long time, int i2) {
         //calculating estimated time left
         double dt = System.nanoTime() - time;

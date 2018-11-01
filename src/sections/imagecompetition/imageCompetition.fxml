@@ -3,14 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.highpassfilter.HighPassFilterController">
+<AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imagecompetition.CompetitionController">
    <children>
-      <Button layoutX="7.0" layoutY="40.0" mnemonicParsing="false" onAction="#loadFilePress" text="load file" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="40.0" />
-      <Button layoutX="82.0" layoutY="40.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="40.0" />
-      <TextField fx:id="blur" layoutX="14.0" layoutY="25.0" text="blur strength" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
-      <Button layoutX="156.0" layoutY="40.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="40.0" />
-      <ImageView fx:id="imagePreview" fitHeight="510.0" fitWidth="475.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="718.0" AnchorPane.topAnchor="80.0" />
-      <Separator layoutX="12.0" layoutY="73.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="73.0" />
-      <CheckBox fx:id="scaleBrightness" layoutX="173.0" layoutY="11.0" mnemonicParsing="false" text="scale brightness" />
+      <ImageView fx:id="imageViewL" fitHeight="510.0" fitWidth="475.0" layoutX="221.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="221.0" AnchorPane.topAnchor="27.0" />
+      <ListView layoutX="14.0" layoutY="47.0" prefHeight="539.0" prefWidth="193.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="47.0" />
+      <Button layoutX="14.0" layoutY="20.0" mnemonicParsing="false" onAction="#newCompetitionPress" text="New competition" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+      <Button layoutX="128.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadPress" text="Load" AnchorPane.leftAnchor="125.0" AnchorPane.topAnchor="14.0" />
+      <Button layoutX="175.0" layoutY="14.0" mnemonicParsing="false" onAction="#savePress" text="Save" AnchorPane.leftAnchor="170.0" AnchorPane.topAnchor="14.0" />
+      <Separator layoutX="221.0" layoutY="548.0" prefHeight="2.0" prefWidth="390.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="221.0" AnchorPane.rightAnchor="14.0" />
+      <ImageView fx:id="imageViewR" fitHeight="510.0" fitWidth="475.0" layoutX="711.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="63.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0" />
    </children>
 </AnchorPane>

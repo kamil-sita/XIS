@@ -1,4 +1,4 @@
-package toolset;
+package toolset.io;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public class GuiFileIO {
 
-    private static String[] extensionList;
     private static File lastFileDirectory = null;
 
     /**
@@ -19,14 +18,14 @@ public class GuiFileIO {
      * @return loaded buffered image
      */
     public static Optional<BufferedImage> getImage() {
-        lazyGenerateFormats();
+        var formats = Extensions.getImageFormats();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open image from ile");
         fileChooser.setInitialDirectory(lastFileDirectory);
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Supported images", extensionList),
+                new FileChooser.ExtensionFilter("Supported images", formats),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         File file = fileChooser.showOpenDialog(stage);
@@ -40,14 +39,14 @@ public class GuiFileIO {
      * @param image image to save
      */
     public static void saveImage(BufferedImage image) {
-        lazyGenerateFormats();
+        var formats = Extensions.getImageFormats();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save image to file");
         fileChooser.setInitialDirectory(lastFileDirectory);
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Supported images", extensionList),
+                new FileChooser.ExtensionFilter("Supported images", formats),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         File file = fileChooser.showSaveDialog(stage);
@@ -62,14 +61,5 @@ public class GuiFileIO {
 
     }
 
-    private static void lazyGenerateFormats() {
-        if (extensionList != null) return;
 
-        extensionList = ImageIO.getReaderFormatNames();
-
-        for (int i = 0; i < extensionList.length; i++) {
-            extensionList[i] = "*." + extensionList[i];
-        }
-
-    }
 }

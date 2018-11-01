@@ -2,82 +2,52 @@ package sections.imagecompetition;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
-import toolset.GuiFileIO;
-import toolset.imagetools.BufferedImageConvert;
 
 import java.awt.image.BufferedImage;
 
 public final class CompetitionController {
 
-    private BufferedImage inputImage;
-    private BufferedImage processedImage;
+    private Notifier notifierL;
+    private Notifier notifierR;
+
+    private BufferedImage imageL;
+    private BufferedImage imageR;
 
     @FXML
-    private TextField blur;
+    private ImageView imageViewL;
 
     @FXML
-    private ImageView imagePreview;
+    private ImageView imageViewR;
 
     @FXML
-    private CheckBox scaleBrightness;
-
-    Notifier notifier;
+    void newCompetitionPress(ActionEvent event) {
+        var optional = UserFeedback.getText("Compretition creator", "Enter details", "File location:");
+        System.out.println(optional.get());
+    }
 
     @FXML
-    void loadFilePress(ActionEvent event) {
-        var oldInputImage = inputImage;
-        var optionalInputImage = GuiFileIO.getImage();
-        if (!optionalInputImage.isPresent()) {
-            inputImage = oldInputImage;
-        } else {
-            inputImage = optionalInputImage.get();
-            processedImage = inputImage;
-            setNewImage(inputImage);
-        }
+    void loadPress(ActionEvent event) {
 
     }
 
     @FXML
-    void saveFilePress(ActionEvent event) {
-        var imageToSave = processedImage != null ? processedImage : inputImage;
-        if (imageToSave == null) {
-            UserFeedback.popup("Can't save non-opened image.");
-        } else {
-            GuiFileIO.saveImage(imageToSave);
-        }
-    }
-
-    @FXML
-    void initialize() {
-        reAddNotifier();
-    }
-
-    @FXML
-    void runButton(ActionEvent event) {
-        if (inputImage == null) {
-            UserFeedback.popup("Can't run without loaded file");
-            return;
-        }
+    void savePress(ActionEvent event) {
 
     }
 
-    private void setNewImage(BufferedImage bufferedImage) {
-        imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
-        reAddNotifier();
-        MainViewController.onWindowSizeChange();
-    }
 
     private void reAddNotifier() {
-        MainViewController.removeNotifier(notifier);
-        notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 90, 10, 1.0);
-        MainViewController.addNotifier(notifier);
+        MainViewController.removeNotifier(notifierL);
+        MainViewController.removeNotifier(notifierR);
+        notifierL = NotifierFactory.scalingImageNotifier(imageL, imageViewL, 300, 100, 0.5);
+        notifierR = NotifierFactory.scalingImageNotifier(imageR, imageViewR, 300, 100, 0.5);
+        MainViewController.addNotifier(notifierL);
+        MainViewController.addNotifier(notifierR);
     }
 
 }

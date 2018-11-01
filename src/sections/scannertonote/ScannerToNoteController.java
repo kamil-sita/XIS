@@ -9,8 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.*;
 import sections.main.MainViewController;
-import toolset.GuiFileIO;
 import toolset.imagetools.BufferedImageConvert;
+import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
 import java.util.Optional;

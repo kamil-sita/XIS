@@ -4,7 +4,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.automatedfilter.AutomatedFilterController">
     <children>
-        <Button layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Load file" />
-        <Button layoutX="15.0" layoutY="105.0" mnemonicParsing="false" text="Save file" />
+        <Button layoutX="15.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadFilePress" text="Load file" />
+        <Button layoutX="16.0" layoutY="85.0" mnemonicParsing="false" onAction="#saveFilePress" text="Save file" />
+      <Button layoutX="15.0" layoutY="48.0" mnemonicParsing="false" onAction="#filterPress" text="Filter" />
     </children>
 </AnchorPane>

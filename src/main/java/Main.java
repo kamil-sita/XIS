@@ -4,8 +4,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
-
 public final class Main extends Application {
 
     public static void main(String[] args) {
@@ -14,12 +12,8 @@ public final class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception{
+        System.out.println(Runtime.getRuntime().maxMemory());
         var res = getClass().getResource("sections/main/mainView.fxml");
-
-        for (var f : new File(Thread.currentThread().getContextClassLoader().getResource("sections/main").getPath()).listFiles()) {
-            System.out.println(f.getName());
-        }
-
         Parent root = FXMLLoader.load(res);
         stage.setTitle("XIS pre-alpha");
         stage.setScene(new Scene (root, 1280, 800));

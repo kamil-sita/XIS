@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import sections.Notifier;
 import sections.SubUserInterface;
+import sections.automatedfilter.AutomatedFilter;
 import sections.defaultpage.WelcomePage;
 import sections.highpassfilter.HighPassFilter;
 import sections.imagecompetition.ImageCompetition;
@@ -88,7 +89,7 @@ public final class MainViewController {
         var highPassFilter = new HighPassFilter();
         changeVista(highPassFilter);
         currentModule = highPassFilter;
-        setStatus("high pass filter module loaded");
+        setStatus("high pass getAsImages module loaded");
     }
 
     @FXML
@@ -101,10 +102,10 @@ public final class MainViewController {
 
     @FXML
     void automatedFilteringPress(ActionEvent event) {
-        var imageCompetition = new ImageCompetition();
-        changeVista(imageCompetition);
-        currentModule = imageCompetition;
-        setStatus("image competition module loaded");
+        var automatedFilter = new AutomatedFilter();
+        changeVista(automatedFilter);
+        currentModule = automatedFilter;
+        setStatus("automatedFilter module loaded");
     }
 
 

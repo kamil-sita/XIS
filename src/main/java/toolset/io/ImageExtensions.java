@@ -2,7 +2,7 @@ package toolset.io;
 
 import javax.imageio.ImageIO;
 
-public class Extensions {
+public class ImageExtensions {
 
     private static String[] starExtensions;
     private static String[] extensions;

@@ -2,6 +2,7 @@ package toolset.io;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import toolset.imagetools.BufferedImageIO;
 
 import javax.imageio.ImageIO;
@@ -18,7 +19,7 @@ public class GuiFileIO {
      * @return loaded buffered image
      */
     public static Optional<BufferedImage> getImage() {
-        var formats = Extensions.getStarExtensions();
+        var formats = ImageExtensions.getStarExtensions();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
@@ -39,7 +40,7 @@ public class GuiFileIO {
      * @param image image to save
      */
     public static void saveImage(BufferedImage image) {
-        var formats = Extensions.getStarExtensions();
+        var formats = ImageExtensions.getStarExtensions();
 
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
@@ -56,8 +57,45 @@ public class GuiFileIO {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            lastFileDirectory = file.getParentFile();
         }
+
+    }
+
+    public static Optional<File> getPdf() {
+
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open image from ile");
+        fileChooser.setInitialDirectory(lastFileDirectory);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Pdf", "*.pdf"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File file = fileChooser.showOpenDialog(stage);
         if (file != null) lastFileDirectory = file.getParentFile();
+
+        return Optional.ofNullable(file);
+    }
+
+    public static void saveDocumentAndClose(PDDocument document) {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save image to file");
+        fileChooser.setInitialDirectory(lastFileDirectory);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        File file = fileChooser.showSaveDialog(stage);
+        if (file != null) {
+            try {
+                document.save(file);
+                document.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            lastFileDirectory = file.getParentFile();
+        }
 
     }
 

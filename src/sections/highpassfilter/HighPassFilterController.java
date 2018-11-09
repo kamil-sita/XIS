@@ -29,6 +29,9 @@ public final class HighPassFilterController {
     @FXML
     private CheckBox scaleBrightness;
 
+    @FXML
+    private CheckBox higherQuality;
+
     Notifier notifier;
 
     @FXML
@@ -73,7 +76,7 @@ public final class HighPassFilterController {
             } catch (Exception e) {
                 //failed parsing
             }
-            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected()).getBufferedImage();
+            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), higherQuality.isSelected());
             processedImage = output;
             Platform.runLater(() -> setNewImage(output));
         }).start();

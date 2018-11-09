@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
      * @return scaled down image
      */
 
-    public static BufferedImage getScaledDownImage(BufferedImage source, final int SIZE) {
+    public static BufferedImage getComparableScaledDownImage(BufferedImage source, final int SIZE) {
         if (source == null) return null;
         BufferedImage newImage = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);
 
@@ -30,5 +30,21 @@ import java.awt.image.BufferedImage;
 
         return newImage;
     }
+
+        public static BufferedImage getScaledImage(BufferedImage source, double scale) {
+            if (source == null) return null;
+            BufferedImage newImage = new BufferedImage((int) (source.getWidth() * scale), (int) (source.getHeight() * scale), BufferedImage.TYPE_INT_ARGB);
+
+            Graphics2D graphics2D = (Graphics2D) newImage.getGraphics();
+
+            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+
+            AffineTransform affineTransform = new AffineTransform();
+            affineTransform.scale(scale, scale);
+            graphics2D.drawImage(source, affineTransform, null);
+            graphics2D.dispose();
+
+            return newImage;
+        }
 
 }

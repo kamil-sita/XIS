@@ -29,12 +29,12 @@ public final class ComparableImage {
         imageFile = file;
         fullSizeImage = image;
 
-        smallImage = BufferedImageScale.getScaledDownImage(fullSizeImage, COMPARED_IMAGE_SIZE);
+        smallImage = BufferedImageScale.getComparableScaledDownImage(fullSizeImage, COMPARED_IMAGE_SIZE);
 
         width = fullSizeImage.getWidth();
         height = fullSizeImage.getHeight();
 
-        Rgb rgb = new Rgb(BufferedImageScale.getScaledDownImage(smallImage, 1).getRGB(0, 0));
+        Rgb rgb = new Rgb(BufferedImageScale.getComparableScaledDownImage(smallImage, 1).getRGB(0, 0));
         hsb = rgb.toHSB();
 
         fullSizeImage = null; //so it's easier to know for GC

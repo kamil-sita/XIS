@@ -1,19 +1,23 @@
 package sections.highpassfilter;
 
 import sections.UserFeedback;
-import toolset.imagetools.BufferedImageBlur;
-import toolset.imagetools.BufferedImageLayers;
-import toolset.imagetools.BufferedImageVarious;
-import toolset.imagetools.RgbImage;
+import toolset.imagetools.*;
 
 import java.awt.image.BufferedImage;
 
 public final class HighPassFilterConverter {
 
-    public static RgbImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness) {
+    public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, boolean higherQuality) {
+
+        if (higherQuality) blurPasses *= 2;
+
+        if (higherQuality) bufferedImage = BufferedImageScale.getScaledImage(bufferedImage, 2);
+
         var blurredImage = BufferedImageVarious.copyImage(bufferedImage);
         int i = 0;
         UserFeedback.reportProgress(i/(blurPasses + 2.0));
+
+
 
         for (i = 0; i < blurPasses; i++) {
             blurredImage = BufferedImageBlur.simpleBlur(blurredImage);
@@ -24,7 +28,8 @@ public final class HighPassFilterConverter {
                 BufferedImageVarious.copyImage(bufferedImage), blurredImage);
         UserFeedback.reportProgress((i+1)/(blurPasses + 2.0));
 
-        if (scaleBrightness) output.scaleBrightness();
+        if (scaleBrightness) BufferedImageColorPalette.cutOffBrightness(output, 0.99);
+        if (higherQuality) output = BufferedImageScale.getScaledImage(output, 0.5);
         UserFeedback.reportProgress(1);
 
         return output;

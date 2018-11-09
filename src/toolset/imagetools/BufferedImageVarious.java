@@ -12,15 +12,4 @@ public class BufferedImageVarious {
         return imageCopy;
     }
 
-    public static RgbImage copyImageToRgbImage(BufferedImage input) {
-        var rgbimage = new RgbImage(input.getWidth(), input.getHeight());
-
-        for (int y = 0; y < input.getHeight(); y++) {
-            for (int x = 0; x < input.getWidth(); x++) {
-                rgbimage.setRgb(x, y, new Rgb(input.getRGB(x, y)));
-            }
-        }
-
-        return rgbimage;
-    }
 }

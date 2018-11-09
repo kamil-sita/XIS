@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
@@ -80,9 +79,7 @@
       <ProgressBar layoutX="380.0" layoutY="841.0" prefWidth="200.0" progress="0.0" />
       <Pagination layoutX="136.0" layoutY="964.0" prefHeight="200.0" prefWidth="317.0" AnchorPane.leftAnchor="136.0" AnchorPane.rightAnchor="147.0" />
       <ImageView fitHeight="244.0" fitWidth="282.0" layoutX="180.0" layoutY="1216.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="176.0">
-         <image>
-            <Image url="@../../../../../../../Users/Sita/Pictures/4nX44_A7.jpg" />
-         </image>
+
       </ImageView>
    </children>
 </AnchorPane>

@@ -3,8 +3,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 <AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.automatedfilter.AutomatedFilterController">
-   <children>
-      <Button layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Load file" />
-      <Button layoutX="15.0" layoutY="105.0" mnemonicParsing="false" text="Save file" />
-   </children>
+    <children>
+        <Button layoutX="14.0" layoutY="21.0" mnemonicParsing="false" text="Load file" />
+        <Button layoutX="15.0" layoutY="105.0" mnemonicParsing="false" text="Save file" />
+    </children>
 </AnchorPane>

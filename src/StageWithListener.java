@@ -19,7 +19,7 @@ public final class StageWithListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                MainViewController.onWindowSizeChange();
+                windowSizeChange();
             }).start();
         });
     }
@@ -30,6 +30,6 @@ public final class StageWithListener {
     }
 
     private void windowSizeChange() {
-        MainViewController.onWindowSizeChange();
+        MainViewController.forceOnWindowSizeChange();
     }
 }

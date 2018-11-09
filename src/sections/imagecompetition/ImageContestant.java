@@ -40,6 +40,10 @@ public class ImageContestant {
         return image.getName();
     }
 
+    public File getImageFile() {
+        return image;
+    }
+
     public static List<ImageContestant> createImageContestants(List<File> imageFiles) {
         List<ImageContestant> imageContestants = new ArrayList<>();
         for (File file : imageFiles) {

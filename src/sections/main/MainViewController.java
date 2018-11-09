@@ -99,6 +99,14 @@ public final class MainViewController {
         setStatus("image competition module loaded");
     }
 
+    @FXML
+    void automatedFilteringPress(ActionEvent event) {
+        var imageCompetition = new ImageCompetition();
+        changeVista(imageCompetition);
+        currentModule = imageCompetition;
+        setStatus("image competition module loaded");
+    }
+
 
     //Other methods
 
@@ -140,11 +148,15 @@ public final class MainViewController {
     /**
      * Function called when Stage changes it's size
      */
-    public static void onWindowSizeChange() {
+    private static void onWindowSizeChange() {
         resizeAnchorPane();
         for (Notifier notifier : notifiers) {
             notifier.notify(scrollPaneGlobal.getViewportBounds().getWidth(), scrollPaneGlobal.getViewportBounds().getHeight());
         }
+    }
+
+    public static void forceOnWindowSizeChange() {
+        onWindowSizeChange();
     }
 
     /**

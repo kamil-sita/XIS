@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="thisAnchorPane" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.automatedfilter.AutomatedFilterController">
+   <children>
+      <ImageView fx:id="imageViewL" fitHeight="510.0" fitWidth="475.0" layoutX="221.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="63.0" AnchorPane.leftAnchor="221.0" AnchorPane.topAnchor="27.0" />
+      <ListView fx:id="listView" layoutX="14.0" layoutY="47.0" prefHeight="539.0" prefWidth="193.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="47.0" />
+      <Separator layoutX="221.0" layoutY="548.0" prefHeight="2.0" prefWidth="390.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="221.0" AnchorPane.rightAnchor="14.0" />
+      <ImageView fx:id="imageViewR" fitHeight="510.0" fitWidth="475.0" layoutX="711.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="63.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="27.0" />
+   </children>
+</AnchorPane>

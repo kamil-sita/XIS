@@ -11,11 +11,14 @@ import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
+import toolset.imagetools.BufferedImageConvert;
+import toolset.imagetools.BufferedImageIO;
 import toolset.io.MultipleFileIO;
 
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public final class CompetitionController {
 
@@ -24,6 +27,9 @@ public final class CompetitionController {
 
     private BufferedImage imageL;
     private BufferedImage imageR;
+    private ImageContestant imageContestantL;
+    private ImageContestant imageContestantR;
+
 
     private List<ImageContestant> contestants;
 
@@ -44,20 +50,8 @@ public final class CompetitionController {
         String[] path = {optional.get()};
         var folders = MultipleFileIO.getFoldersFromStrings(path);
         var files = MultipleFileIO.loadFilesFromFolders(folders);
-        for (var file : files) {
-            System.out.println(file.getName());
-        }
-        System.out.println("+++++++");
         files = MultipleFileIO.filterOutNonImages(files);
-        System.out.println("Filtered images:");
-        for (var file : files) {
-            System.out.println(file.getName());
-        }
         contestants = ImageContestant.createImageContestants(files);
-        System.out.println("________");
-        for (var c : contestants) {
-            System.out.println(c.getName());
-        }
         updateListView();
     }
 
@@ -93,19 +87,51 @@ public final class CompetitionController {
         ObservableList<ImageContestant> observableContestants = FXCollections.observableArrayList();
         observableContestants.addAll(contestants);
         listView.setItems(observableContestants);
+        listView.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> displayLeft(newValue)
+        );
 
     }
 
-
-
+    private void displayLeft(ImageContestant ic) {
+        imageContestantL = ic;
+        imageL = getContestantImage(ic);
+        var fxImage = BufferedImageConvert.toFxImage(imageL);
+        imageViewL.setImage(fxImage);
+        reAddNotifier();
+        displayRandomRight();
+    }
 
     private void reAddNotifier() {
         MainViewController.removeNotifier(notifierL);
         MainViewController.removeNotifier(notifierR);
-        notifierL = NotifierFactory.scalingImageNotifier(imageL, imageViewL, 300, 100, 0.5);
-        notifierR = NotifierFactory.scalingImageNotifier(imageR, imageViewR, 300, 100, 0.5);
+        notifierL = NotifierFactory.scalingImageNotifier(imageL, imageViewL, 50, 250, 0.5);
+        notifierR = NotifierFactory.scalingImageNotifier(imageR, imageViewR, 50, 250, 0.5);
         MainViewController.addNotifier(notifierL);
         MainViewController.addNotifier(notifierR);
+        MainViewController.forceOnWindowSizeChange();
+    }
+
+    private void displayRandomRight() {
+        if (contestants.size() <= 1) return;
+        var randomContestant = getRandom();
+        while (randomContestant == imageContestantL) {
+            randomContestant = getRandom();
+        }
+        imageContestantR = randomContestant;
+        imageR = getContestantImage(imageContestantR);
+        var fxImage = BufferedImageConvert.toFxImage(imageR);
+        imageViewR.setImage(fxImage);
+        reAddNotifier();
+    }
+
+    private ImageContestant getRandom() {
+        return contestants.get(new Random().nextInt(contestants.size()));
+    }
+
+    private static BufferedImage getContestantImage(ImageContestant ic) {
+        var file = ic.getImageFile();
+        return BufferedImageIO.getImage(file).get();
     }
 
 }

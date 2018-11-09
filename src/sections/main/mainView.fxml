@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.*?>
 <VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainView.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.main.MainViewController">
    <children>
-      <GridPane fx:id="gridPane" VBox.vgrow="ALWAYS">
+      <!--suppress InconsistentLineSeparators -->
+       <GridPane fx:id="gridPane" VBox.vgrow="ALWAYS">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="100.0" prefWidth="200.0" />
             <ColumnConstraints hgrow="ALWAYS" minWidth="628.0" />
@@ -20,7 +21,8 @@
                   <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="Image copy finder" />
                   <Button mnemonicParsing="false" onAction="#scannerToNotePress" prefHeight="42.0" prefWidth="200.0" text="Scanner to note" />
                   <Button mnemonicParsing="false" onAction="#highPassFilterPress" prefHeight="42.0" prefWidth="200.0" text="High pass filter" />
-                  <Button mnemonicParsing="false" onAction="#imagesCompetitionPress" prefHeight="42.0" prefWidth="200.0" text="Images competition" />
+                  <Button mnemonicParsing="false" onAction="#automatedFilteringPress" prefHeight="42.0" prefWidth="200.0" text="Automated filtering" />
+                  <Button mnemonicParsing="false" onAction="#imagesCompetitionPress" prefHeight="42.0" prefWidth="200.0" text="Images competition [WIP]" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Image compression" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Spritesheet builder" />
                </children>

@@ -3,6 +3,8 @@ package toolset.io;
 import sections.UserFeedback;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -52,8 +54,14 @@ public class MultipleFileIO {
     }
 
     private static boolean isImage(File file) {
-        return Arrays.stream(Extensions.getExtensions()).map(x -> x.substring(1, x.length() - 1).toLowerCase())
-                .anyMatch(file.getName().toLowerCase()::endsWith);
+        if (file.isDirectory()) return false;
+        String s = "";
+        try {
+            s = Files.probeContentType(file.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return s.toLowerCase().contains("image");
     }
 
 

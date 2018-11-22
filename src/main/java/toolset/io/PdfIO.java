@@ -25,7 +25,7 @@ public class PdfIO {
             document = PDDocument.load(pdfFile);
             pdfRenderer = new PDFRenderer(document);
             for (int i = 0; i < document.getNumberOfPages(); i++) {
-                var image = pdfRenderer.renderImageWithDPI(i, 600, ImageType.RGB);
+                var image = pdfRenderer.renderImageWithDPI(i, 300, ImageType.RGB);
                 listOfImages.add(image);
                 System.out.println("(" + i + "/" + document.getNumberOfPages() + ")");
             }

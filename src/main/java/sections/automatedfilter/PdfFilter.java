@@ -20,7 +20,7 @@ public class PdfFilter {
 
         for (int i = 0; i < images.size(); i++) {
             System.out.println("(" + i + "/" + images.size() + ")");
-            images.set(i, HighPassFilterConverter.convert(images.get(i), 5, true, highQuality));
+            images.set(i, HighPassFilterConverter.convert(images.get(i), 5, true, 0.90, highQuality));
         }
 
         return PdfIO.imagesToDocument(images);

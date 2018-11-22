@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.Notifier;
@@ -31,6 +32,10 @@ public final class HighPassFilterController {
 
     @FXML
     private CheckBox higherQuality;
+
+
+    @FXML
+    private Slider brightnessSlider;
 
     Notifier notifier;
 
@@ -76,7 +81,7 @@ public final class HighPassFilterController {
             } catch (Exception e) {
                 //failed parsing
             }
-            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), higherQuality.isSelected());
+            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, higherQuality.isSelected());
             processedImage = output;
             Platform.runLater(() -> setNewImage(output));
         }).start();

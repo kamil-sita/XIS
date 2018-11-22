@@ -23,6 +23,10 @@ public class MultipleFileIO {
             } catch (Exception e) {
                 UserFeedback.popup("Exception caused by: " + s);
             }
+            if (folder == null) {
+                UserFeedback.popup("Not a file/directory: " + s);
+                return null;
+            }
             if (!folder.isDirectory()) {
                 UserFeedback.popup("Not a folder: " + s);
             }

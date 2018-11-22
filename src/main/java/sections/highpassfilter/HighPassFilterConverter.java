@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public final class HighPassFilterConverter {
 
-    public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, boolean higherQuality) {
+    public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, double scaleBrightnessVal, boolean higherQuality) {
 
         if (higherQuality) blurPasses *= 2;
 
@@ -28,7 +28,7 @@ public final class HighPassFilterConverter {
                 BufferedImageVarious.copyImage(bufferedImage), blurredImage);
         UserFeedback.reportProgress((i+1)/(blurPasses + 2.0));
 
-        if (scaleBrightness) BufferedImageColorPalette.cutOffBrightness(output, 0.99);
+        if (scaleBrightness) BufferedImageColorPalette.cutOffBrightness(output, scaleBrightnessVal);
         if (higherQuality) output = BufferedImageScale.getScaledImage(output, 0.5);
         UserFeedback.reportProgress(1);
 

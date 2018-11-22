@@ -28,7 +28,7 @@ public final class HighPassFilterConverter {
                 BufferedImageVarious.copyImage(bufferedImage), blurredImage);
         UserFeedback.reportProgress((i+1)/(blurPasses + 2.0));
 
-        if (scaleBrightness) BufferedImageColorPalette.cutOffBrightness(output, scaleBrightnessVal);
+        if (scaleBrightness) BufferedImageColorPalette.scaleAndCutoffBrightness(output, scaleBrightnessVal);
         if (higherQuality) output = BufferedImageScale.getScaledImage(output, 0.5);
         UserFeedback.reportProgress(1);
 

@@ -41,11 +41,11 @@
  */
 
 .background-anchor-pane {
-    -fx-background-color: #717171;
+    -fx-background-color: #555555;
 }
 
 .tile-pane {
-    -fx-background-color: linear-gradient(to bottom, white, lightgray);
+    -fx-background-color: #717171;
 }
 
 .progress-bar {
@@ -54,6 +54,8 @@
     -fx-accent: #9DE093;
 }
 
+.front-anchor-pane {
+}
 
 /*
     Dark accents
@@ -63,22 +65,6 @@
     -fx-text-fill: #333333;
 }
 
-/*
-
-https://docs.oracle.com/javafx/2/api/javafx/scene/doc-files/cssref.html
-
-.anchor-pane-left {
-    -fx-background-color: linear-gradient(to right, white, lightgray);
-}
-
-.anchor-pane-right {
-    -fx-background-color: linear-gradient(to left, white, lightgray);
-}
-
-.tile-pane {
-    -fx-background-color: linear-gradient(to bottom, white, lightgray);
-}
- */
 
 /*
     Border

@@ -78,18 +78,17 @@ public class BufferedImageColorPalette {
         return closest;
     }
 
-    /**
-     * Sets brightness as max or min
-     */
-    public static void cutOffBrightness(BufferedImage bufferedImage, double cutOff) {
+    public static void scaleAndCutoffBrightness(BufferedImage bufferedImage, double cutOff) {
         for (int x = 0; x < bufferedImage.getWidth(); x++) {
             for (int y = 0; y < bufferedImage.getHeight(); y++) {
                 var rgb = new Rgb(bufferedImage.getRGB(x, y));
                 var hsb = rgb.toHSB();
                 if (hsb.B >= cutOff) {
-                    bufferedImage.setRGB(x, y, new Rgb(255, 255, 255).toInt());
+                    hsb.B = 1;
+                    bufferedImage.setRGB(x, y, hsb.toRGB().toInt());
                 } else {
-                    bufferedImage.setRGB(x, y, new Rgb(0, 0, 0).toInt());
+                    hsb.B = hsb.B / cutOff; //scaling Brightness
+                    bufferedImage.setRGB(x, y, hsb.toRGB().toInt());
                 }
             }
         }

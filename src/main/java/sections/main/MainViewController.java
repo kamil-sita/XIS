@@ -81,7 +81,7 @@ public final class MainViewController {
         var scannerToNote = new ScannerToNote();
         changeVista(scannerToNote);
         currentModule = scannerToNote;
-        setStatus("scanner to note module loaded");
+        setStatus("scanner-to-note module loaded");
     }
 
     @FXML
@@ -89,7 +89,7 @@ public final class MainViewController {
         var highPassFilter = new HighPassFilter();
         changeVista(highPassFilter);
         currentModule = highPassFilter;
-        setStatus("high pass getAsImages module loaded");
+        setStatus("high-pass-filter module loaded");
     }
 
     @FXML
@@ -97,7 +97,7 @@ public final class MainViewController {
         var imageCompetition = new ImageCompetition();
         changeVista(imageCompetition);
         currentModule = imageCompetition;
-        setStatus("image competition module loaded");
+        setStatus("image-competition-module loaded");
     }
 
     @FXML

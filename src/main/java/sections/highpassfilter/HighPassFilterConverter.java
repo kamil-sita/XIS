@@ -17,8 +17,6 @@ public final class HighPassFilterConverter {
         int i = 0;
         UserFeedback.reportProgress(i/(blurPasses + 2.0));
 
-
-
         for (i = 0; i < blurPasses; i++) {
             blurredImage = BufferedImageBlur.simpleBlur(blurredImage);
             UserFeedback.reportProgress(i/(blurPasses + 2.0));

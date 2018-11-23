@@ -78,7 +78,7 @@ public class GuiFileIO {
         return Optional.ofNullable(file);
     }
 
-    public static void saveDocumentAndClose(PDDocument document) {
+    public static void saveDocumentAndCloseNoGui(PDDocument document) {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save image to file");
@@ -87,6 +87,22 @@ public class GuiFileIO {
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         File file = fileChooser.showSaveDialog(stage);
+        saveDocumentAndCloseNoGui(file, document);
+    }
+
+    public static Optional<File> getSaveDirectory() {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save image to file");
+        fileChooser.setInitialDirectory(lastFileDirectory);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        return Optional.ofNullable(fileChooser.showSaveDialog(stage));
+
+    }
+
+    public static void saveDocumentAndCloseNoGui(File file, PDDocument document) {
         if (file != null) {
             try {
                 document.save(file);
@@ -96,7 +112,6 @@ public class GuiFileIO {
             }
             lastFileDirectory = file.getParentFile();
         }
-
     }
 
 

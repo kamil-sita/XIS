@@ -2,7 +2,6 @@ package toolset.io;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import toolset.imagetools.BufferedImageIO;
 
 import javax.imageio.ImageIO;
@@ -78,17 +77,6 @@ public class GuiFileIO {
         return Optional.ofNullable(file);
     }
 
-    public static void saveDocumentAndCloseNoGui(PDDocument document) {
-        Stage stage = new Stage();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save image to file");
-        fileChooser.setInitialDirectory(lastFileDirectory);
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-        );
-        File file = fileChooser.showSaveDialog(stage);
-        saveDocumentAndCloseNoGui(file, document);
-    }
 
     public static Optional<File> getSaveDirectory() {
         Stage stage = new Stage();
@@ -100,18 +88,6 @@ public class GuiFileIO {
         );
         return Optional.ofNullable(fileChooser.showSaveDialog(stage));
 
-    }
-
-    public static void saveDocumentAndCloseNoGui(File file, PDDocument document) {
-        if (file != null) {
-            try {
-                document.save(file);
-                document.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            lastFileDirectory = file.getParentFile();
-        }
     }
 
 

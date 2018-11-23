@@ -9,11 +9,12 @@
         <ImageView fx:id="imagePreview" fitHeight="510.0" fitWidth="475.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="718.0" AnchorPane.topAnchor="80.0" />
         <Separator layoutX="12.0" layoutY="73.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="73.0" />
         <CheckBox fx:id="scaleBrightness" layoutX="173.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="correct brightness" />
-        <CheckBox fx:id="higherQuality" layoutX="336.0" layoutY="46.0" mnemonicParsing="false" text="higher quality" />
+        <CheckBox fx:id="higherQuality" layoutX="393.0" layoutY="46.0" mnemonicParsing="false" text="higher quality" />
         <Slider fx:id="brightnessSlider" layoutX="298.0" layoutY="1.0" majorTickUnit="10.0" min="20.0" minorTickCount="1" prefHeight="24.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" value="90.0" />
 
-        <Button layoutX="12.0" layoutY="42.0" mnemonicParsing="false" onAction="#everything" text="Load, filter, save" />
-        <Button layoutX="185.0" layoutY="42.0" mnemonicParsing="false" onAction="#saveFilePress" text="Save file" />
-        <Button layoutX="132.0" layoutY="42.0" mnemonicParsing="false" onAction="#filterPress" text="Filter" />
+        <Button fx:id="filterAndSaveButton" disable="true" layoutX="62.0" layoutY="42.0" mnemonicParsing="false" onAction="#filterAndSavePress" text="Filter, save" />
+        <Button fx:id="previewButton" disable="true" layoutX="145.0" layoutY="42.0" mnemonicParsing="false" onAction="#previewPress" text="Preview page" />
+        <Button layoutX="14.0" layoutY="42.0" mnemonicParsing="false" onAction="#loadFile" text="Load" />
+      <TextField fx:id="previewPage" layoutX="245.0" layoutY="42.0" prefHeight="25.0" prefWidth="140.0" text="preview page number" />
     </children>
 </AnchorPane>

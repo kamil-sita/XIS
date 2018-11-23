@@ -39,12 +39,22 @@ public class PdfIO {
 
     public static int getNumberOfPages(File pdfFile) {
         PDDocument document = null;
+        int number = -1;
         try {
             document = PDDocument.load(pdfFile);
+            number = document.getNumberOfPages();
         } catch (Exception e) {
             e.printStackTrace();
+
+        } finally {
+            try {
+                if (document != null) document.close();
+            } catch (Exception e) {
+                //
+            }
+
         }
-        return document.getNumberOfPages();
+        return number;
     }
 
     public static PDDocument createDocument() {
@@ -66,12 +76,14 @@ public class PdfIO {
         }
     }
 
-    public static void closeDocument(PDDocument document) {
-        try {
-            document.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void saveDocumentAndClose(File file, PDDocument document) {
+        if (file != null) {
+            try {
+                document.save(file);
+                document.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-
 }

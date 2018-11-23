@@ -1,7 +1,7 @@
 package sections.automatedfilter;
 
+import sections.UserFeedback;
 import sections.highpassfilter.HighPassFilterConverter;
-import toolset.io.GuiFileIO;
 import toolset.io.PdfIO;
 
 import java.io.File;
@@ -12,11 +12,12 @@ public class PdfFilter {
         var document = PdfIO.createDocument();
         for (int i = 0; i < size; i++) {
             System.out.println("(" + i + "/" + size + ")");
+            UserFeedback.reportProgress((1.0*i)/size);
             var image = PdfIO.getPdfAsImage(inputFile, i);
             var filteredImage = HighPassFilterConverter.convert(image, 5, scaleBrightness, scaleBrightnessVal, highQuality);
             PdfIO.addImage(document, filteredImage);
         }
-        GuiFileIO.saveDocumentAndCloseNoGui(outputFile, document);
-        System.out.println("end");
+        PdfIO.saveDocumentAndClose(outputFile, document);
+
     }
 }

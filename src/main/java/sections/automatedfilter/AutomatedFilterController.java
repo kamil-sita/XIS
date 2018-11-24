@@ -56,6 +56,7 @@ public final class AutomatedFilterController {
         }
         var savePdf = optionalSavePdf.get();
         new Thread(() -> {
+            Platform.runLater(() -> UserFeedback.popup("Poup will show up once PDF is filtered"));
             PdfFilter.filter(openPdf, savePdf, higherQuality.isSelected(), scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
             Platform.runLater(() -> UserFeedback.popup("Finished filtering pdf"));
         }).start();

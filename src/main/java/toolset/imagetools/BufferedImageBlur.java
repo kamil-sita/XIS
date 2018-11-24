@@ -6,32 +6,39 @@ import java.awt.image.Kernel;
 
 public class BufferedImageBlur {
 
-    public static BufferedImage simpleBlur(BufferedImage input) {
+    public static BufferedImage simpleBlur(BufferedImage input, Kernel kernel) {
 
-        var convolveOp = new ConvolveOp(new Kernel(3, 3, new float[] {
-                0.05f, 0.15f, 0.05f,
-                0.15f, 0.20f, 0.15f,
-                0.05f, 0.15f, 0.05f
-        }));
+        var convolveOp = new ConvolveOp(kernel);
 
         return convolveOp.filter(input, null);
     }
 
-    public static BufferedImage simpleGaussianBlur(BufferedImage input) {
+    public static Kernel genererateGausianKernel(int size) {
+        final double SIGMA = 0.84089642;
 
-        //kernel is based on sample gaussian kernel on wikipedia
-        var convolveOp = new ConvolveOp(new Kernel(7, 7, new float[] {
-                0.00000067f, 0.00002292f, 0.00019117f, 0.00038771f, 0.00019117f, 0.00002292f, 0.00000067f,
-                0.00002292f, 0.00078633f, 0.00655965f, 0.01330373f, 0.00655965f, 0.00078633f, 0.00002292f,
-                0.00019117f, 0.00655965f, 0.05472157f, 0.11098164f, 0.05472157f, 0.00655965f, 0.00019117f,
-                0.00038771f, 0.01330373f, 0.11098164f, 0.22508352f, 0.11098164f, 0.01330373f, 0.00038771f,
-                0.00019117f, 0.00655965f, 0.05472157f, 0.11098164f, 0.05472157f, 0.00655965f, 0.00019117f,
-                0.00002292f, 0.00078633f, 0.00655965f, 0.01330373f, 0.00655965f, 0.00078633f, 0.00002292f,
-                0.00000067f, 0.00002292f, 0.00019117f, 0.00038771f, 0.00019117f, 0.00002292f, 0.00000067f
+        float[] f = new float[size * size];
 
-        }));
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                int pos = y * size + x;
+                double value = 1 / (2 * Math.PI * SIGMA * SIGMA);
+                value *= Math.pow(Math.E, -(Math.pow((size / 2) - x, 2) + Math.pow((size / 2) - y, 2))/(2 * SIGMA * SIGMA));
+                f[pos] = (float) value;
+            }
+        }
 
-        return convolveOp.filter(input, null);
+        float sum = 0;
+        for (int i = 0; i < f.length; i++) {
+            sum += f[i];
+        }
+
+        for (int i = 0; i < f.length; i++) {
+            float fNormalize = f[i];
+            fNormalize = fNormalize / sum;
+            f[i] = fNormalize;
+        }
+
+        return new Kernel(size, size, f);
     }
 
 

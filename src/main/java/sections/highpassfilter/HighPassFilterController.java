@@ -81,8 +81,10 @@ public final class HighPassFilterController {
             } catch (Exception e) {
                 //failed parsing
             }
+            UserFeedback.reportProgress("Converting...");
             var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, higherQuality.isSelected());
             processedImage = output;
+            UserFeedback.reportProgress("Converted image!");
             Platform.runLater(() -> setNewImage(output));
         }).start();
 

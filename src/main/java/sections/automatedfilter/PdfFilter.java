@@ -11,13 +11,14 @@ public class PdfFilter {
         int size = PdfIO.getNumberOfPages(inputFile);
         var document = PdfIO.createDocument();
         for (int i = 0; i < size; i++) {
-            System.out.println("(" + i + "/" + size + ")");
             UserFeedback.reportProgress((1.0*i)/size);
+            UserFeedback.reportProgress("Progress: page " + (i + 1) + "/" + size + ".");
             var image = PdfIO.getPdfAsImage(inputFile, i);
             var filteredImage = HighPassFilterConverter.convert(image, 5, scaleBrightness, scaleBrightnessVal, highQuality);
             PdfIO.addImage(document, filteredImage);
         }
         PdfIO.saveDocumentAndClose(outputFile, document);
+        UserFeedback.reportProgress("Finished");
 
     }
 }

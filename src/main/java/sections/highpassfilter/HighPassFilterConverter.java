@@ -3,6 +3,7 @@ package sections.highpassfilter;
 import toolset.imagetools.*;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.Kernel;
 
 public final class HighPassFilterConverter {
 
@@ -13,11 +14,10 @@ public final class HighPassFilterConverter {
         if (higherQuality) bufferedImage = BufferedImageScale.getScaledImage(bufferedImage, 2);
 
         var blurredImage = BufferedImageVarious.copyImage(bufferedImage);
-        int i = 0;
 
-        for (i = 0; i < blurPasses; i++) {
-            blurredImage = BufferedImageBlur.simpleBlur(blurredImage);
-        }
+        Kernel kernel = BufferedImageBlur.genererateGausianKernel(blurPasses);
+
+        blurredImage = BufferedImageBlur.simpleBlur(blurredImage, kernel);
 
         var output = BufferedImageLayers.divide(
                 BufferedImageVarious.copyImage(bufferedImage), blurredImage);

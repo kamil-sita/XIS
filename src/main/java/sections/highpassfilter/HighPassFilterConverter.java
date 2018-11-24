@@ -15,7 +15,7 @@ public final class HighPassFilterConverter {
 
         var blurredImage = BufferedImageVarious.copyImage(bufferedImage);
 
-        Kernel kernel = BufferedImageBlur.genererateGausianKernel(blurPasses);
+        Kernel kernel = BufferedImageBlur.generateGaussianKernel(blurPasses);
 
         blurredImage = BufferedImageBlur.simpleBlur(blurredImage, kernel);
 

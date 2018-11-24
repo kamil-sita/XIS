@@ -17,10 +17,6 @@ public class ImageExtensions {
             starExtensions[i] = "*." + starExtensions[i];
         }
 
-        for (var ex : extensions) {
-            System.out.println(ex);
-        }
-
     }
 
     /**
@@ -32,7 +28,7 @@ public class ImageExtensions {
     }
 
     /**
-     * Gets image starExtensions as supported by ImageIO. Returns"extension"
+     * Gets image starExtensions as supported by ImageIO. Returns as "extension"
      */
     public static String[] getExtensions() {
         lazyGenerateFormats();

@@ -12,7 +12,6 @@ public final class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception{
-        System.out.println(Runtime.getRuntime().maxMemory());
         var res = getClass().getResource("sections/main/mainView.fxml");
         Parent root = FXMLLoader.load(res);
         stage.setTitle("XIS pre-alpha");

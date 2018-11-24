@@ -79,15 +79,21 @@ public class BufferedImageColorPalette {
     }
 
     public static void scaleAndCutoffBrightness(BufferedImage bufferedImage, double cutOff) {
+
+        double diff = cutOff;
+        double scale = 1/(1-cutOff);
+
+
         for (int x = 0; x < bufferedImage.getWidth(); x++) {
             for (int y = 0; y < bufferedImage.getHeight(); y++) {
                 var rgb = new Rgb(bufferedImage.getRGB(x, y));
                 var hsb = rgb.toHSB();
-                if (hsb.B >= cutOff) {
-                    hsb.B = 1;
+                if (hsb.B <= cutOff) {
+                    hsb.B = 0;
                     bufferedImage.setRGB(x, y, hsb.toRGB().toInt());
                 } else {
-                    hsb.B = hsb.B / cutOff; //scaling Brightness
+                    hsb.B -= diff;
+                    hsb.B *= scale;
                     bufferedImage.setRGB(x, y, hsb.toRGB().toInt());
                 }
             }

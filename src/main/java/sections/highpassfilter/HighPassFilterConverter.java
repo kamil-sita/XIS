@@ -1,17 +1,16 @@
 package sections.highpassfilter;
 
-import toolset.imagetools.*;
+import toolset.imagetools.BufferedImageBlur;
+import toolset.imagetools.BufferedImageColorPalette;
+import toolset.imagetools.BufferedImageLayers;
+import toolset.imagetools.BufferedImageVarious;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Kernel;
 
 public final class HighPassFilterConverter {
 
-    public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, double scaleBrightnessVal, boolean higherQuality) {
-
-        if (higherQuality) blurPasses *= 2;
-
-        if (higherQuality) bufferedImage = BufferedImageScale.getScaledImage(bufferedImage, 2);
+    public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, double scaleBrightnessVal) {
 
         var blurredImage = BufferedImageVarious.copyImage(bufferedImage);
 
@@ -23,7 +22,6 @@ public final class HighPassFilterConverter {
                 BufferedImageVarious.copyImage(bufferedImage), blurredImage);
 
         if (scaleBrightness) BufferedImageColorPalette.scaleAndCutoffBrightness(output, scaleBrightnessVal);
-        if (higherQuality) output = BufferedImageScale.getScaledImage(output, 0.5);
 
         return output;
     }

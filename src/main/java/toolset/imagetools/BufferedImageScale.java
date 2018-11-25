@@ -9,13 +9,6 @@ import java.awt.image.BufferedImageOp;
 
 public final class BufferedImageScale {
 
-    /**
-     * Scales down image
-     *
-     * @param source input BufferedImage
-     * @param SIZE   size of scaled down image
-     * @return scaled down image
-     */
 
     public static BufferedImage getComparableScaledDownImage(BufferedImage source, final int SIZE) {
         if (source == null) return null;
@@ -35,21 +28,6 @@ public final class BufferedImageScale {
         return newImage;
     }
 
-    public static BufferedImage getScaledImage(BufferedImage source, double scale) {
-        if (source == null) return null;
-        BufferedImage newImage = new BufferedImage((int) (source.getWidth() * scale), (int) (source.getHeight() * scale), BufferedImage.TYPE_INT_ARGB);
-
-        Graphics2D graphics2D = (Graphics2D) newImage.getGraphics();
-
-        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-
-        AffineTransform affineTransform = new AffineTransform();
-        affineTransform.scale(scale, scale);
-        graphics2D.drawImage(source, affineTransform, null);
-        graphics2D.dispose();
-
-        return newImage;
-    }
 
     public static BufferedImage getScaledImage(BufferedImage source, double width, double height) {
         if (source == null) return null;

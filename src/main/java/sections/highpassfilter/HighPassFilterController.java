@@ -12,9 +12,11 @@ import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
 import toolset.imagetools.BufferedImageConvert;
+import toolset.imagetools.BufferedImageScale;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
+import java.util.concurrent.Semaphore;
 
 public final class HighPassFilterController {
 
@@ -31,7 +33,7 @@ public final class HighPassFilterController {
     private CheckBox scaleBrightness;
 
     @FXML
-    private CheckBox higherQuality;
+    private CheckBox higherQualityPreview;
 
 
     @FXML
@@ -82,18 +84,41 @@ public final class HighPassFilterController {
                 //failed parsing
             }
             UserFeedback.reportProgress("Converting...");
-            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, higherQuality.isSelected());
+            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
             processedImage = output;
             UserFeedback.reportProgress("Converted image!");
             Platform.runLater(() -> setNewImage(output));
+
+            if (higherQualityPreview.isSelected()) {
+                semaphore = new Semaphore(0);
+                Platform.runLater(() -> setNewImage(output));
+                UserFeedback.reportProgress("Generated preview. Scaling to fit window... Waiting for permit.");
+                try {
+                    semaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                UserFeedback.reportProgress("Generated preview. Scaling to fit window...");
+                double width = imagePreview.getFitWidth();
+                double height = imagePreview.getFitHeight();
+                var scaledOutput = BufferedImageScale.getScaledImage(output, width, height);
+                Platform.runLater(() -> setNewImage(scaledOutput));
+                UserFeedback.reportProgress("Generated scaled preview.");
+            } else {
+                Platform.runLater(() -> setNewImage(output));
+                UserFeedback.reportProgress("Generated preview.");
+            }
         }).start();
 
     }
+
+    Semaphore semaphore;
 
     private void setNewImage(BufferedImage bufferedImage) {
         imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
         reAddNotifier();
         MainViewController.forceOnWindowSizeChange();
+        if (semaphore != null) semaphore.release();
     }
 
     private void reAddNotifier() {

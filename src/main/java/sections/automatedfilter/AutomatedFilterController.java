@@ -68,7 +68,7 @@ public final class AutomatedFilterController {
 
         new Thread(() -> {
             Platform.runLater(() -> UserFeedback.popup("Poup will show up once PDF is filtered"));
-            PdfFilter.filter(openPdf, savePdf, false, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, finalBlurPasses);
+            PdfFilter.filter(openPdf, savePdf, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, finalBlurPasses);
             Platform.runLater(() -> UserFeedback.popup("Finished filtering pdf"));
         }).start();
     }
@@ -123,7 +123,7 @@ public final class AutomatedFilterController {
                 lastImage = inputImage[0];
             }
             UserFeedback.reportProgress("Filtering image...");
-            var output = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, false);
+            var output = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
 
             if (higherQualityPreview.isSelected()) {
                 semaphore = new Semaphore(0);

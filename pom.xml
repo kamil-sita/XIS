@@ -9,13 +9,14 @@
     <version>0.2</version>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
+        <!-- pdfbox for opening pdfs-->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
             <version>2.0.12</version>
         </dependency>
 
+        <!-- local dependency for kmeans-->
         <dependency>
             <groupId>pl.ksitarski.simplekmeans</groupId>
             <artifactId>sample</artifactId>
@@ -23,6 +24,14 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/simple_kmeans.jar</systemPath>
         </dependency>
+
+        <!-- scaling images-->
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>4.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>

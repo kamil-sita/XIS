@@ -1,8 +1,11 @@
 package toolset.imagetools;
 
+import org.imgscalr.Scalr;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 
 public final class BufferedImageScale {
 
@@ -50,20 +53,8 @@ public final class BufferedImageScale {
 
     public static BufferedImage getScaledImage(BufferedImage source, double width, double height) {
         if (source == null) return null;
-        BufferedImage newImage = new BufferedImage((int) width, (int) height, BufferedImage.TYPE_INT_ARGB);
 
-        Graphics2D graphics2D = (Graphics2D) newImage.getGraphics();
-
-        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics2D.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-
-        AffineTransform affineTransform = new AffineTransform();
-        affineTransform.scale(width/source.getWidth(), height/source.getHeight());
-        graphics2D.drawImage(source, affineTransform, null);
-        graphics2D.dispose();
-
-        return newImage;
+        return Scalr.resize(source, Scalr.Method.QUALITY, (int) width, (int) height, (BufferedImageOp) null);
     }
 
 }

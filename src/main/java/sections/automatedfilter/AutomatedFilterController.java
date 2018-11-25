@@ -140,7 +140,6 @@ public final class AutomatedFilterController {
                 var scaledOutput = BufferedImageScale.getScaledImage(output, width, height);
                 Platform.runLater(() -> setNewImage(scaledOutput));
                 UserFeedback.reportProgress("Generated scaled preview.");
-                Platform.runLater(() -> GuiFileIO.saveImage(scaledOutput));
             } else {
                 Platform.runLater(() -> setNewImage(output));
                 UserFeedback.reportProgress("Generated preview.");

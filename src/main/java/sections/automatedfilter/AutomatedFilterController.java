@@ -8,16 +8,19 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.highpassfilter.HighPassFilterConverter;
 import sections.main.MainViewController;
 import toolset.imagetools.BufferedImageConvert;
+import toolset.imagetools.BufferedImageScale;
 import toolset.io.GuiFileIO;
 import toolset.io.PdfIO;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.concurrent.Semaphore;
 
 public final class AutomatedFilterController {
 
@@ -33,7 +36,7 @@ public final class AutomatedFilterController {
     private CheckBox scaleBrightness;
 
     @FXML
-    private CheckBox higherQuality;
+    private CheckBox higherQualityPreview;
 
     @FXML
     private Slider brightnessSlider;
@@ -55,9 +58,17 @@ public final class AutomatedFilterController {
             return;
         }
         var savePdf = optionalSavePdf.get();
+        int blurPasses = 5;
+        try {
+            blurPasses = Integer.parseInt(blur.getText());
+        } catch (Exception e) {
+            //
+        }
+        int finalBlurPasses = blurPasses;
+
         new Thread(() -> {
             Platform.runLater(() -> UserFeedback.popup("Poup will show up once PDF is filtered"));
-            PdfFilter.filter(openPdf, savePdf, higherQuality.isSelected(), scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
+            PdfFilter.filter(openPdf, savePdf, false, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, finalBlurPasses);
             Platform.runLater(() -> UserFeedback.popup("Finished filtering pdf"));
         }).start();
     }
@@ -90,9 +101,18 @@ public final class AutomatedFilterController {
         } catch (Exception e) {
             //
         }
+
+        int blurPasses = 5;
+        try {
+            blurPasses = Integer.parseInt(blur.getText());
+        } catch (Exception e) {
+            //
+        }
+
         //variables below are necessary as a workaround for lambda
         final BufferedImage[] inputImage = new BufferedImage[1];
         int finalPage = page;
+        int finalBlurPasses = blurPasses;
 
         new Thread(() -> {
             UserFeedback.reportProgress("Loading image...");
@@ -103,23 +123,44 @@ public final class AutomatedFilterController {
                 lastImage = inputImage[0];
             }
             UserFeedback.reportProgress("Filtering image...");
-            var output = HighPassFilterConverter.convert(inputImage[0], 5, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, higherQuality.isSelected());
-            Platform.runLater(() -> setNewImage(output));
-            UserFeedback.reportProgress("Generated preview.");
+            var output = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, false);
+
+            if (higherQualityPreview.isSelected()) {
+                semaphore = new Semaphore(0);
+                Platform.runLater(() -> setNewImage(output));
+                UserFeedback.reportProgress("Generated preview. Scaling to fit window... Waiting for permit.");
+                try {
+                    semaphore.acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                UserFeedback.reportProgress("Generated preview. Scaling to fit window...");
+                double width = imagePreview.getFitWidth();
+                double height = imagePreview.getFitHeight();
+                var scaledOutput = BufferedImageScale.getScaledImage(output, width, height);
+                Platform.runLater(() -> setNewImage(scaledOutput));
+                UserFeedback.reportProgress("Generated scaled preview.");
+                Platform.runLater(() -> GuiFileIO.saveImage(scaledOutput));
+            } else {
+                Platform.runLater(() -> setNewImage(output));
+                UserFeedback.reportProgress("Generated preview.");
+            }
         }).start();
     }
 
 
+    private Notifier oldNotifier;
+    private Semaphore semaphore;
+
     private void setNewImage(BufferedImage bufferedImage) {
+
         imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
         var notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imagePreview, 90, 10, 1.0);
+        MainViewController.removeNotifier(oldNotifier);
         MainViewController.addNotifier(notifier);
         MainViewController.forceOnWindowSizeChange();
-    }
+        oldNotifier = notifier;
 
-
-    @FXML
-    void everything(ActionEvent event) {
-
+        if (semaphore != null) semaphore.release();
     }
 }

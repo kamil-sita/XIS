@@ -1,9 +1,4 @@
-package sections.highpassfilter;
-
-import toolset.imagetools.BufferedImageBlur;
-import toolset.imagetools.BufferedImageColorPalette;
-import toolset.imagetools.BufferedImageLayers;
-import toolset.imagetools.BufferedImageVarious;
+package toolset.imagetools;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Kernel;

@@ -14,7 +14,7 @@ public final class Main extends Application {
     public void start(Stage stage) throws Exception{
         var res = getClass().getResource("sections/main/mainView.fxml");
         Parent root = FXMLLoader.load(res);
-        stage.setTitle("XIS 0.2");
+        stage.setTitle("XIS 0.2.1");
         stage.setScene(new Scene (root, 1280, 800));
         stage.setMinHeight(480);
         stage.setMinWidth(800);

@@ -1,7 +1,7 @@
 package sections.automatedfilter;
 
 import sections.UserFeedback;
-import sections.highpassfilter.HighPassFilterConverter;
+import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.PdfIO;
 
 import java.io.File;

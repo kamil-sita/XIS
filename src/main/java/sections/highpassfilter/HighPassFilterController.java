@@ -13,6 +13,7 @@ import sections.UserFeedback;
 import sections.main.MainViewController;
 import toolset.imagetools.BufferedImageConvert;
 import toolset.imagetools.BufferedImageScale;
+import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;

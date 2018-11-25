@@ -11,10 +11,10 @@ import javafx.scene.image.ImageView;
 import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
-import sections.highpassfilter.HighPassFilterConverter;
 import sections.main.MainViewController;
 import toolset.imagetools.BufferedImageConvert;
 import toolset.imagetools.BufferedImageScale;
+import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.GuiFileIO;
 import toolset.io.PdfIO;
 

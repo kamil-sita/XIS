@@ -82,26 +82,31 @@ public final class AutomatedFilterController {
 
     @FXML
     void previewPress(ActionEvent event) {
+        UserFeedback.reportProgress("Previewing page...");
         int page = PdfIO.getNumberOfPages(openPdf);
         page = (int) (page * 0.1);
         try {
             page = Integer.parseInt(previewPage.getText());
-            BufferedImage inputImage = null;
-            if (page == lastPage) {
-                inputImage = lastImage;
-            } else {
-                inputImage = PdfIO.getPdfAsImage(openPdf, page);
-                lastImage = inputImage;
-            }
-            BufferedImage finalInputImage = inputImage; //"variable should be effectively final"
-            new Thread(() -> {
-                var output = HighPassFilterConverter.convert(finalInputImage, 5, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, higherQuality.isSelected());
-                Platform.runLater(() -> setNewImage(output));
-            }).start();
-
         } catch (Exception e) {
             //
         }
+        //variables below are necessary as a workaround for lambda
+        final BufferedImage[] inputImage = new BufferedImage[1];
+        int finalPage = page;
+
+        new Thread(() -> {
+            UserFeedback.reportProgress("Loading image...");
+            if (finalPage == lastPage) {
+                inputImage[0] = lastImage;
+            } else {
+                inputImage[0] = PdfIO.getPdfAsImage(openPdf, finalPage);
+                lastImage = inputImage[0];
+            }
+            UserFeedback.reportProgress("Filtering image...");
+            var output = HighPassFilterConverter.convert(inputImage[0], 5, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, higherQuality.isSelected());
+            Platform.runLater(() -> setNewImage(output));
+            UserFeedback.reportProgress("Generated preview.");
+        }).start();
     }
 
 

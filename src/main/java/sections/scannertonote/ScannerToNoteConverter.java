@@ -1,7 +1,7 @@
 package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeans;
-import sections.Interruptable;
+import sections.Interruptible;
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImageColorPalette;
 import toolset.imagetools.BufferedImageVarious;
@@ -12,7 +12,7 @@ import java.util.*;
 
 public final class ScannerToNoteConverter {
 
-    public static Optional<BufferedImage> convert(ScannerToNoteParameters scannerToNoteParameters, Interruptable interruptable) {
+    public static Optional<BufferedImage> convert(ScannerToNoteParameters scannerToNoteParameters, Interruptible interruptable) {
 
         if (scannerToNoteParameters.getColors() <= 0) return Optional.empty();
 

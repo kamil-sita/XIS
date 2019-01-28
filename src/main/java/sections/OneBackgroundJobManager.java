@@ -6,9 +6,9 @@ package sections;
  */
 public final class OneBackgroundJobManager {
 
-    private static Interruptable currentJob = null;
+    private static Interruptible currentJob = null;
 
-    public static void setAndRunJob(Interruptable job) {
+    public static void setAndRunJob(Interruptible job) {
         interruptIfPossible();
         currentJob = job;
         new Thread(() -> {

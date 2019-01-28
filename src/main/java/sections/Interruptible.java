@@ -3,7 +3,7 @@ package sections;
 /**
  *
  */
-public abstract class Interruptable {
+public abstract class Interruptible {
     protected boolean isInterrupted = false;
 
     public abstract Runnable getRunnable();
@@ -14,7 +14,6 @@ public abstract class Interruptable {
     }
 
     public final void interrupt() {
-        System.out.println("interrupted!");
         isInterrupted = true;
     }
 }

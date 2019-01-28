@@ -18,17 +18,10 @@ public class GuiFileIO {
      * @return loaded buffered image
      */
     public static Optional<BufferedImage> getImage() {
-        var formats = ImageExtensions.getStarExtensions();
-
         Stage stage = new Stage();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open image from ile");
-        fileChooser.setInitialDirectory(lastFileDirectory);
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Supported images", formats),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-        );
-        File file = fileChooser.showOpenDialog(stage);
+
+        File file = getImageFileChooser(FileChooserType.open).showOpenDialog(stage);
+
         if (file != null) lastFileDirectory = file.getParentFile();
 
         return BufferedImageIO.getImage(file);
@@ -39,17 +32,10 @@ public class GuiFileIO {
      * @param image image to save
      */
     public static void saveImage(BufferedImage image) {
-        var formats = ImageExtensions.getStarExtensions();
-
         Stage stage = new Stage();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save image to file");
-        fileChooser.setInitialDirectory(lastFileDirectory);
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Supported images", formats),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-        );
-        File file = fileChooser.showSaveDialog(stage);
+
+        File file = getImageFileChooser(FileChooserType.save).showSaveDialog(stage);
+
         if (file != null) {
             try {
                 ImageIO.write(image, "png", file);
@@ -58,6 +44,31 @@ public class GuiFileIO {
             }
             lastFileDirectory = file.getParentFile();
         }
+
+    }
+
+    private enum FileChooserType {
+        open, save
+    }
+
+    private static FileChooser getImageFileChooser(FileChooserType fileChooserType) {
+        var formats = ImageExtensions.getStarExtensions();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(fileChooserType == FileChooserType.open ? "Open image from file" : "Save image to file");
+        fileChooser.setInitialDirectory(lastFileDirectory);
+        if (fileChooserType == FileChooserType.open) {
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("Supported images", formats),
+                    new FileChooser.ExtensionFilter("All Files", "*.*")
+            );
+        } else {
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter("PNG image", "*.png", "*.PNG")
+            );
+        }
+
+        return fileChooser;
 
     }
 

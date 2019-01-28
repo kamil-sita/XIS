@@ -72,7 +72,7 @@ public final class ScannerToNoteController {
             UserFeedback.popup("Can't run without loaded file");
             return;
         }
-        OneBackgroundJobManager.setAndRunJob(new Interruptable() {
+        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
 
             BufferedImage image = null;
 

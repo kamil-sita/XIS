@@ -10,6 +10,7 @@ import java.util.Optional;
 
 
 public final class UserFeedback {
+
     public static void reportProgress (double percentProgress) {
         Platform.runLater(() -> MainViewController.getProgressBar().setProgress(percentProgress));
     }

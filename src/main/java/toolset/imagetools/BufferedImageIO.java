@@ -13,6 +13,8 @@ public final class BufferedImageIO {
             bufferedImage = ImageIO.read(file);
         } catch (IOException e) {
             return Optional.empty();
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
         } catch (Exception e) {
             e.printStackTrace();
         }

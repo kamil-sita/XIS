@@ -57,6 +57,7 @@
          <children>
             <Label fx:id="labelStatus" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Status" HBox.hgrow="ALWAYS" />
             <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#interruptPress" text="Interrupt" />
             <ProgressBar fx:id="progressBar" maxWidth="200.0" minWidth="50.0" prefWidth="200.0" progress="0.0" HBox.hgrow="NEVER" />
          </children>
          <padding>

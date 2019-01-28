@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import sections.Notifier;
+import sections.OneBackgroundJobManager;
 import sections.SubUserInterface;
 import sections.automatedfilter.AutomatedFilter;
 import sections.defaultpage.WelcomePage;
@@ -106,6 +107,12 @@ public final class MainViewController {
         changeVista(automatedFilter);
         currentModule = automatedFilter;
         setStatus("automatedFilter module loaded");
+    }
+
+
+    @FXML
+    public void interruptPress(ActionEvent event) {
+        OneBackgroundJobManager.interruptIfPossible();
     }
 
 

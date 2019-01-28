@@ -1,6 +1,7 @@
 package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeans;
+import sections.Interruptable;
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImageColorPalette;
 import toolset.imagetools.BufferedImageVarious;
@@ -11,23 +12,23 @@ import java.util.*;
 
 public final class ScannerToNoteConverter {
 
-    public static Optional<BufferedImage> convert(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff) {
+    public static Optional<BufferedImage> convert(ScannerToNoteParameters scannerToNoteParameters, Interruptable interruptable) {
 
-        if (colors <= 0) return Optional.empty();
+        if (scannerToNoteParameters.getColors() <= 0) return Optional.empty();
 
         final int DEPTH = 5;
         final int ITERATIONS = 32;
 
-        var inputCopy = BufferedImageVarious.copyImage(input);
+        var inputCopy = BufferedImageVarious.copyImage(scannerToNoteParameters.getInput());
 
         List<RgbContainer> rgbList = sampleData(inputCopy);
 
         final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = reduceBitrate(DEPTH, rgbList);
 
-        final Rgb BACKGROUND_COLOR = filterBackground ? getMostCommon(SAMPLE_WITH_REDUCED_BITRATE) : null;
+        final Rgb BACKGROUND_COLOR = scannerToNoteParameters.isFilterBackground() ? getMostCommon(SAMPLE_WITH_REDUCED_BITRATE) : null;
 
-        if (filterBackground) {
-            filterOutBackgroundByBrightnessAndSaturation(rgbList, BACKGROUND_COLOR, brightnessDiff, saturationDiff);
+        if (scannerToNoteParameters.isFilterBackground()) {
+            filterOutBackgroundByBrightnessAndSaturation(rgbList, BACKGROUND_COLOR, scannerToNoteParameters.getBrightnessDiff(), scannerToNoteParameters.getSaturationDiff());
         }
 
         if (rgbList.size() == 0) {
@@ -35,33 +36,32 @@ public final class ScannerToNoteConverter {
             return Optional.empty();
         }
 
-        var kMeans = new KMeans<>(colors, rgbList);
-        var mainThread = Thread.currentThread();
+        var kMeans = new KMeans<>(scannerToNoteParameters.getColors(), rgbList);
 
         kMeans.setOnUpdate(() -> {
             UserFeedback.reportProgress(kMeans.getProgress());
-            if (mainThread.isInterrupted()) {
+            if (interruptable.isInterrupted()) {
                 kMeans.abort();
             }
         });
 
         kMeans.iterate(ITERATIONS);
 
-        if (mainThread.isInterrupted()) {
+        if (interruptable.isInterrupted()) {
             return Optional.empty();
         }
 
         List<RgbContainer> results = kMeans.getCalculatedMeanPoints();
 
-        if (filterBackground) {
+        if (scannerToNoteParameters.isFilterBackground()) {
             results.add(new RgbContainer(BACKGROUND_COLOR));
         }
 
         BufferedImageColorPalette.replace(inputCopy, RgbContainer.toRgbList(results));
 
-        scaleBrightnessIfNeeded(scaleBrightness, inputCopy, results);
+        scaleBrightnessIfNeeded(scannerToNoteParameters.isScaleBrightness(), inputCopy, results);
 
-        if (mainThread.isInterrupted()) {
+        if (interruptable.isInterrupted()) {
             return Optional.empty();
         }
 
@@ -152,4 +152,45 @@ public final class ScannerToNoteConverter {
     }
 
 
+    static class ScannerToNoteParameters {
+        private final BufferedImage input;
+        private final boolean filterBackground;
+        private final boolean scaleBrightness;
+        private final int colors;
+        private final double brightnessDiff;
+        private final double saturationDiff;
+
+        ScannerToNoteParameters(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff) {
+            this.input = input;
+            this.filterBackground = filterBackground;
+            this.scaleBrightness = scaleBrightness;
+            this.colors = colors;
+            this.brightnessDiff = brightnessDiff;
+            this.saturationDiff = saturationDiff;
+        }
+
+        public BufferedImage getInput() {
+            return input;
+        }
+
+        public boolean isFilterBackground() {
+            return filterBackground;
+        }
+
+        public boolean isScaleBrightness() {
+            return scaleBrightness;
+        }
+
+        public int getColors() {
+            return colors;
+        }
+
+        public double getBrightnessDiff() {
+            return brightnessDiff;
+        }
+
+        public double getSaturationDiff() {
+            return saturationDiff;
+        }
+    }
 }

@@ -11,13 +11,12 @@ import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
+import toolset.JavaFXTools;
 import toolset.imagetools.BufferedImageConvert;
-import toolset.imagetools.BufferedImageScale;
 import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
-import java.util.concurrent.Semaphore;
 
 public final class HighPassFilterController {
 
@@ -90,36 +89,14 @@ public final class HighPassFilterController {
             UserFeedback.reportProgress("Converted image!");
             Platform.runLater(() -> setNewImage(output));
 
-            if (higherQualityPreview.isSelected()) {
-                semaphore = new Semaphore(0);
-                Platform.runLater(() -> setNewImage(output));
-                UserFeedback.reportProgress("Generated preview. Scaling to fit window... Waiting for permit.");
-                try {
-                    semaphore.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                UserFeedback.reportProgress("Generated preview. Scaling to fit window...");
-                double width = imagePreview.getFitWidth();
-                double height = imagePreview.getFitHeight();
-                var scaledOutput = BufferedImageScale.getScaledImage(output, width, height);
-                Platform.runLater(() -> setNewImage(scaledOutput));
-                UserFeedback.reportProgress("Generated scaled preview.");
-            } else {
-                Platform.runLater(() -> setNewImage(output));
-                UserFeedback.reportProgress("Generated preview.");
-            }
+            JavaFXTools.showPreview(output, higherQualityPreview.isSelected(), imagePreview, this::setNewImage);
         }).start();
 
     }
-
-    Semaphore semaphore;
-
     private void setNewImage(BufferedImage bufferedImage) {
         imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
         reAddNotifier();
         MainViewController.forceOnWindowSizeChange();
-        if (semaphore != null) semaphore.release();
     }
 
     private void reAddNotifier() {

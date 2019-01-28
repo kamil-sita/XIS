@@ -1,6 +1,5 @@
 package sections.scannertonote;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -9,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.*;
 import sections.main.MainViewController;
+import toolset.JavaFXTools;
 import toolset.imagetools.BufferedImageConvert;
 import toolset.io.GuiFileIO;
 
@@ -32,6 +32,8 @@ public final class ScannerToNoteController {
     private Slider brightnessDiffSlider;
     @FXML
     private Slider saturationDiffSlider;
+    @FXML
+    private CheckBox highQualityPreview;
 
     @FXML
     void isolateBackgroundAction(ActionEvent event) {
@@ -46,7 +48,7 @@ public final class ScannerToNoteController {
         if (optionalInputImage.isPresent()) {
             plainImage = optionalInputImage.get();
             processedImage = null;
-            setNewImage();
+            JavaFXTools.showPreview(plainImage, highQualityPreview.isSelected(), imagePreview, this::setNewImage);
         }
     }
 
@@ -72,7 +74,7 @@ public final class ScannerToNoteController {
         }
         OneBackgroundJobManager.setAndRunJob(new Interruptable() {
 
-            Optional<BufferedImage> optionalImage;
+            BufferedImage image = null;
 
             @Override
             public Runnable getRunnable() {
@@ -84,23 +86,28 @@ public final class ScannerToNoteController {
                         //
                     }
 
-                    optionalImage = ScannerToNoteConverter.convert(
-                            plainImage,
-                            isolateBackground.isSelected(),
-                            correctBrightness.isSelected(),
-                            colorCount,
-                            brightnessDiffSlider.getValue()/100.0,
-                            saturationDiffSlider.getValue()/100.0
+                    Optional<BufferedImage> optionalImage = ScannerToNoteConverter.convert(
+                            new ScannerToNoteConverter.ScannerToNoteParameters(
+                                    plainImage,
+                                    isolateBackground.isSelected(),
+                                    correctBrightness.isSelected(),
+                                    colorCount,
+                                    brightnessDiffSlider.getValue()/100.0,
+                                    saturationDiffSlider.getValue()/100.0
+                            ),
+                            this
                     );
+
+                    image = optionalImage.orElse(null);
                 };
             }
 
             @Override
-            public Runnable onFinish() {
+            public Runnable onUninterruptedFinish() {
                 return () -> {
-                    if (optionalImage.isPresent()) {
-                        processedImage = optionalImage.get();
-                        Platform.runLater(() -> setNewImage());
+                    if (image != null) {
+                        processedImage = image;
+                        JavaFXTools.showPreview(processedImage, highQualityPreview.isSelected(), imagePreview, (BufferedImage bu) -> setNewImage(bu));
                     }
                 };
             }
@@ -108,9 +115,8 @@ public final class ScannerToNoteController {
 
     }
 
-    private void setNewImage() {
-        var imageToSet = processedImage != null ? processedImage : plainImage;
-        imagePreview.setImage(BufferedImageConvert.toFxImage(imageToSet));
+    private void setNewImage(BufferedImage bufferedImage) {
+        imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
         reAddNotifier();
     }
 

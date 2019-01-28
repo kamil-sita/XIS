@@ -17,5 +17,6 @@
       <Slider fx:id="saturationDiffSlider" layoutX="413.0" layoutY="44.0" showTickLabels="true" showTickMarks="true" value="15.0" />
       <Label layoutX="288.0" layoutY="42.0" text="Saturation difference" />
       <Separator layoutX="12.0" layoutY="120.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="110.0" />
+      <CheckBox fx:id="highQualityPreview" layoutX="209.0" layoutY="86.0" mnemonicParsing="false" selected="true" text="higher quality preview" />
    </children>
 </AnchorPane>

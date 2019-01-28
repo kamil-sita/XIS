@@ -1,6 +1,8 @@
 package toolset;
 
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImageScale;
@@ -22,6 +24,10 @@ public class JavaFXTools {
             Platform.runLater(() -> delegate.set(previewImage));
             UserFeedback.reportProgress("Generated preview.");
         }
+    }
+
+    public static Image toFxImage(BufferedImage bi) {
+        return SwingFXUtils.toFXImage(bi, null);
     }
 
     public interface SetImageDelegate {

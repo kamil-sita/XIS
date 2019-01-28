@@ -1,10 +1,11 @@
 package toolset.imagetools;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class BufferedImageLayers {
     public static BufferedImage divide(BufferedImage image0, BufferedImage image1) {
-        var output = BufferedImageVarious.copyImage(image0);
+        var output = copyImage(image0);
 
         for (int x = 0; x < output.getWidth(); x++) {
             for (int y = 0; y < output.getHeight(); y++) {
@@ -22,5 +23,13 @@ public class BufferedImageLayers {
         }
 
         return output;
+    }
+
+    public static BufferedImage copyImage(BufferedImage input) {
+        BufferedImage imageCopy = new BufferedImage(input.getWidth(), input.getHeight(), input.getType());
+        Graphics2D g = imageCopy.createGraphics();
+        g.drawImage(input, 0, 0, null);
+        g.dispose();
+        return imageCopy;
     }
 }

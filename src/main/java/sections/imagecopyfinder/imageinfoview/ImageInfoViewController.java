@@ -7,8 +7,8 @@ import javafx.scene.image.ImageView;
 import sections.Notifier;
 import sections.NotifierFactory;
 import sections.main.MainViewController;
-import toolset.imagetools.BufferedImageConvert;
-import toolset.imagetools.BufferedImageIO;
+import toolset.JavaFXTools;
+import toolset.io.BufferedImageIO;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -79,7 +79,7 @@ public final class ImageInfoViewController {
             if (!optionalImage.isPresent()) return;
             bufferedImage = optionalImage.get();
             Platform.runLater(() -> {
-                imageView.setImage(BufferedImageConvert.toFxImage(bufferedImage));
+                imageView.setImage(JavaFXTools.toFxImage(bufferedImage));
                 dimensionsValue.setText("(" + bufferedImage.getWidth() + "x" + bufferedImage.getHeight() + ")");
                 MainViewController.reloadView();
             });

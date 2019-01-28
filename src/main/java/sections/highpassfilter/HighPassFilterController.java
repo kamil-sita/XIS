@@ -12,7 +12,6 @@ import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
 import toolset.JavaFXTools;
-import toolset.imagetools.BufferedImageConvert;
 import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.GuiFileIO;
 
@@ -94,7 +93,7 @@ public final class HighPassFilterController {
 
     }
     private void setNewImage(BufferedImage bufferedImage) {
-        imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
+        imagePreview.setImage(JavaFXTools.toFxImage(bufferedImage));
         reAddNotifier();
         MainViewController.forceOnWindowSizeChange();
     }

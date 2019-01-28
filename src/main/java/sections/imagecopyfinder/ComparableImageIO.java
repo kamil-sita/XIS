@@ -1,7 +1,7 @@
 package sections.imagecopyfinder;
 
 import sections.UserFeedback;
-import toolset.imagetools.BufferedImageIO;
+import toolset.io.BufferedImageIO;
 import toolset.io.MultipleFileIO;
 
 import java.io.File;

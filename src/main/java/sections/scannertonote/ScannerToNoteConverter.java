@@ -4,7 +4,7 @@ import pl.ksitarski.simplekmeans.KMeans;
 import sections.Interruptible;
 import sections.UserFeedback;
 import toolset.imagetools.BufferedImageColorPalette;
-import toolset.imagetools.BufferedImageVarious;
+import toolset.imagetools.BufferedImageLayers;
 import toolset.imagetools.Rgb;
 
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ public final class ScannerToNoteConverter {
         final int DEPTH = 5;
         final int ITERATIONS = 32;
 
-        var inputCopy = BufferedImageVarious.copyImage(scannerToNoteParameters.getInput());
+        var inputCopy = BufferedImageLayers.copyImage(scannerToNoteParameters.getInput());
 
         List<RgbContainer> rgbList = sampleData(inputCopy);
 

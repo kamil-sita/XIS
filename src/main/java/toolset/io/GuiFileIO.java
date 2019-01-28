@@ -2,7 +2,6 @@ package toolset.io;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import toolset.imagetools.BufferedImageIO;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

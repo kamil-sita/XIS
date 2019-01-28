@@ -7,14 +7,14 @@ public final class HighPassFilterConverter {
 
     public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, double scaleBrightnessVal) {
 
-        var blurredImage = BufferedImageVarious.copyImage(bufferedImage);
+        var blurredImage = BufferedImageLayers.copyImage(bufferedImage);
 
         Kernel kernel = BufferedImageBlur.generateGaussianKernel(blurPasses);
 
         blurredImage = BufferedImageBlur.simpleBlur(blurredImage, kernel);
 
         var output = BufferedImageLayers.divide(
-                BufferedImageVarious.copyImage(bufferedImage), blurredImage);
+                BufferedImageLayers.copyImage(bufferedImage), blurredImage);
 
         if (scaleBrightness) BufferedImageColorPalette.scaleAndCutoffBrightness(output, scaleBrightnessVal);
 

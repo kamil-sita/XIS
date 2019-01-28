@@ -11,8 +11,8 @@ import sections.Notifier;
 import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
-import toolset.imagetools.BufferedImageConvert;
-import toolset.imagetools.BufferedImageIO;
+import toolset.JavaFXTools;
+import toolset.io.BufferedImageIO;
 import toolset.io.MultipleFileIO;
 
 import java.awt.image.BufferedImage;
@@ -96,7 +96,7 @@ public final class CompetitionController {
     private void displayLeft(ImageContestant ic) {
         imageContestantL = ic;
         imageL = getContestantImage(ic);
-        var fxImage = BufferedImageConvert.toFxImage(imageL);
+        var fxImage = JavaFXTools.toFxImage(imageL);
         imageViewL.setImage(fxImage);
         reAddNotifier();
         displayRandomRight();
@@ -120,7 +120,7 @@ public final class CompetitionController {
         }
         imageContestantR = randomContestant;
         imageR = getContestantImage(imageContestantR);
-        var fxImage = BufferedImageConvert.toFxImage(imageR);
+        var fxImage = JavaFXTools.toFxImage(imageR);
         imageViewR.setImage(fxImage);
         reAddNotifier();
     }

@@ -1,6 +1,6 @@
 package sections.imagecompetition;
 
-import toolset.imagetools.BufferedImageIO;
+import toolset.io.BufferedImageIO;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

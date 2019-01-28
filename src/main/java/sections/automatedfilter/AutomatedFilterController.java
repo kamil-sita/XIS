@@ -13,7 +13,6 @@ import sections.NotifierFactory;
 import sections.UserFeedback;
 import sections.main.MainViewController;
 import toolset.JavaFXTools;
-import toolset.imagetools.BufferedImageConvert;
 import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.GuiFileIO;
 import toolset.io.PdfIO;
@@ -136,7 +135,7 @@ public final class AutomatedFilterController {
 
     private void setNewImage(BufferedImage bufferedImage) {
 
-        imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
+        imagePreview.setImage(JavaFXTools.toFxImage(bufferedImage));
         var notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imagePreview, 90, 10, 1.0);
         MainViewController.removeNotifier(oldNotifier);
         MainViewController.addNotifier(notifier);

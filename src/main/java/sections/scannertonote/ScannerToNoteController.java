@@ -9,7 +9,6 @@ import javafx.scene.image.ImageView;
 import sections.*;
 import sections.main.MainViewController;
 import toolset.JavaFXTools;
-import toolset.imagetools.BufferedImageConvert;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
@@ -116,7 +115,7 @@ public final class ScannerToNoteController {
     }
 
     private void setNewImage(BufferedImage bufferedImage) {
-        imagePreview.setImage(BufferedImageConvert.toFxImage(bufferedImage));
+        imagePreview.setImage(JavaFXTools.toFxImage(bufferedImage));
         reAddNotifier();
     }
 

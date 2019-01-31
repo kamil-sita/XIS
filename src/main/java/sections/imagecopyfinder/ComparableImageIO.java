@@ -1,5 +1,6 @@
 package sections.imagecopyfinder;
 
+import sections.Interruptible;
 import sections.UserFeedback;
 import toolset.io.BufferedImageIO;
 import toolset.io.MultipleFileIO;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class ComparableImageIO {
 
-    public static List<ComparableImage> loadFiles(File[] folders, int generatedMiniatureSize) {
+    public static List<ComparableImage> loadFiles(File[] folders, int generatedMiniatureSize, Interruptible interruptible) {
         UserFeedback.reportProgress("Finding files in folder");
         var images = new ArrayList<ComparableImage>();
         List<File> files = MultipleFileIO.loadFilesFromFolders(folders);
@@ -40,6 +41,7 @@ public class ComparableImageIO {
                 images.add(comparableImage);
             }
 
+            if (interruptible.isInterrupted()) return null;
         }
 
         return images;

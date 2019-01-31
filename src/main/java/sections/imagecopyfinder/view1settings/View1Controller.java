@@ -1,17 +1,18 @@
 package sections.imagecopyfinder.view1settings;
 
 import javafx.application.Platform;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import sections.Interruptible;
+import sections.OneBackgroundJobManager;
 import sections.UserFeedback;
+import sections.imagecopyfinder.FolderImageComparator;
 import sections.imagecopyfinder.ImageComparator;
 import sections.imagecopyfinder.ImageCopyFinder;
-import sections.imagecopyfinder.TaskImageComparator;
 import sections.main.MainViewController;
 
 public final class View1Controller {
@@ -48,19 +49,26 @@ public final class View1Controller {
 
     @FXML
     private void runButtonPress(ActionEvent event) {
-        TaskImageComparator tic = new TaskImageComparator(
-                folderLocations.getText().split("\n"),
-                imageSizeComboBox.getValue(),
-                checkBoxGeometricalMode.isSelected()
-        );
-        tic.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED,
-                event1 -> {
-                    var imageComparator = tic.getValue();
-                    onFinish(imageComparator);
-                }
-        );
+        String JAVAFX_NEWLINE = "\n";
 
-        new Thread(tic).start();
+        final var folderComparator = new FolderImageComparator(folderLocations.getText().split(JAVAFX_NEWLINE),
+                imageSizeComboBox.getValue(),
+                checkBoxGeometricalMode.isSelected());
+
+        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+            private ImageComparator imageComparator;
+
+            @Override
+            public Runnable getRunnable() {
+                return () -> imageComparator = folderComparator.compare(this);
+            }
+
+            @Override
+            public Runnable onUninterruptedFinish() {
+                return () -> onFinish(imageComparator);
+            }
+        });
+
     }
 
     private void onFinish(ImageComparator imageComparator) {

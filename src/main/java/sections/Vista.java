@@ -18,7 +18,7 @@ public abstract class Vista {
     protected String defaultLocation = null;
 
     public AnchorPane getUserInterface() {
-        OneBackgroundJobManager.interruptIfPossible();
+        OneBackgroundJobManager.interruptCurrentJobIfPossible();
         return lazyLoad();
     }
 

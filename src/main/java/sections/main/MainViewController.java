@@ -1,5 +1,6 @@
 package sections.main;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -13,7 +14,6 @@ import sections.Vista;
 import sections.automatedfilter.AutomatedFilter;
 import sections.defaultpage.WelcomePage;
 import sections.highpassfilter.HighPassFilter;
-import sections.imagecompetition.ImageCompetition;
 import sections.imagecopyfinder.ImageCopyFinder;
 import sections.scannertonote.ScannerToNote;
 
@@ -83,14 +83,6 @@ public final class MainViewController {
     }
 
     @FXML
-    void imagesCompetitionPress(ActionEvent event) {
-        var imageCompetition = new ImageCompetition();
-        changeVistaIfChanged(imageCompetition);
-        currentModule = imageCompetition;
-        setStatus("image-competition-module loaded");
-    }
-
-    @FXML
     void automatedFilteringPress(ActionEvent event) {
         var automatedFilter = new AutomatedFilter();
         changeVistaIfChanged(automatedFilter);
@@ -101,7 +93,7 @@ public final class MainViewController {
 
     @FXML
     public void interruptPress(ActionEvent event) {
-        OneBackgroundJobManager.interruptIfPossible();
+        OneBackgroundJobManager.interruptCurrentJobIfPossible();
     }
 
 
@@ -128,11 +120,13 @@ public final class MainViewController {
      * @param newVista module with AnchorPane
      */
     public static void changeVistaIfChanged(Vista newVista) {
-        if (lastVistaUI == null || lastVistaUI != newVista.getUserInterface()) {
-            currentVistaGlobal = newVista.getUserInterface();
-            vistaHolderGlobal.getChildren().setAll((Node) newVista.getUserInterface());
-            onWindowSizeChange();
-        }
+        Platform.runLater(() -> {
+            if (lastVistaUI == null || lastVistaUI != newVista.getUserInterface()) {
+                currentVistaGlobal = newVista.getUserInterface();
+                vistaHolderGlobal.getChildren().setAll((Node) newVista.getUserInterface());
+                onWindowSizeChange();
+            }
+        });
     }
     private static AnchorPane lastVistaUI = null;
 

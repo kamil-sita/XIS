@@ -1,5 +1,6 @@
 package sections.imagecopyfinder;
 
+import sections.Interruptible;
 import sections.UserFeedback;
 import toolset.imagetools.Rgb;
 
@@ -24,6 +25,8 @@ public final class ImageComparator {
 
     private ImageComparatorStatus status;
 
+    private Interruptible interruptible;
+
 
     public ImageComparator(int generatedMiniatureSize) {
         this.generatedMiniatureSize = generatedMiniatureSize;
@@ -38,8 +41,10 @@ public final class ImageComparator {
      * @param folders
      * @return true if initialized
      */
-    public boolean initialize(File[] folders, boolean isGeometricalMode) {
-        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize);
+    public boolean initialize(File[] folders, boolean isGeometricalMode, Interruptible interruptible) {
+        this.interruptible = interruptible;
+        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize, interruptible);
+        if (interruptible.isInterrupted()) return false;
         if (!optionalImages.isEmpty()) {
             images = optionalImages;
             findPairs(isGeometricalMode);
@@ -60,6 +65,7 @@ public final class ImageComparator {
         long time = System.nanoTime();
 
         for (int i = 0; i < images.size(); i++) {
+            if (interruptible.isInterrupted()) return;
             reportFindPairingProgress(time, i);
 
             ComparableImage image1 = images.get(i);

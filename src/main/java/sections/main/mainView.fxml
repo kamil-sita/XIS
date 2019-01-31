@@ -22,7 +22,7 @@
                   <Button mnemonicParsing="false" onAction="#scannerToNotePress" prefHeight="42.0" prefWidth="200.0" text="Scanner to note" />
                   <Button mnemonicParsing="false" onAction="#highPassFilterPress" prefHeight="42.0" prefWidth="200.0" text="High pass filter" />
                   <Button mnemonicParsing="false" onAction="#automatedFilteringPress" prefHeight="42.0" prefWidth="200.0" text="Automated filtering" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#imagesCompetitionPress" prefHeight="42.0" prefWidth="200.0" text="Images competition [WIP]" />
+                  <Button disable="true" mnemonicParsing="false"  prefHeight="42.0" prefWidth="200.0" text="Images competition [WIP]" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Image compression" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Spritesheet builder" />
                </children>

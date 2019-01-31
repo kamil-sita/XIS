@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imagecopyfinder.view1settings.View1Controller">
+<AnchorPane prefHeight="369.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imagecopyfinder.view1settings.View1Controller">
 <children>
    <Label layoutX="14.0" layoutY="150.0" styleClass="caption" text="Images locations" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="150.0" />
    <Button layoutX="1082.0" layoutY="18.0" maxWidth="101.0" minWidth="101.0" mnemonicParsing="false" onAction="#runButtonPress" prefHeight="26.0" prefWidth="101.0" text="Run" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="18.0" />

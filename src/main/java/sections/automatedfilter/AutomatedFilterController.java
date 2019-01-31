@@ -19,7 +19,6 @@ import toolset.io.PdfIO;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.concurrent.Semaphore;
 
 public final class AutomatedFilterController {
 
@@ -131,7 +130,6 @@ public final class AutomatedFilterController {
 
 
     private Notifier oldNotifier;
-    private Semaphore semaphore;
 
     private void setNewImage(BufferedImage bufferedImage) {
 

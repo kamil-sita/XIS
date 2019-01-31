@@ -26,6 +26,7 @@ public class BufferedImageLayers {
     }
 
     public static BufferedImage copyImage(BufferedImage input) {
+        if (input == null) return null;
         BufferedImage imageCopy = new BufferedImage(input.getWidth(), input.getHeight(), input.getType());
         Graphics2D g = imageCopy.createGraphics();
         g.drawImage(input, 0, 0, null);

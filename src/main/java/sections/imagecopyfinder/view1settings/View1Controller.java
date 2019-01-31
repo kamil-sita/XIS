@@ -68,7 +68,7 @@ public final class View1Controller {
             ImageCopyFinder.setImageComparator(imageComparator);
             ImageCopyFinder.setDeleteDirectory(deleteFolder.toString());
             MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
-            MainViewController.reloadView();
+            MainViewController.refreshVista();
         } else {
             UserFeedback.popup(imageComparator.getStatus().toString());
         }

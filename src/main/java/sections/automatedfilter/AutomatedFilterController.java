@@ -137,7 +137,7 @@ public final class AutomatedFilterController {
         var notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imagePreview, 90, 10, 1.0);
         MainViewController.removeNotifier(oldNotifier);
         MainViewController.addNotifier(notifier);
-        MainViewController.forceOnWindowSizeChange();
+        MainViewController.refreshVista();
         oldNotifier = notifier;
     }
 }

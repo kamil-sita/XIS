@@ -9,7 +9,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import sections.Notifier;
 import sections.OneBackgroundJobManager;
-import sections.SubUserInterface;
+import sections.Vista;
 import sections.automatedfilter.AutomatedFilter;
 import sections.defaultpage.WelcomePage;
 import sections.highpassfilter.HighPassFilter;
@@ -26,7 +26,7 @@ public final class MainViewController {
     private static AnchorPane vistaHolderGlobal;
     private static AnchorPane currentVistaGlobal;
     private static ScrollPane scrollPaneGlobal;
-    private static SubUserInterface currentModule;
+    private static Vista currentModule;
     private static ProgressBar progressBarGlobal;
 
     private static ArrayList<Notifier> notifiers = new ArrayList<>();
@@ -53,7 +53,7 @@ public final class MainViewController {
     @FXML
     void mainPress(ActionEvent event) {
         WelcomePage welcomePage = new WelcomePage();
-        changeVista(welcomePage);
+        changeVistaIfChanged(welcomePage);
         currentModule = welcomePage;
         setStatus("welcome page loaded");
     }
@@ -61,7 +61,7 @@ public final class MainViewController {
     @FXML
     void imageCopyFinderPress(ActionEvent event) {
         imageCopyFinder = new ImageCopyFinder();
-        changeVista(imageCopyFinder);
+        changeVistaIfChanged(imageCopyFinder);
         currentModule = imageCopyFinder;
         setStatus("imagecopyfinder module loaded");
     }
@@ -69,7 +69,7 @@ public final class MainViewController {
     @FXML
     void scannerToNotePress(ActionEvent event) {
         var scannerToNote = new ScannerToNote();
-        changeVista(scannerToNote);
+        changeVistaIfChanged(scannerToNote);
         currentModule = scannerToNote;
         setStatus("scanner-to-note module loaded");
     }
@@ -77,7 +77,7 @@ public final class MainViewController {
     @FXML
     void highPassFilterPress(ActionEvent event) {
         var highPassFilter = new HighPassFilter();
-        changeVista(highPassFilter);
+        changeVistaIfChanged(highPassFilter);
         currentModule = highPassFilter;
         setStatus("high-pass-filter module loaded");
     }
@@ -85,7 +85,7 @@ public final class MainViewController {
     @FXML
     void imagesCompetitionPress(ActionEvent event) {
         var imageCompetition = new ImageCompetition();
-        changeVista(imageCompetition);
+        changeVistaIfChanged(imageCompetition);
         currentModule = imageCompetition;
         setStatus("image-competition-module loaded");
     }
@@ -93,7 +93,7 @@ public final class MainViewController {
     @FXML
     void automatedFilteringPress(ActionEvent event) {
         var automatedFilter = new AutomatedFilter();
-        changeVista(automatedFilter);
+        changeVistaIfChanged(automatedFilter);
         currentModule = automatedFilter;
         setStatus("automatedFilter module loaded");
     }
@@ -112,7 +112,6 @@ public final class MainViewController {
      */
     @FXML
     public void initialize() {
-        MainViewController mainViewController = this;
         labelStatusGlobal = labelStatus;
         vistaHolderGlobal = vistaHolder;
         scrollPaneGlobal = scrollPane;
@@ -126,13 +125,16 @@ public final class MainViewController {
 
     /**
      * Changes vista (main AnchorPane where content is displayed)
-     * @param mt module with AnchorPane
+     * @param newVista module with AnchorPane
      */
-    public static void changeVista(SubUserInterface mt) {
-        currentVistaGlobal = mt.getUserInterface();
-        vistaHolderGlobal.getChildren().setAll((Node) mt.getUserInterface());
-        onWindowSizeChange();
+    public static void changeVistaIfChanged(Vista newVista) {
+        if (lastVistaUI == null || lastVistaUI != newVista.getUserInterface()) {
+            currentVistaGlobal = newVista.getUserInterface();
+            vistaHolderGlobal.getChildren().setAll((Node) newVista.getUserInterface());
+            onWindowSizeChange();
+        }
     }
+    private static AnchorPane lastVistaUI = null;
 
     /**
      * Sets status (Label) in bottom left label
@@ -152,15 +154,12 @@ public final class MainViewController {
         }
     }
 
-    public static void forceOnWindowSizeChange() {
-        onWindowSizeChange();
-    }
-
     /**
-     * Reloads anchorPane from last used class implementing SubUserInterface
+     * Notifies notifiers waiting for window size change.
+     * If current vista was changed, loads it.
      */
-    public static void reloadView() {
-        changeVista(currentModule);
+    public static void refreshVista() {
+        changeVistaIfChanged(currentModule);
         onWindowSizeChange();
     }
 

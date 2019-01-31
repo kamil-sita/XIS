@@ -1,8 +1,8 @@
 package sections.imagecopyfinder;
 
-import sections.SubUserInterface;
+import sections.Vista;
 
-public final class ImageCopyFinder extends SubUserInterface {
+public final class ImageCopyFinder extends Vista {
 
     private static final String LOCATION_VIEW1 = "sections/imagecopyfinder/view1settings/view1.fxml";
     private static final String LOCATION_VIEW2 = "sections/imagecopyfinder/view2comparison/view2.fxml";

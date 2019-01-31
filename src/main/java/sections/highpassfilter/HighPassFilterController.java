@@ -95,7 +95,7 @@ public final class HighPassFilterController {
     private void setNewImage(BufferedImage bufferedImage) {
         imagePreview.setImage(JavaFXTools.toFxImage(bufferedImage));
         reAddNotifier();
-        MainViewController.forceOnWindowSizeChange();
+        MainViewController.refreshVista();
     }
 
     private void reAddNotifier() {

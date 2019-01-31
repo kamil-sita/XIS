@@ -123,7 +123,7 @@ public final class ScannerToNoteController {
         MainViewController.removeNotifier(notifier);
         notifier = NotifierFactory.scalingImageNotifier(plainImage, imagePreview, 130, 0, 1.0);
         MainViewController.addNotifier(notifier);
-        MainViewController.forceOnWindowSizeChange();
+        MainViewController.refreshVista();
     }
 
 }

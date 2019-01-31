@@ -109,7 +109,7 @@ public final class CompetitionController {
         notifierR = NotifierFactory.scalingImageNotifier(imageR, imageViewR, 50, 250, 0.5);
         MainViewController.addNotifier(notifierL);
         MainViewController.addNotifier(notifierR);
-        MainViewController.forceOnWindowSizeChange();
+        MainViewController.refreshVista();
     }
 
     private void displayRandomRight() {

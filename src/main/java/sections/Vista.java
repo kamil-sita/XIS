@@ -9,7 +9,7 @@ import java.net.URL;
 /**
  * Abstract class of main vista in user interface.
  */
-public abstract class SubUserInterface {
+public abstract class Vista {
 
     private AnchorPane anchorPane = null;
     /**
@@ -31,7 +31,7 @@ public abstract class SubUserInterface {
     }
 
     protected void setInterface(String location) {
-        URL url = SubUserInterface.class.getClassLoader().getResource(location);
+        URL url = Vista.class.getClassLoader().getResource(location);
         try {
             anchorPane = FXMLLoader.load(url);
         } catch (IOException e) {

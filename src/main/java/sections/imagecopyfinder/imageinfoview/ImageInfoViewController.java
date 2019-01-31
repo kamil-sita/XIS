@@ -70,7 +70,7 @@ public final class ImageInfoViewController {
     private void addNotifierToMakeImageFitWindow() {
         notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imageView, 460,50, 0.5);
         MainViewController.addNotifier(notifier);
-        MainViewController.reloadView();
+        MainViewController.refreshVista();
     }
 
     private void loadImageInBackground(File resourceFile) {
@@ -81,7 +81,7 @@ public final class ImageInfoViewController {
             Platform.runLater(() -> {
                 imageView.setImage(JavaFXTools.toFxImage(bufferedImage));
                 dimensionsValue.setText("(" + bufferedImage.getWidth() + "x" + bufferedImage.getHeight() + ")");
-                MainViewController.reloadView();
+                MainViewController.refreshVista();
             });
 
         }).start();

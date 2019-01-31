@@ -1,8 +1,8 @@
 package sections.imagecompetition;
 
-import sections.SubUserInterface;
+import sections.Vista;
 
-public final class ImageCompetition extends SubUserInterface {
+public final class ImageCompetition extends Vista {
 
     public ImageCompetition() {
         this.defaultLocation = "sections/imagecompetition/imageCompetition.fxml";

@@ -1,8 +1,8 @@
 package sections.scannertonote;
 
-import sections.SubUserInterface;
+import sections.Vista;
 
-public final class ScannerToNote extends SubUserInterface {
+public final class ScannerToNote extends Vista {
 
     public ScannerToNote() {
         this.defaultLocation = "sections/scannertonote/scannerToNote.fxml";

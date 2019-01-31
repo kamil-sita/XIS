@@ -1,3 +1,5 @@
+package sections;
+
 import javafx.beans.value.ChangeListener;
 import javafx.stage.Stage;
 import sections.main.MainViewController;
@@ -30,6 +32,6 @@ public final class StageWithListener {
     }
 
     private void windowSizeChange() {
-        MainViewController.forceOnWindowSizeChange();
+        MainViewController.refreshVista();
     }
 }

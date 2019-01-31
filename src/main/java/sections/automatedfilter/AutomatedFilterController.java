@@ -65,7 +65,7 @@ public final class AutomatedFilterController {
         int finalBlurPasses = blurPasses;
 
         new Thread(() -> {
-            Platform.runLater(() -> UserFeedback.popup("Poup will show up once PDF is filtered"));
+            Platform.runLater(() -> UserFeedback.popup("Popup will show up once PDF is filtered"));
             PdfFilter.filter(openPdf, savePdf, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, finalBlurPasses);
             Platform.runLater(() -> UserFeedback.popup("Finished filtering pdf"));
         }).start();

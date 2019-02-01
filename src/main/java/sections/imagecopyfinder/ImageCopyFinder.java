@@ -2,6 +2,8 @@ package sections.imagecopyfinder;
 
 import sections.Vista;
 
+import java.nio.file.FileSystems;
+
 public final class ImageCopyFinder extends Vista {
 
     private static final String LOCATION_VIEW1 = "sections/imagecopyfinder/view1settings/view1.fxml";
@@ -37,6 +39,10 @@ public final class ImageCopyFinder extends Vista {
     }
 
     public static void setDeleteDirectory(String loc) {
+        String separator = FileSystems.getDefault().getSeparator();
+        if (!loc.endsWith(separator)) {
+            loc = loc + separator;
+        }
         deleteDirectory = loc;
     }
 

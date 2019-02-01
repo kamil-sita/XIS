@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class MultipleFileIO {
 
-    public static File[] getFoldersFromStrings(String[] fileFolders) {
-        File[] folders = new File[fileFolders.length];
-        for (int i = 0; i < fileFolders.length; i++) {
-            String s = fileFolders[i];
+    public static File[] getFoldersFromStrings(List<String> fileFolders) {
+        File[] folders = new File[fileFolders.size()];
+        for (int i = 0; i < fileFolders.size(); i++) {
+            String s = fileFolders.get(i);
             File folder = null;
             try {
                 folder = new File(s);

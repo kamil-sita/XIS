@@ -173,17 +173,14 @@ public final class MainViewController {
 
     public static void addNotifier(Notifier notifier) {
         notifiers.add(notifier);
-        System.out.println(notifiers.size());
     }
 
     public static void removeNotifier(Notifier notifier) {
         if (notifier == null) return;
         notifiers.remove(notifier);
-        System.out.println(notifiers.size());
     }
 
     public static void removeAllNotifiers() {
         notifiers.clear();
-        System.out.println(notifiers.size());
     }
 }

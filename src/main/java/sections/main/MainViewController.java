@@ -23,8 +23,8 @@ public final class MainViewController {
 
     //static elements
     private static Label labelStatusGlobal;
-    private static AnchorPane vistaHolderGlobal;
-    private static AnchorPane currentVistaGlobal;
+    private static AnchorPane vistaParentGlobal;
+    private static AnchorPane currentVistaUIGlobal;
     private static ScrollPane scrollPaneGlobal;
     private static Vista currentModule;
     private static ProgressBar progressBarGlobal;
@@ -37,7 +37,7 @@ public final class MainViewController {
     //JavaFX Elements
 
     @FXML
-    private AnchorPane vistaHolder;
+    private AnchorPane vistaParent;
 
     @FXML
     private ScrollPane scrollPane;
@@ -105,7 +105,7 @@ public final class MainViewController {
     @FXML
     public void initialize() {
         labelStatusGlobal = labelStatus;
-        vistaHolderGlobal = vistaHolder;
+        vistaParentGlobal = vistaParent;
         scrollPaneGlobal = scrollPane;
         progressBarGlobal = progressBar;
         mainPress(null);
@@ -122,8 +122,10 @@ public final class MainViewController {
     public static void changeVistaIfChanged(Vista newVista) {
         Platform.runLater(() -> {
             if (lastVistaUI == null || lastVistaUI != newVista.getUserInterface()) {
-                currentVistaGlobal = newVista.getUserInterface();
-                vistaHolderGlobal.getChildren().setAll((Node) newVista.getUserInterface());
+                lastVistaUI = newVista.getUserInterface();
+                removeAllNotifiers();
+                currentVistaUIGlobal = newVista.getUserInterface();
+                vistaParentGlobal.getChildren().setAll((Node) newVista.getUserInterface());
                 onWindowSizeChange();
             }
         });
@@ -165,16 +167,23 @@ public final class MainViewController {
      * Changes preferred width of vista (AnchorPane) so it scales properly with stage size
      */
     private static void resizeAnchorPane() {
-        if (currentVistaGlobal == null) return;
-        currentVistaGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
+        if (currentVistaUIGlobal == null) return;
+        currentVistaUIGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
     }
 
     public static void addNotifier(Notifier notifier) {
         notifiers.add(notifier);
+        System.out.println(notifiers.size());
     }
 
     public static void removeNotifier(Notifier notifier) {
         if (notifier == null) return;
         notifiers.remove(notifier);
+        System.out.println(notifiers.size());
+    }
+
+    public static void removeAllNotifiers() {
+        notifiers.clear();
+        System.out.println(notifiers.size());
     }
 }

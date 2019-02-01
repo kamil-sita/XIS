@@ -39,7 +39,7 @@
                <children>
                   <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" GridPane.columnIndex="1">
                      <content>
-                        <AnchorPane fx:id="vistaHolder" prefHeight="200.0" prefWidth="200.0">
+                        <AnchorPane fx:id="vistaParent" prefHeight="200.0" prefWidth="200.0">
                            <children>
                               <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
                               <ToggleButton layoutX="98.0" layoutY="14.0" mnemonicParsing="false" text="ToggleButton" AnchorPane.rightAnchor="3.0" />

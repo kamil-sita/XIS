@@ -18,11 +18,11 @@
             <TilePane fx:id="tilePane" maxWidth="200.0" minWidth="0.0" prefHeight="574.0" prefWidth="232.0" styleClass="tile-pane">
                <children>
                   <Button mnemonicParsing="false" onAction="#mainPress" prefHeight="42.0" prefWidth="200.0" text="Default page" />
-                  <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="Image copy finder [Alpha]" />
+                  <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="Image copy finder" />
                   <Button mnemonicParsing="false" onAction="#scannerToNotePress" prefHeight="42.0" prefWidth="200.0" text="Scanner to note" />
                   <Button mnemonicParsing="false" onAction="#highPassFilterPress" prefHeight="42.0" prefWidth="200.0" text="High pass filter" />
                   <Button mnemonicParsing="false" onAction="#automatedFilteringPress" prefHeight="42.0" prefWidth="200.0" text="Automated filtering" />
-                  <Button disable="true" mnemonicParsing="false"  prefHeight="42.0" prefWidth="200.0" text="Images competition [WIP]" />
+                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Images competition [WIP]" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Image compression" />
                   <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Spritesheet builder" />
                </children>

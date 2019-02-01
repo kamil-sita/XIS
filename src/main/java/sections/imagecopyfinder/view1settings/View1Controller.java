@@ -65,7 +65,7 @@ public final class View1Controller {
 
             @Override
             public Runnable onUninterruptedFinish() {
-                return () -> onFinish(imageComparator);
+                return () -> {if (imageComparator != null) onFinish(imageComparator);};
             }
         });
 

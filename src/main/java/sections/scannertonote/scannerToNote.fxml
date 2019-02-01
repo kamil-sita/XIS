@@ -9,7 +9,7 @@
       <Button layoutX="82.0" layoutY="82.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="82.0" />
       <TextField fx:id="colors" layoutX="14.0" layoutY="25.0" text="colors" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
       <Button layoutX="156.0" layoutY="82.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="82.0" />
-      <ImageView fx:id="imagePreview" fitHeight="175.0" fitWidth="225.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="968.0" AnchorPane.topAnchor="115.0" />
+      <ImageView fx:id="imagePreview" fitHeight="195.0" fitWidth="1152.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="41.0" AnchorPane.topAnchor="115.0" />
       <CheckBox fx:id="isolateBackground" layoutX="166.0" layoutY="11.0" mnemonicParsing="false" onAction="#isolateBackgroundAction" selected="true" text="isolate background" />
       <CheckBox fx:id="correctBrightness" layoutX="303.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="correct brightness" />
       <Slider fx:id="brightnessDiffSlider" layoutX="139.0" layoutY="43.0" showTickLabels="true" showTickMarks="true" value="15.0" AnchorPane.leftAnchor="139.0" AnchorPane.topAnchor="43.0" />

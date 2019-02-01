@@ -9,7 +9,7 @@
       <Button layoutX="82.0" layoutY="40.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.leftAnchor="82.0" AnchorPane.topAnchor="40.0" />
       <TextField fx:id="blur" layoutX="14.0" layoutY="25.0" text="blur strength" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
       <Button layoutX="156.0" layoutY="40.0" mnemonicParsing="false" onAction="#runButton" text="run" AnchorPane.leftAnchor="156.0" AnchorPane.topAnchor="40.0" />
-      <ImageView fx:id="imagePreview" fitHeight="158.0" fitWidth="189.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="1004.0" AnchorPane.topAnchor="80.0" />
+      <ImageView fx:id="imagePreview" fitHeight="367.0" fitWidth="782.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="80.0" />
       <Separator layoutX="12.0" layoutY="73.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="73.0" />
       <CheckBox fx:id="scaleBrightness" layoutX="173.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="correct brightness" />
       <CheckBox fx:id="higherQualityPreview" layoutX="198.0" layoutY="44.0" mnemonicParsing="false" selected="true" text="higher quality preview" />

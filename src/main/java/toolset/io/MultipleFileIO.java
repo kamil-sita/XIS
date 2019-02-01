@@ -43,8 +43,9 @@ public class MultipleFileIO {
 
     private static ArrayList<File> getFiles(File[] folders) {
         ArrayList<File> files = new ArrayList<>();
-        for (int i = 0; i < folders.length; i++) {
-            File[] filesToAdd = folders[i].listFiles();
+        for (File folder : folders) {
+            File[] filesToAdd = folder.listFiles();
+            if (filesToAdd == null) continue;
             files.addAll(Arrays.asList(filesToAdd));
         }
         return files;

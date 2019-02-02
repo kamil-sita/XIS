@@ -134,7 +134,7 @@ public final class ImageComparator {
     public double compareImages(ComparableImage image1, ComparableImage image2, boolean geometricalMode) {
         final double POWER = 1.25;
 
-        if (!proportionsAcceptable(image1, image2)) return 0;
+        if (!areProportionsAcceptable(image1, image2)) return 0;
 
         double equality = 0;
 
@@ -160,15 +160,12 @@ public final class ImageComparator {
         }
     }
 
-    private boolean proportionsAcceptable(ComparableImage image1, ComparableImage image2) {
+    private boolean areProportionsAcceptable(ComparableImage image1, ComparableImage image2) {
         double imagesProportionRatio = image1.getProportion()/image2.getProportion();
 
         final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
         final double MINIMUM_PROPORTIONS_DIFFERENCE = 1.0/MAXIMUM_PROPORTIONS_DIFFERENCE;
-        if (MINIMUM_PROPORTIONS_DIFFERENCE <= imagesProportionRatio && imagesProportionRatio <= MAXIMUM_PROPORTIONS_DIFFERENCE) {
-            return true;
-        }
-        return false;
+        return MINIMUM_PROPORTIONS_DIFFERENCE <= imagesProportionRatio && imagesProportionRatio <= MAXIMUM_PROPORTIONS_DIFFERENCE;
     }
 
     public ImageComparatorStatus getStatus() {

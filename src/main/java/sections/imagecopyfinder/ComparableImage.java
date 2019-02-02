@@ -11,8 +11,6 @@ import java.io.File;
  * ComparableImage is image that can be compared by ImageComparator
  */
 public final class ComparableImage {
-    //original full-sized image
-    private BufferedImage fullSizeImage;
     //scaled down image, to speed up calculations
     private BufferedImage smallImage;
     //file containing image
@@ -27,17 +25,14 @@ public final class ComparableImage {
 
     public ComparableImage(File file, BufferedImage image, final int COMPARED_IMAGE_SIZE) {
         imageFile = file;
-        fullSizeImage = image;
 
-        smallImage = BufferedImageScale.getComparableScaledDownImage(fullSizeImage, COMPARED_IMAGE_SIZE);
+        smallImage = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE);
 
-        width = fullSizeImage.getWidth();
-        height = fullSizeImage.getHeight();
+        width = image.getWidth();
+        height = image.getHeight();
 
         Rgb rgb = new Rgb(BufferedImageScale.getComparableScaledDownImage(smallImage, 1).getRGB(0, 0));
         hsb = rgb.toHSB();
-
-        fullSizeImage = null; //so it's easier to know for GC
     }
 
     public double getProportion() {

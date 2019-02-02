@@ -6,7 +6,12 @@ import toolset.imagetools.Rgb;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ImageComparator compares images and for images that have more than MINIMUM_SIMILARITY similarity, outputs them into list of ComparableImagePairs
@@ -47,7 +52,7 @@ public final class ImageComparator {
         if (interruptible.isInterrupted()) return false;
         if (!optionalImages.isEmpty()) {
             images = optionalImages;
-            findPairs(isGeometricalMode);
+            findPairsMultithreaded(isGeometricalMode);
             return true;
         }
         UserFeedback.reportProgress("No images found");
@@ -56,28 +61,49 @@ public final class ImageComparator {
 
 
     /**
-     * finds pairs of similar images
+     * Finds pairs of similar images using all of available cores.
+     * @param geometricalMode
      */
+    private void findPairsMultithreaded(boolean geometricalMode) {
+        imagePairs = Collections.synchronizedList(new ArrayList<>());
 
-    private void findPairs(boolean geometricalMode) {
-        imagePairs = new ArrayList<>();
+        var clock = new ImageComparatorClock(images.size());
 
-        long time = System.nanoTime();
+        final int AVAILABLE_THREADS = Runtime.getRuntime().availableProcessors();
+        ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_THREADS);
+        AtomicInteger finishedThreads = new AtomicInteger();
+        CountDownLatch latch = new CountDownLatch(images.size());
 
-        for (int i = 0; i < images.size(); i++) {
-            if (interruptible.isInterrupted()) return;
-            reportFindPairingProgress(time, i);
-
-            ComparableImage image1 = images.get(i);
-
-            for (int j = i + 1; j < images.size(); j++) {
-
-                ComparableImage image2 = images.get(j);
-
-                addPairIfSimilar(geometricalMode, image1, image2);
+        try {
+            for (int i = 0; i < images.size(); i++) {
+                final int c = i;
+                exec.submit(() -> {
+                    findPairsFor(c, geometricalMode);
+                    finishedThreads.getAndIncrement();
+                    reportFindPairingProgress(clock, finishedThreads.getAcquire());
+                    latch.countDown();
+                });
             }
+        } finally {
+            exec.shutdown();
         }
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         UserFeedback.reportProgress("Images compared");
+    }
+
+    private void findPairsFor(int i, boolean geometricalMode) {
+        ComparableImage image1 = images.get(i);
+        for (int j = i + 1; j < images.size(); j++) {
+            if (interruptible.isInterrupted()) return;
+            ComparableImage image2 = images.get(j);
+            addPairIfSimilar(geometricalMode, image1, image2);
+        }
     }
 
     private void addPairIfSimilar(boolean geometricalMode, ComparableImage image1, ComparableImage image2) {
@@ -89,9 +115,9 @@ public final class ImageComparator {
         }
     }
 
-    private void reportFindPairingProgress(long time, int i) {
+    private void reportFindPairingProgress(ImageComparatorClock clock, int i) {
         if (i >= 10) {
-            double dt = getApproximateTimeLeftComparing(time, i);
+            double dt = clock.getApproximateTimeLeftComparing(i);
             UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
         } else {
             UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
@@ -101,28 +127,7 @@ public final class ImageComparator {
     }
 
 
-    private double getApproximateTimeLeftComparing(long time, int i) {
-        //calculating estimated time left
-        //if you were to plot comparisons for x-th iteration, formula would go somewhat like this: f(x) = size - x
-        //calculating integral of it would be too boring, so instead we will calculate
-        //two areas of rectangles
 
-        //rectangle 1
-        int base1 = i;
-        int height1 = (2 * images.size() - i)/2;
-
-        //rectangle 2
-        int base2 = images.size() - i;
-        int height2 = (images.size() - i)/2;
-
-        int area1 = base1 * height1;
-        int area2 = base2 * height2;
-
-        double dt = System.nanoTime() - time;
-        dt = dt * area2/area1;
-        dt /= 1000000000;
-        return dt;
-    }
 
     /**
      * Calculates equality % of two images, based on RGB>compareToRGB() method

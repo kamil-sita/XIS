@@ -4,11 +4,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import sections.StageWithListener;
+import sections.compression.Compression;
 
 public final class Main extends Application {
 
     public static void main(String[] args) {
-        launch(args);
+        Compression.compress();
+
+        //launch(args);
     }
 
     @Override

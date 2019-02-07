@@ -27,4 +27,8 @@ class BitSequence {
     public ArrayList<Boolean> getSeq() {
         return seq;
     }
+
+    public int getSize() {
+        return seq.size();
+    }
 }

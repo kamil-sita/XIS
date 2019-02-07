@@ -45,7 +45,7 @@ public class YCbCrImage {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 var ycbcr = new YCbCr(yl.get(x, y), cbl.get(x, y), crl.get(x, y));
-                bufferedImage.setRGB(x, y, ycbcr.toRgb().toInt());
+                bufferedImage.setRGB(x, y, ycbcr.toRgb().normalize().toInt());
             }
         }
 

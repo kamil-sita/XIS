@@ -1,5 +1,6 @@
 package toolset.imagetools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class YCbCrLayer {
@@ -26,14 +27,19 @@ public class YCbCrLayer {
         return image.length;
     }
 
-    public void replace(int xstart, int xend, int ystart, int yend, List<Integer> palette) {
+
+    public List<Integer> replace(int xstart, int xend, int ystart, int yend, List<Integer> palette) {
+        var list = new ArrayList<Integer>();
         for (int x = xstart; x < xend; x++) {
             for (int y = ystart; y < yend; y++) {
                 int value = get(x, y);
                 int valueRepl = findClosestInPalette(value, palette);
                 set(x, y, valueRepl);
+                int idOf = palette.indexOf(valueRepl);
+                list.add(idOf);
             }
         }
+        return list;
     }
 
     private static int findClosestInPalette(int value, List<Integer> palette) {

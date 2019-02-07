@@ -63,6 +63,25 @@ public class Rgb {
         return totalSimilarity/3.0;
     }
 
+    /**
+     * Corrects rgba values so they stay in their range
+     * @return this object
+     */
+    public Rgb normalize() {
+        r = Math.max(0, r);
+        r = Math.min(255, r);
+
+        g = Math.max(0, g);
+        g = Math.min(255, g);
+
+        b = Math.max(0, b);
+        b = Math.min(255, b);
+
+        a = Math.max(0, a);
+        a = Math.min(255, a);
+        return this;
+    }
+
     public double getDistanceFrom(Rgb rgb) {
         return Math.sqrt(squared(r - rgb.r) + squared(g - rgb.g) + squared(b - rgb.b));
     }

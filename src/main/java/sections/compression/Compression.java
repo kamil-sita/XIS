@@ -18,6 +18,20 @@ public class Compression {
     private static final short VERSION = 0;
     private static final short LEGACY_VERSION = 0;
 
+    public static final int MIN_K = 2;
+    public static final int MAX_K = 32;
+    private static final int K_SIZE = 5; // 2^K_SIZE = MAX_K
+
+    private static final double YWEIGHT = 128;
+    private static final double CWEIGHT = 64;
+
+    // Recommended Y/Cweight:
+    // 128, 64 for high quality images
+    // 16, 8 for photos
+
+    private static final int PRE_ITERATIONS = 5;
+    private static final int POST_ITERATIONS = 5;
+
     public static void compress() {
         BitSequence b = generateHeader();
         DEBUG_printAsBits(b);
@@ -39,9 +53,9 @@ public class Compression {
 
         for (int x = 0; x < size_X; x++) {
             for (int y =0; y < size_Y; y++) {
-                compressBlock(x, y, SIZE, b, ycbcr.getYl(), 12);
-                compressBlock(x, y, SIZE, b, ycbcr.getYl(), 6);
-                compressBlock(x, y, SIZE, b, ycbcr.getYl(), 6);
+                compressBlock(x, y, SIZE, b, ycbcr.getYl(), YWEIGHT);
+                compressBlock(x, y, SIZE, b, ycbcr.getCbl(), CWEIGHT);
+                compressBlock(x, y, SIZE, b, ycbcr.getCrl(), CWEIGHT);
             }
         }
 
@@ -51,7 +65,9 @@ public class Compression {
             GuiFileIO.saveImage(out);
         });
 
-        for (int i =0; i < 32; i++) {
+        System.out.println("Size in kb: " + b.getSize()/8.0/1024.0);
+
+        for (int i =0; i < MAX_K + 1; i++) {
             System.out.println("K = " + i + ":" + CompressionStatistic.kStatistic[i]);
         }
 
@@ -59,20 +75,19 @@ public class Compression {
     }
 
     private static void DEBUG_printAsBits(BitSequence b) {
-        //var s = b.getSeq();
-        //int i = 0;
-        //for (Boolean c : s) {
-        //    if (i%8 == 0 && i != 0) System.out.print(" ");
-        //    i++;
-        //    if (c) {
-        //        System.out.print("1");
-        //    } else {
-        //        System.out.print("0");
-        //    }
-//
-        //}
-        //System.out.println();
-        //System.out.println("+++++++++");
+        var s = b.getSeq();
+        int i = 0;
+        for (Boolean c : s) {
+            if (i%8 == 0 && i != 0) System.out.print(" ");
+            i++;
+            if (c) {
+                System.out.print("1");
+            } else {
+                System.out.print("0");
+            }
+        }
+        System.out.println();
+        System.out.println("+++++++++");
     }
 
     private static BitSequence generateHeader() {
@@ -95,16 +110,14 @@ public class Compression {
         return b;
     }
 
-    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer input, double multiplier) {
-        final int RESULTS_MAX = 31;
-        int k = calculateK(x, y, size, input, multiplier);
-        if (k >= RESULTS_MAX) k = RESULTS_MAX;
+    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier) {
+        int k = calculateK(x, y, size, layer, multiplier);
 
         var valueList = new ArrayList<IntKMeans>();
 
         for (int i = x * size; i < (x+1) * size; i++) {
             for (int j = y * size; j < (y+1) * size; j++) {
-                valueList.add(new IntKMeans(input.get(i, j)));
+                valueList.add(new IntKMeans(layer.get(i, j)));
             }
         }
 
@@ -112,7 +125,7 @@ public class Compression {
 
 
         KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
-        kMeansKMeans.iterate(5);
+        kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
         var intResults = new ArrayList<Integer>();
         for (var result : results) {
@@ -121,14 +134,20 @@ public class Compression {
 
         intResults.sort(Integer::compareTo);
 
-        bitSequence.put(k, 3);
+        bitSequence.put(k - 1, K_SIZE); //k is min 1, so to use all of the space k-1 is saved instead
         for (int i = 0; i < k; i++) {
             int v = intResults.get(i);
             if (v > 255) v = 255;
             bitSequence.put(v, 8);
         }
 
-        input.replace(x * size, (x + 1) *size, y * size, (y + 1) * size, intResults);
+        final int ENCODE_SIZE = intLog2(k);
+
+        var list = layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, intResults);
+
+        for (int i = 0; i < list.size(); i++) {
+            bitSequence.put(list.get(i), ENCODE_SIZE);
+        }
     }
 
     ///calculates k value for k means
@@ -144,10 +163,8 @@ public class Compression {
         final int INITIAL_RESULTS = 32;
 
         KMeans<IntKMeans> kMeans = new KMeans<>(INITIAL_RESULTS, valueList);
-        kMeans.iterate(5);
+        kMeans.iterate(PRE_ITERATIONS);
         var results = kMeans.getCalculatedMeanPoints();
-
-
 
         TreeSet<Integer> integerTreeSet = new TreeSet<>();
         for (var result : results) {
@@ -168,8 +185,30 @@ public class Compression {
 
         int k_ceil = (int) Math.ceil(k);
         if (k_ceil > filteredList.size()) k_ceil = filteredList.size();
-        k_ceil = Math.max(4, k_ceil);
+        k_ceil = Math.max(MIN_K, k_ceil);
+        k_ceil = Math.min(MAX_K, k_ceil);
+        k_ceil = roundToNextPowerOf2(k_ceil);
         return k_ceil;
+    }
+
+    private static int roundToNextPowerOf2(int k) {
+        int power = 0;
+        while (true) {
+            int min = 1 << power;
+            int max = 1 << (power + 1);
+            if (min < k && k <= max) {
+                return max;
+            }
+            power++;
+        }
+    }
+
+    private static int intLog2(int v) {
+        int k = 0;
+        while (1 << k != v || 1 << k < 0) {
+            k++;
+        }
+        return k;
     }
 
     private static double calculateContinuity(List<Integer> input) {

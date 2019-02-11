@@ -22,8 +22,8 @@ public class Compression {
     public static final int MAX_K = 32;
     private static final int K_SIZE = 5; // 2^K_SIZE = MAX_K
 
-    private static final double YWEIGHT = 128;
-    private static final double CWEIGHT = 64;
+    private static final double YWEIGHT = 2;
+    private static final double CWEIGHT = 1;
 
     // Recommended Y/Cweight:
     // 128, 64 for high quality images
@@ -31,6 +31,8 @@ public class Compression {
 
     private static final int PRE_ITERATIONS = 5;
     private static final int POST_ITERATIONS = 5;
+
+    private static final int BLOCK_SIZE = 128;
 
     public static void compress() {
         BitSequence b = generateHeader();
@@ -47,15 +49,14 @@ public class Compression {
             e.printStackTrace();
         }
         var ycbcr = new YCbCrImage(image[0]);
-        final int SIZE = 16;
-        int size_X = image[0].getWidth()/SIZE;
-        int size_Y = image[0].getHeight()/SIZE;
+        int size_X = image[0].getWidth()/BLOCK_SIZE;
+        int size_Y = image[0].getHeight()/BLOCK_SIZE;
 
         for (int x = 0; x < size_X; x++) {
             for (int y =0; y < size_Y; y++) {
-                compressBlock(x, y, SIZE, b, ycbcr.getYl(), YWEIGHT);
-                compressBlock(x, y, SIZE, b, ycbcr.getCbl(), CWEIGHT);
-                compressBlock(x, y, SIZE, b, ycbcr.getCrl(), CWEIGHT);
+                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getYl(), YWEIGHT);
+                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCbl(), CWEIGHT);
+                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCrl(), CWEIGHT);
             }
         }
 
@@ -105,8 +106,7 @@ public class Compression {
         b.put(width, 32);
         b.put(height, 32);
 
-        short blockSize = 16;
-        b.put(blockSize, 16);
+        b.put(BLOCK_SIZE, 16);
         return b;
     }
 
@@ -145,8 +145,19 @@ public class Compression {
 
         var list = layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, intResults);
 
+        int lastValue = -1;
         for (int i = 0; i < list.size(); i++) {
-            bitSequence.put(list.get(i), ENCODE_SIZE);
+            if (ENCODE_SIZE == 1) {
+                bitSequence.put(list.get(i), 1);
+                continue;
+            }
+            int value = list.get(i);
+            if (value == lastValue) {
+                bitSequence.put(1, 1);
+            } else {
+                bitSequence.put(list.get(i), ENCODE_SIZE + 1);
+            }
+            lastValue = value;
         }
     }
 
@@ -179,7 +190,7 @@ public class Compression {
         double continuity = calculateContinuity(filteredList);
         double width = calculateWidth(filteredList);
 
-        multiplier = multiplier * size / 64;
+        multiplier = multiplier/4.0;
 
         double k = width/continuity * multiplier;
 

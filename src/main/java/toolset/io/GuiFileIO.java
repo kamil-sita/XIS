@@ -91,13 +91,12 @@ public class GuiFileIO {
     public static Optional<File> getSaveDirectory() {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save image to file");
+        fileChooser.setTitle("Save to file");
         fileChooser.setInitialDirectory(lastFileDirectory);
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         return Optional.ofNullable(fileChooser.showSaveDialog(stage));
-
     }
 
 

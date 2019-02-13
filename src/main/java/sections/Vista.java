@@ -32,6 +32,7 @@ public abstract class Vista {
 
     protected void setInterface(String location) {
         URL url = Vista.class.getClassLoader().getResource(location);
+        System.out.println(location);
         try {
             anchorPane = FXMLLoader.load(url);
         } catch (IOException e) {

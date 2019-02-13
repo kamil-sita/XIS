@@ -5,7 +5,7 @@ import sections.Vista;
 public final class CompressionVista extends Vista {
 
     public CompressionVista() {
-        this.defaultLocation = "sections/scannertonote/compression.fxml";
+        this.defaultLocation = "sections/compression/compression.fxml";
     }
 
 }

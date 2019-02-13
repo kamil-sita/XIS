@@ -2,7 +2,7 @@ package sections.compression;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.*;
 import sections.main.MainViewController;
@@ -18,8 +18,14 @@ final class CompressionController {
     private BufferedImage processedImage = null;
     @FXML
     private ImageView imagePreview;
+
+
     @FXML
-    private CheckBox highQualityPreview;
+    private TextField yWeight;
+
+    @FXML
+    private TextField cWeight;
+
 
     @FXML
     void loadFilePress(ActionEvent event) {
@@ -28,8 +34,21 @@ final class CompressionController {
         if (optionalInputImage.isPresent()) {
             loadedImage = optionalInputImage.get();
             processedImage = null;
-            JavaFXTools.showPreview(loadedImage, highQualityPreview.isSelected(), imagePreview, this::setNewImage);
+            JavaFXTools.showPreview(loadedImage, true, imagePreview, this::setNewImage);
         }
+    }
+
+    @FXML
+    void highQualityImagesPress(ActionEvent event) {
+        yWeight.setText("128");
+        cWeight.setText("64");
+    }
+
+
+    @FXML
+    void mediumQualityPhotosPress(ActionEvent event) {
+        yWeight.setText("16");
+        cWeight.setText("8");
     }
 
     @FXML

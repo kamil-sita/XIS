@@ -2,6 +2,8 @@ package sections.compression;
 
 import javafx.application.Platform;
 import pl.ksitarski.simplekmeans.KMeans;
+import sections.Interruptible;
+import sections.MockInterruptible;
 import toolset.imagetools.YCbCrImage;
 import toolset.imagetools.YCbCrLayer;
 import toolset.io.GuiFileIO;
@@ -22,19 +24,32 @@ public class Compression {
     public static final int MAX_K = 32;
     private static final int K_SIZE = 5; // 2^K_SIZE = MAX_K
 
-    private static final double YWEIGHT = 2;
-    private static final double CWEIGHT = 1;
-
-    // Recommended Y/Cweight:
-    // 128, 64 for high quality images
-    // 16, 8 for photos
 
     private static final int PRE_ITERATIONS = 5;
     private static final int POST_ITERATIONS = 5;
 
     private static final int BLOCK_SIZE = 128;
 
-    public static void compress() {
+    /**
+     * compress() delegate for outside calls to the function
+     * @param yWeight
+     * @param cWeight
+     * @param blockSize
+     * @return
+     */
+    public static CompressedAndPreview compressedAndPreview(double yWeight, double cWeight, int blockSize) {
+        return compress(yWeight, cWeight, blockSize, new MockInterruptible());
+    }
+
+    /**
+     *
+     * @param yWeight
+     * @param cWeight
+     * @param blockSize
+     * @param interruptible
+     * @return
+     */
+    public static CompressedAndPreview compress(double yWeight, double cWeight, int blockSize, Interruptible interruptible) {
         BitSequence b = generateHeader();
         DEBUG_printAsBits(b);
         final BufferedImage[] image = {null};
@@ -54,17 +69,13 @@ public class Compression {
 
         for (int x = 0; x < size_X; x++) {
             for (int y =0; y < size_Y; y++) {
-                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getYl(), YWEIGHT);
-                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCbl(), CWEIGHT);
-                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCrl(), CWEIGHT);
+                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getYl(), yWeight);
+                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCbl(), cWeight);
+                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCrl(), cWeight);
             }
         }
 
-        BufferedImage out = ycbcr.getBufferedImage();
-
-        Platform.runLater(() -> {
-            GuiFileIO.saveImage(out);
-        });
+        BufferedImage preview = ycbcr.getBufferedImage();
 
         System.out.println("Size in kb: " + b.getSize()/8.0/1024.0);
 
@@ -72,7 +83,7 @@ public class Compression {
             System.out.println("K = " + i + ":" + CompressionStatistic.kStatistic[i]);
         }
 
-
+        return new CompressedAndPreview(b, preview);
     }
 
     private static void DEBUG_printAsBits(BitSequence b) {

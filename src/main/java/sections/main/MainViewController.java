@@ -12,6 +12,7 @@ import sections.Notifier;
 import sections.OneBackgroundJobManager;
 import sections.Vista;
 import sections.automatedfilter.AutomatedFilter;
+import sections.compression.CompressionVista;
 import sections.defaultpage.WelcomePage;
 import sections.highpassfilter.HighPassFilter;
 import sections.imagecopyfinder.ImageCopyFinder;
@@ -87,6 +88,14 @@ public final class MainViewController {
         var automatedFilter = new AutomatedFilter();
         changeVistaIfChanged(automatedFilter);
         currentModule = automatedFilter;
+        setStatus("automatedFilter module loaded");
+    }
+
+    @FXML
+    void imageCompressionPress(ActionEvent event) {
+        var imageCompression = new CompressionVista();
+        changeVistaIfChanged(imageCompression);
+        currentModule = imageCompression;
         setStatus("automatedFilter module loaded");
     }
 

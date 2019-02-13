@@ -4,7 +4,7 @@ import pl.ksitarski.simplekmeans.KMeansData;
 
 import java.util.List;
 
-public class IntKMeans implements KMeansData {
+class IntKMeans implements KMeansData {
 
     private int val;
 

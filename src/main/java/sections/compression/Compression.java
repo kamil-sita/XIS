@@ -107,14 +107,7 @@ public class Compression {
     private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier) {
         int k = calculateK(x, y, size, layer, multiplier);
 
-        var valueList = new ArrayList<IntKMeans>();
-
-        for (int i = x * size; i < (x+1) * size; i++) {
-            for (int j = y * size; j < (y+1) * size; j++) {
-                valueList.add(new IntKMeans(layer.get(i, j)));
-            }
-        }
-
+        ArrayList<IntKMeans> valueList = getListFromArea(x, y, size, layer);
 
 
         KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
@@ -154,15 +147,20 @@ public class Compression {
         }
     }
 
-    ///calculates k value for k means
-    private static int calculateK(int x, int y, int size, YCbCrLayer input, double multiplier) {
+    private static ArrayList<IntKMeans> getListFromArea(int x, int y, int size, YCbCrLayer layer) {
         var valueList = new ArrayList<IntKMeans>();
 
         for (int i = x * size; i < (x+1) * size; i++) {
             for (int j = y * size; j < (y+1) * size; j++) {
-                valueList.add(new IntKMeans(input.get(i, j)));
+                valueList.add(new IntKMeans(layer.get(i, j)));
             }
         }
+        return valueList;
+    }
+
+    ///calculates k value for k means
+    private static int calculateK(int x, int y, int size, YCbCrLayer input, double multiplier) {
+        var valueList = getListFromArea(x, y, size, input);
 
         final int INITIAL_RESULTS = 32;
 

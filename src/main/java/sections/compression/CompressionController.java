@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import sections.*;
 import sections.main.MainViewController;
 import toolset.JavaFXTools;
@@ -35,6 +36,15 @@ public final class CompressionController {
 
 
     @FXML
+    void imageClick(MouseEvent event) {
+        if (processedImage != null) {
+            UserFeedback.openInDefault(processedImage);
+        } else if (loadedImage != null) {
+            UserFeedback.openInDefault(loadedImage);
+        }
+    }
+
+    @FXML
     void loadFilePress(ActionEvent event) {
         //opens image. If image == null, uses old image instead
         var optionalInputImage = GuiFileIO.getImage();
@@ -42,6 +52,7 @@ public final class CompressionController {
             loadedImage = optionalInputImage.get();
             processedImage = null;
             JavaFXTools.showPreview(loadedImage, true, imagePreview, this::setNewImage);
+            imagePreview.getStyleClass().add("clickable");
         }
     }
 
@@ -85,7 +96,6 @@ public final class CompressionController {
             yWeightValue = Integer.parseInt(yWeight.getText());
             cWeightValue = Integer.parseInt(cWeight.getText());
         } catch (Exception e) {
-            e.printStackTrace();
             UserFeedback.reportProgress("yWeight or cWeight is not an integer.");
         }
 

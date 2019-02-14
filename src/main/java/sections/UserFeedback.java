@@ -5,7 +5,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextInputDialog;
 import sections.main.MainViewController;
+import toolset.io.BufferedImageIO;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Optional;
 
 
@@ -33,6 +37,16 @@ public final class UserFeedback {
         textInputDialog.setHeaderText(header);
         textInputDialog.setContentText(context);
         return textInputDialog.showAndWait();
+    }
+
+    public static void openInDefault(BufferedImage bufferedImage) {
+        var file = BufferedImageIO.saveImage(bufferedImage, null);
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -38,6 +38,14 @@
 }
 
 /*
+
+ */
+.clickable, .button {
+    -fx-cursor: hand
+}
+
+
+/*
     Gradients and colors on various elements of GUI
  */
 

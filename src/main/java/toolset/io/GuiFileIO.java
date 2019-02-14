@@ -93,7 +93,7 @@ public class GuiFileIO {
         fileChooser.setTitle("Save to file");
         fileChooser.setInitialDirectory(lastFileDirectory);
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("File", "format"),
+                new FileChooser.ExtensionFilter("File", mainFormat),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         return Optional.ofNullable(fileChooser.showSaveDialog(stage));

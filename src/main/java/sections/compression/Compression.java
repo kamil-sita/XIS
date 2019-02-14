@@ -50,7 +50,6 @@ public class Compression {
     public static Optional<CompressedAndPreview> compress(double yWeight, double cWeight, int blockSize, Interruptible interruptible, BufferedImage input) {
         if (input == null) return Optional.empty();
         BitSequence b = generateHeader();
-        DEBUG_printAsBits(b);
         var ycbcr = new YCbCrImage(input);
         int size_X = input.getWidth()/BLOCK_SIZE;
         int size_Y = input.getHeight()/BLOCK_SIZE;
@@ -66,10 +65,6 @@ public class Compression {
         BufferedImage preview = ycbcr.getBufferedImage();
 
         System.out.println("Size in kb: " + b.getSize()/8.0/1024.0);
-
-        for (int i =0; i < MAX_K + 1; i++) {
-            System.out.println("K = " + i + ":" + CompressionStatistic.kStatistic[i]);
-        }
 
         return Optional.of(new CompressedAndPreview(b, preview));
     }
@@ -120,7 +115,6 @@ public class Compression {
             }
         }
 
-        CompressionStatistic.kStatistic[k]++;
 
 
         KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);

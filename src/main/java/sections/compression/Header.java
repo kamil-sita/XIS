@@ -42,5 +42,22 @@ public class Header {
         b.put(width, 32);
         b.put(height, 32);
         b.put(blockSize, 16);
+        for (var c : b.getSeq()) {
+            System.out.print(c ? "1" : "0");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Header{" +
+                "algName=" + algName +
+                ", version=" + version +
+                ", legacyVersion=" + legacyVersion +
+                ", flag=" + flag +
+                ", width=" + width +
+                ", height=" + height +
+                ", blockSize=" + blockSize +
+                ", errors=" + errors +
+                '}';
     }
 }

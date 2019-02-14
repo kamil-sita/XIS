@@ -29,6 +29,7 @@ public class Compression {
 
     /**
      * compress() delegate for outside calls to the function
+     *
      * @param yWeight
      * @param cWeight
      * @param blockSize
@@ -39,7 +40,6 @@ public class Compression {
     }
 
     /**
-     *
      * @param yWeight
      * @param cWeight
      * @param blockSize
@@ -50,8 +50,8 @@ public class Compression {
         if (input == null) return Optional.empty();
         BitSequence b = generateHeader((int) blockSize, input.getWidth(), input.getHeight());
         var ycbcr = new YCbCrImage(input);
-        int size_X = (int) Math.ceil(input.getWidth()/blockSize);
-        int size_Y = (int) Math.ceil(input.getHeight()/blockSize);
+        int size_X = (int) Math.ceil(input.getWidth() / blockSize);
+        int size_Y = (int) Math.ceil(input.getHeight() / blockSize);
 
         for (int x = 0; x < size_X; x++) {
             for (int y = 0; y < size_Y; y++) {
@@ -63,7 +63,12 @@ public class Compression {
 
         BufferedImage preview = ycbcr.getBufferedImage();
 
+
         return Optional.of(new CompressedAndPreview(b, preview));
+    }
+
+    public static Optional<BufferedImage> decompress(BitSequenceDecoder bitSequenceDecoder) {
+        return decompress(bitSequenceDecoder, new MockInterruptible());
     }
 
     public static Optional<BufferedImage> decompress(BitSequenceDecoder bitSequenceDecoder, Interruptible interruptible) {
@@ -73,16 +78,23 @@ public class Compression {
             return Optional.empty();
         }
 
-        int size_X = (int) Math.ceil(1.0 * h.width/h.blockSize);
-        int size_Y = (int) Math.ceil(1.0 * h.height/h.blockSize);
+        System.out.println(h);
+
+        int size_X = (int) Math.ceil(1.0 * h.width / h.blockSize);
+        int size_Y = (int) Math.ceil(1.0 * h.height / h.blockSize);
 
         var image = new YCbCrImage(h.width, h.height);
 
         for (int x = 0; x < size_X; x++) {
-            for (int y =0; y < size_Y; y++) {
-                decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getYl(), h);
-                decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCbl(), h);
-                decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCrl(), h);
+            for (int y = 0; y < size_Y; y++) {
+                boolean flag;
+                flag = decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getYl(), h);
+                flag = flag & decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCbl(), h);
+                flag = flag & decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCrl(), h);
+                if (!flag) {
+                    System.out.println("ERR");
+                    return Optional.of(image.getBufferedImage());
+                }
             }
         }
 
@@ -90,23 +102,7 @@ public class Compression {
     }
 
     private static boolean headerOkay(Header h) {
-        return h.legacyVersion <= VERSION && !h.errors;
-    }
-
-    private static void DEBUG_printAsBits(BitSequence b) {
-        var s = b.getSeq();
-        int i = 0;
-        for (Boolean c : s) {
-            if (i%8 == 0 && i != 0) System.out.print(" ");
-            i++;
-            if (c) {
-                System.out.print("1");
-            } else {
-                System.out.print("0");
-            }
-        }
-        System.out.println();
-        System.out.println("+++++++++");
+        return h.legacyVersion <= VERSION && !h.errors ;
     }
 
     private static BitSequence generateHeader(int blockSize, int width, int height) {
@@ -120,6 +116,7 @@ public class Compression {
                 height,
                 blockSize
         );
+        System.out.println(h);
         h.addToBitSequence(b);
 
         return b;
@@ -132,7 +129,7 @@ public class Compression {
 
 
         KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
-        KMeans.setLogger(s -> System.out.println("KMeans, at: (" + x +", " + y + "): " + s));
+        KMeans.setLogger(s -> System.out.println("KMeans, at: (" + x + ", " + y + "): " + s));
         kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
         var intResults = new ArrayList<Integer>();
@@ -181,8 +178,8 @@ public class Compression {
 
         int lastValue = -1;
 
-        for (int j = y * size; j < (y+1) * size; j++) {
-            for (int i = x * size; i < (x+1) * size; i++) {
+        for (int j = y * size; j < (y + 1) * size; j++) {
+            for (int i = x * size; i < (x + 1) * size; i++) {
                 if (i < layer.width() && j < layer.height()) {
                     if (!bitSequenceDecoder.has(encodeSize)) return false;
                     if (encodeSize == 1) {
@@ -204,13 +201,14 @@ public class Compression {
                 }
             }
         }
+
         return true;
     }
 
     private static ArrayList<IntKMeans> getListFromArea(int x, int y, int size, YCbCrLayer layer) {
         var valueList = new ArrayList<IntKMeans>();
-        for (int j = y * size; j < (y+1) * size; j++) {
-            for (int i = x * size; i < (x+1) * size; i++) {
+        for (int j = y * size; j < (y + 1) * size; j++) {
+            for (int i = x * size; i < (x + 1) * size; i++) {
                 if (i < layer.width() && j < layer.height()) {
                     valueList.add(new IntKMeans(layer.get(i, j)));
                 }
@@ -242,9 +240,9 @@ public class Compression {
         double continuity = calculateContinuity(filteredList);
         double width = calculateWidth(filteredList);
 
-        multiplier = multiplier/4.0;
+        multiplier = multiplier / 4.0;
 
-        double k = width/continuity * multiplier;
+        double k = width / continuity * multiplier;
 
         int k_ceil = (int) Math.ceil(k);
         if (k_ceil > filteredList.size()) k_ceil = filteredList.size();
@@ -267,11 +265,24 @@ public class Compression {
     }
 
     private static int intLog2(int v) {
-        int k = 0;
-        while (1 << k != v || 1 << k < 0) {
-            k++;
+        int log = 0;
+        if ((v & 0xffff0000) != 0) {
+            v >>>= 16;
+            log = 16;
         }
-        return k;
+        if (v >= 256) {
+            v >>>= 8;
+            log += 8;
+        }
+        if (v >= 16) {
+            v >>>= 4;
+            log += 4;
+        }
+        if (v >= 4) {
+            v >>>= 2;
+            log += 2;
+        }
+        return log + (v >>> 1);
     }
 
     private static double calculateContinuity(List<Integer> input) {
@@ -291,8 +302,6 @@ public class Compression {
     private static double calculateWidth(List<Integer> input) {
         return input.get(input.size() - 1) - input.get(0);
     }
-
-
 
 
 }

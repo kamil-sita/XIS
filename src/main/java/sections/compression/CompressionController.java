@@ -14,6 +14,7 @@ import toolset.io.BinaryIO;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
+import java.util.Optional;
 
 public final class CompressionController {
 
@@ -21,6 +22,7 @@ public final class CompressionController {
     private BufferedImage loadedImage = null;
     private BufferedImage processedImage = null;
     private CompressedAndPreview compressedAndPreview = null;
+    private BitSequence compressedImage = null;
 
     @FXML
     private ImageView imagePreview;
@@ -53,16 +55,23 @@ public final class CompressionController {
         var optionalInputImage = GuiFileIO.getImage();
         if (optionalInputImage.isPresent()) {
             loadedImage = optionalInputImage.get();
-            processedImage = null;
             JavaFXTools.showPreview(loadedImage, true, imagePreview, this::setNewImage);
             imagePreview.getStyleClass().add("clickable");
+
+            processedImage = null;
+            compressedImage = null;
         }
     }
 
     @FXML
     void loadCompressedFilePress(ActionEvent event) {
         var file = BinaryIO.getBitSequenceFromUserSelected();
-        Header h = new Header(new BitSequenceDecoder(file.get()));
+        if (file.isPresent()) {
+            compressedImage = file.get();
+            processedImage = null;
+            loadedImage = null;
+            //setNewImage(null);
+        }
     }
 
     @FXML
@@ -95,7 +104,34 @@ public final class CompressionController {
     }
 
     @FXML
-    void runButton(ActionEvent event) {
+    void decompressButton(ActionEvent event) {
+        if (compressedImage == null) {
+            UserFeedback.popup("No compressed image loaded");
+            return;
+        }
+        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+            private Optional<BufferedImage> image;
+            @Override
+            public Runnable getRunnable() {
+                return () -> {
+                    image = Compression.decompress(new BitSequenceDecoder(compressedImage), this);
+                };
+            }
+
+            @Override
+            public Runnable onUninterruptedFinish() {
+                return () -> {
+                    if (image.isPresent()) {
+                        loadedImage = image.get();
+                        JavaFXTools.showPreview(loadedImage, true, imagePreview, bufferedImage -> setNewImage(loadedImage));
+                    }
+                };
+            }
+        });
+    }
+
+    @FXML
+    void compressButton(ActionEvent event) {
         if (loadedImage == null) {
             UserFeedback.popup("Can't run without loaded file");
             return;

@@ -31,8 +31,9 @@ public class YCbCrLayer {
 
     public List<Integer> replace(int xstart, int xend, int ystart, int yend, List<Integer> palette) {
         var list = new ArrayList<Integer>();
-        for (int x = xstart; x < xend; x++) {
-            for (int y = ystart; y < yend; y++) {
+
+        for (int y = ystart; y < yend; y++) {
+            for (int x = xstart; x < xend; x++) {
                 if (x < width() && y < height()) {
                     int value = get(x, y);
                     int valueRepl = findClosestInPalette(value, palette);

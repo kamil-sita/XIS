@@ -46,7 +46,7 @@ public class BitSequence {
     }
 
 
-    private boolean[] toBoolArray(long input, int length) {
+    public boolean[] toBoolArray(long input, int length) {
         boolean[] arr = new boolean[length];
         int i = 0;
         for (int j = length - 1; j >= 0; j--) {
@@ -65,11 +65,11 @@ public class BitSequence {
 
     private byte fitBitsIntoByte(int octaId) {
         byte out = 0;
-        int j = 8;
+        int j = 7;
         for (int i = octaId * 8; i < (octaId + 1) * 8; i++) {
             if (seq.get(i)) {
-                int xor = 1 << j;
-                out = (byte) (xor ^ out);
+                int value = 1 << j;
+                out = (byte) (value | out);
             }
             j--;
         }

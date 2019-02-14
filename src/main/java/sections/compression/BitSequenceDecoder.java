@@ -15,7 +15,6 @@ public class BitSequenceDecoder {
     }
 
     public int get(int bits) {
-        System.out.println("new number:");
         int ret = 0;
         for (int i = 0; i < bits; i++) {
             ret = ret << 1;
@@ -30,10 +29,5 @@ public class BitSequenceDecoder {
         pos++;
         return v;
     }
-
-    private boolean peek() {
-        return bitSequence.get(pos);
-    }
-
 
 }

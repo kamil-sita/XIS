@@ -48,13 +48,13 @@ public class Compression {
      */
     public static Optional<CompressedAndPreview> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input) {
         if (input == null) return Optional.empty();
-        BitSequence b = generateHeader((int) blockSize, input.getWidth(), input.getHeight());
+        BitSequence b = generateBitSequenceWithHeader((int) blockSize, input.getWidth(), input.getHeight());
         var ycbcr = new YCbCrImage(input);
         int size_X = (int) Math.ceil(input.getWidth() / blockSize);
         int size_Y = (int) Math.ceil(input.getHeight() / blockSize);
 
-        for (int x = 0; x < size_X; x++) {
-            for (int y = 0; y < size_Y; y++) {
+        for (int y = 0; y < size_Y; y++) {
+            for (int x = 0; x < size_X; x++) {
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight);
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight);
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight);
@@ -78,22 +78,21 @@ public class Compression {
             return Optional.empty();
         }
 
-        System.out.println(h);
 
         int size_X = (int) Math.ceil(1.0 * h.width / h.blockSize);
         int size_Y = (int) Math.ceil(1.0 * h.height / h.blockSize);
 
         var image = new YCbCrImage(h.width, h.height);
 
-        for (int x = 0; x < size_X; x++) {
-            for (int y = 0; y < size_Y; y++) {
+
+        for (int y = 0; y < size_Y; y++) {
+            for (int x = 0; x < size_X; x++) {
                 boolean flag;
                 flag = decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getYl(), h);
                 flag = flag & decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCbl(), h);
                 flag = flag & decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCrl(), h);
                 if (!flag) {
-                    System.out.println("ERR");
-                    return Optional.of(image.getBufferedImage());
+                    return Optional.empty();
                 }
             }
         }
@@ -102,10 +101,10 @@ public class Compression {
     }
 
     private static boolean headerOkay(Header h) {
-        return h.legacyVersion <= VERSION && !h.errors ;
+        return h.legacyVersion <= VERSION && !h.errors && h.algName == ALG_NAME;
     }
 
-    private static BitSequence generateHeader(int blockSize, int width, int height) {
+    private static BitSequence generateBitSequenceWithHeader(int blockSize, int width, int height) {
         BitSequence b = new BitSequence();
         Header h = new Header(
                 ALG_NAME,
@@ -116,7 +115,6 @@ public class Compression {
                 height,
                 blockSize
         );
-        System.out.println(h);
         h.addToBitSequence(b);
 
         return b;

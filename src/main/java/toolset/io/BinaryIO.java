@@ -11,7 +11,6 @@ public class BinaryIO {
     private final static String FORMAT = "*.ls2";
 
     public static boolean writeBitSequenceToUserSelected(BitSequence bitSequence) {
-        System.out.println(bitSequence.getSize());
         var optionalOut = GuiFileIO.getSaveDirectory(FORMAT);
         if (optionalOut.isPresent()) {
             byte[] data = bitSequence.getSeqArray();
@@ -38,7 +37,6 @@ public class BinaryIO {
                 return Optional.empty();
             }
             var data = readBinaryStream(is);
-            System.out.println(new BitSequence(data).getSize());
             return Optional.of(new BitSequence(data));
         }
         return Optional.empty();

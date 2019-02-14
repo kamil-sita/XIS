@@ -39,6 +39,14 @@ public class YCbCrImage {
         height = yl.height();
     }
 
+    public YCbCrImage(int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.yl = new YCbCrLayer(width, height);
+        this.cbl = new YCbCrLayer(width, height);
+        this.crl = new YCbCrLayer(width, height);
+    }
+
     public BufferedImage getBufferedImage() {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 

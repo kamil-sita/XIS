@@ -32,6 +32,9 @@ public final class CompressionController {
     private TextField cWeight;
 
     @FXML
+    private TextField blockSize;
+
+    @FXML
     private Label outputSize;
 
 
@@ -57,9 +60,16 @@ public final class CompressionController {
     }
 
     @FXML
+    void loadCompressedFilePress(ActionEvent event) {
+        var file = BinaryIO.getBitSequenceFromUserSelected();
+        Header h = new Header(new BitSequenceDecoder(file.get()));
+    }
+
+    @FXML
     void highQualityImagesPress(ActionEvent event) {
         yWeight.setText("128");
         cWeight.setText("64");
+        blockSize.setText("8");
     }
 
 
@@ -67,6 +77,7 @@ public final class CompressionController {
     void mediumQualityPhotosPress(ActionEvent event) {
         yWeight.setText("16");
         cWeight.setText("8");
+        blockSize.setText("16");
     }
 
     @FXML
@@ -92,20 +103,27 @@ public final class CompressionController {
 
         int yWeightValue = 0;
         int cWeightValue = 0;
+        int blockSizeValue = 0;
         try {
             yWeightValue = Integer.parseInt(yWeight.getText());
             cWeightValue = Integer.parseInt(cWeight.getText());
+            blockSizeValue = Integer.parseInt(blockSize.getText());
         } catch (Exception e) {
-            UserFeedback.reportProgress("yWeight or cWeight is not an integer.");
+            UserFeedback.reportProgress("Some of values are not integer values.");
+        }
+
+        if (yWeightValue < 0 || cWeightValue < 0 || blockSizeValue < 2) {
+            UserFeedback.reportProgress("Some of values are smaller than their minimum size");
         }
 
         int finalYWeightValue = yWeightValue;
         int finalCWeightValue = cWeightValue;
+        int finalBlockSizeValue = blockSizeValue;
         OneBackgroundJobManager.setAndRunJob(new Interruptible() {
 
             @Override
             public Runnable getRunnable() {
-                return () -> compressedAndPreview = Compression.compress(finalYWeightValue, finalCWeightValue, 16, this, loadedImage).get();
+                return () -> compressedAndPreview = Compression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).get();
             };
 
             @Override

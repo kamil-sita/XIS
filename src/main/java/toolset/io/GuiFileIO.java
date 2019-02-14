@@ -100,4 +100,17 @@ public class GuiFileIO {
     }
 
 
+    public static Optional<File> getLoadDirectory(String mainFormat) {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load from file");
+        fileChooser.setInitialDirectory(lastFileDirectory);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("File", mainFormat),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        return Optional.ofNullable(fileChooser.showOpenDialog(stage));
+    }
+
+
 }

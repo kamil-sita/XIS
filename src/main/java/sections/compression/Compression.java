@@ -26,7 +26,6 @@ public class Compression {
     private static final int PRE_ITERATIONS = 5;
     private static final int POST_ITERATIONS = 5;
 
-    private static final int BLOCK_SIZE = 128;
 
     /**
      * compress() delegate for outside calls to the function
@@ -35,7 +34,7 @@ public class Compression {
      * @param blockSize
      * @return
      */
-    public static Optional<CompressedAndPreview> compressedAndPreview(double yWeight, double cWeight, int blockSize, BufferedImage input) {
+    public static Optional<CompressedAndPreview> compressedAndPreview(double yWeight, double cWeight, double blockSize, BufferedImage input) {
         return compress(yWeight, cWeight, blockSize, new MockInterruptible(), input);
     }
 
@@ -47,26 +46,51 @@ public class Compression {
      * @param interruptible
      * @return
      */
-    public static Optional<CompressedAndPreview> compress(double yWeight, double cWeight, int blockSize, Interruptible interruptible, BufferedImage input) {
+    public static Optional<CompressedAndPreview> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input) {
         if (input == null) return Optional.empty();
-        BitSequence b = generateHeader();
+        BitSequence b = generateHeader((int) blockSize, input.getWidth(), input.getHeight());
         var ycbcr = new YCbCrImage(input);
-        int size_X = input.getWidth()/BLOCK_SIZE;
-        int size_Y = input.getHeight()/BLOCK_SIZE;
+        int size_X = (int) Math.ceil(input.getWidth()/blockSize);
+        int size_Y = (int) Math.ceil(input.getHeight()/blockSize);
 
         for (int x = 0; x < size_X; x++) {
-            for (int y =0; y < size_Y; y++) {
-                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getYl(), yWeight);
-                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCbl(), cWeight);
-                compressBlock(x, y, BLOCK_SIZE, b, ycbcr.getCrl(), cWeight);
+            for (int y = 0; y < size_Y; y++) {
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight);
             }
         }
 
         BufferedImage preview = ycbcr.getBufferedImage();
 
-        System.out.println("Size in kb: " + b.getSize()/8.0/1024.0);
-
         return Optional.of(new CompressedAndPreview(b, preview));
+    }
+
+    public static Optional<BufferedImage> decompress(BitSequenceDecoder bitSequenceDecoder, Interruptible interruptible) {
+        if (bitSequenceDecoder == null) return Optional.empty();
+        Header h = new Header(bitSequenceDecoder);
+        if (!headerOkay(h)) {
+            return Optional.empty();
+        }
+
+        int size_X = (int) Math.ceil(1.0 * h.width/h.blockSize);
+        int size_Y = (int) Math.ceil(1.0 * h.height/h.blockSize);
+
+        var image = new YCbCrImage(h.width, h.height);
+
+        for (int x = 0; x < size_X; x++) {
+            for (int y =0; y < size_Y; y++) {
+                decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getYl(), h);
+                decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCbl(), h);
+                decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCrl(), h);
+            }
+        }
+
+        return Optional.of(image.getBufferedImage());
+    }
+
+    private static boolean headerOkay(Header h) {
+        return h.legacyVersion <= VERSION && !h.errors;
     }
 
     private static void DEBUG_printAsBits(BitSequence b) {
@@ -85,22 +109,19 @@ public class Compression {
         System.out.println("+++++++++");
     }
 
-    private static BitSequence generateHeader() {
+    private static BitSequence generateHeader(int blockSize, int width, int height) {
         BitSequence b = new BitSequence();
+        Header h = new Header(
+                ALG_NAME,
+                VERSION,
+                LEGACY_VERSION,
+                0,
+                width,
+                height,
+                blockSize
+        );
+        h.addToBitSequence(b);
 
-        b.put(ALG_NAME, 32); //LOSTIC 2
-        b.put(VERSION, 8); //current version
-        b.put(LEGACY_VERSION, 8); //supported version, that is minimum version that old versions of algorithm may attempt reading
-        int flag = 0;
-        b.put(flag, 8);
-
-        int width = 1024;
-        int height = 1600;
-
-        b.put(width, 32);
-        b.put(height, 32);
-
-        b.put(BLOCK_SIZE, 16);
         return b;
     }
 
@@ -111,6 +132,7 @@ public class Compression {
 
 
         KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
+        KMeans.setLogger(s -> System.out.println("KMeans, at: (" + x +", " + y + "): " + s));
         kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
         var intResults = new ArrayList<Integer>();
@@ -147,12 +169,51 @@ public class Compression {
         }
     }
 
+    private static boolean decompressBlock(int x, int y, int size, BitSequenceDecoder bitSequenceDecoder, YCbCrLayer layer, Header h) {
+        if (!bitSequenceDecoder.has(K_SIZE)) return false;
+        int dictionarySize = bitSequenceDecoder.get(K_SIZE) + 1;
+        int encodeSize = intLog2(dictionarySize);
+        ArrayList<Integer> dictionary = new ArrayList<>();
+        if (!bitSequenceDecoder.has(8 * dictionarySize)) return false;
+        for (int i = 0; i < dictionarySize; i++) {
+            dictionary.add(bitSequenceDecoder.get(8));
+        }
+
+        int lastValue = -1;
+
+        for (int j = y * size; j < (y+1) * size; j++) {
+            for (int i = x * size; i < (x+1) * size; i++) {
+                if (i < layer.width() && j < layer.height()) {
+                    if (!bitSequenceDecoder.has(encodeSize)) return false;
+                    if (encodeSize == 1) {
+                        int id = bitSequenceDecoder.get(encodeSize);
+                        int value = dictionary.get(id);
+                        layer.set(i, j, value);
+                    } else {
+                        int value;
+                        int copy = bitSequenceDecoder.get(1);
+                        if (copy == 1) {
+                            value = lastValue;
+                        } else {
+                            int id = bitSequenceDecoder.get(encodeSize);
+                            value = dictionary.get(id);
+                        }
+                        layer.set(i, j, value);
+                        lastValue = value;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     private static ArrayList<IntKMeans> getListFromArea(int x, int y, int size, YCbCrLayer layer) {
         var valueList = new ArrayList<IntKMeans>();
-
-        for (int i = x * size; i < (x+1) * size; i++) {
-            for (int j = y * size; j < (y+1) * size; j++) {
-                valueList.add(new IntKMeans(layer.get(i, j)));
+        for (int j = y * size; j < (y+1) * size; j++) {
+            for (int i = x * size; i < (x+1) * size; i++) {
+                if (i < layer.width() && j < layer.height()) {
+                    valueList.add(new IntKMeans(layer.get(i, j)));
+                }
             }
         }
         return valueList;

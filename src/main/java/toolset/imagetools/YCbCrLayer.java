@@ -15,6 +15,7 @@ public class YCbCrLayer {
         return image[y][x];
     }
 
+
     public void set(int x, int y, int value) {
         image[y][x] = value;
     }
@@ -32,11 +33,13 @@ public class YCbCrLayer {
         var list = new ArrayList<Integer>();
         for (int x = xstart; x < xend; x++) {
             for (int y = ystart; y < yend; y++) {
-                int value = get(x, y);
-                int valueRepl = findClosestInPalette(value, palette);
-                set(x, y, valueRepl);
-                int idOf = palette.indexOf(valueRepl);
-                list.add(idOf);
+                if (x < width() && y < height()) {
+                    int value = get(x, y);
+                    int valueRepl = findClosestInPalette(value, palette);
+                    set(x, y, valueRepl);
+                    int idOf = palette.indexOf(valueRepl);
+                    list.add(idOf);
+                }
             }
         }
         return list;

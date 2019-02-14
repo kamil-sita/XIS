@@ -17,5 +17,6 @@
       <TextField fx:id="cWeight" layoutX="308.0" layoutY="13.0" prefHeight="25.0" prefWidth="74.0" />
       <Button layoutX="14.0" layoutY="49.0" mnemonicParsing="false" onAction="#highQualityImagesPress" text="Preset for high quality images" />
       <Button layoutX="205.0" layoutY="49.0" mnemonicParsing="false" onAction="#mediumQualityPhotosPress" text="Preset for medium quality photos" />
+      <Label fx:id="outputSize" layoutX="416.0" layoutY="53.0" text="Output size: n/a" />
    </children>
 </AnchorPane>

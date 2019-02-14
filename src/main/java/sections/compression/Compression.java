@@ -1,18 +1,16 @@
 package sections.compression;
 
-import javafx.application.Platform;
 import pl.ksitarski.simplekmeans.KMeans;
 import sections.Interruptible;
 import sections.MockInterruptible;
 import toolset.imagetools.YCbCrImage;
 import toolset.imagetools.YCbCrLayer;
-import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.TreeSet;
-import java.util.concurrent.CountDownLatch;
 
 public class Compression {
 
@@ -37,8 +35,8 @@ public class Compression {
      * @param blockSize
      * @return
      */
-    public static CompressedAndPreview compressedAndPreview(double yWeight, double cWeight, int blockSize) {
-        return compress(yWeight, cWeight, blockSize, new MockInterruptible());
+    public static Optional<CompressedAndPreview> compressedAndPreview(double yWeight, double cWeight, int blockSize, BufferedImage input) {
+        return compress(yWeight, cWeight, blockSize, new MockInterruptible(), input);
     }
 
     /**
@@ -49,23 +47,13 @@ public class Compression {
      * @param interruptible
      * @return
      */
-    public static CompressedAndPreview compress(double yWeight, double cWeight, int blockSize, Interruptible interruptible) {
+    public static Optional<CompressedAndPreview> compress(double yWeight, double cWeight, int blockSize, Interruptible interruptible, BufferedImage input) {
+        if (input == null) return Optional.empty();
         BitSequence b = generateHeader();
         DEBUG_printAsBits(b);
-        final BufferedImage[] image = {null};
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        Platform.runLater(() -> {
-            image[0] = GuiFileIO.getImage().get();
-            countDownLatch.countDown();
-        });
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        var ycbcr = new YCbCrImage(image[0]);
-        int size_X = image[0].getWidth()/BLOCK_SIZE;
-        int size_Y = image[0].getHeight()/BLOCK_SIZE;
+        var ycbcr = new YCbCrImage(input);
+        int size_X = input.getWidth()/BLOCK_SIZE;
+        int size_Y = input.getHeight()/BLOCK_SIZE;
 
         for (int x = 0; x < size_X; x++) {
             for (int y =0; y < size_Y; y++) {
@@ -83,7 +71,7 @@ public class Compression {
             System.out.println("K = " + i + ":" + CompressionStatistic.kStatistic[i]);
         }
 
-        return new CompressedAndPreview(b, preview);
+        return Optional.of(new CompressedAndPreview(b, preview));
     }
 
     private static void DEBUG_printAsBits(BitSequence b) {

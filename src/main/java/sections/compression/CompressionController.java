@@ -1,30 +1,37 @@
 package sections.compression;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.*;
 import sections.main.MainViewController;
 import toolset.JavaFXTools;
+import toolset.io.BinaryIO;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
 
-final class CompressionController {
+public final class CompressionController {
 
     Notifier notifier;
     private BufferedImage loadedImage = null;
     private BufferedImage processedImage = null;
+    private CompressedAndPreview compressedAndPreview = null;
+
     @FXML
     private ImageView imagePreview;
-
 
     @FXML
     private TextField yWeight;
 
     @FXML
     private TextField cWeight;
+
+    @FXML
+    private Label outputSize;
 
 
     @FXML
@@ -53,10 +60,10 @@ final class CompressionController {
 
     @FXML
     void saveFilePress(ActionEvent event) {
-        if (processedImage == null) {
+        if (compressedAndPreview == null) {
             UserFeedback.popup("Can't save non-processed image.");
         } else {
-            GuiFileIO.saveImage(processedImage);
+            BinaryIO.writeBitSequenceToUserSelected(compressedAndPreview.getBitSequence());
         }
     }
 
@@ -71,15 +78,36 @@ final class CompressionController {
             UserFeedback.popup("Can't run without loaded file");
             return;
         }
+
+        int yWeightValue = 0;
+        int cWeightValue = 0;
+        try {
+            yWeightValue = Integer.parseInt(yWeight.getText());
+            cWeightValue = Integer.parseInt(cWeight.getText());
+        } catch (Exception e) {
+            e.printStackTrace();
+            UserFeedback.reportProgress("yWeight or cWeight is not an integer.");
+        }
+
+        int finalYWeightValue = yWeightValue;
+        int finalCWeightValue = cWeightValue;
         OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+
             @Override
             public Runnable getRunnable() {
-                return null;
-            }
+                return () -> compressedAndPreview = Compression.compress(finalYWeightValue, finalCWeightValue, 16, this, loadedImage).get();
+            };
 
             @Override
             public Runnable onUninterruptedFinish() {
-                return null;
+                return () -> {
+                    processedImage = compressedAndPreview.getBufferedImage();
+                    int size = compressedAndPreview.getBitSequence().getSize()/8/1024;
+                    Platform.runLater(() -> {
+                        outputSize.setText("Output size: " + size + "kB");
+                    });
+                    setNewImage(processedImage);
+                };
             }
         });
 

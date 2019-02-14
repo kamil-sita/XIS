@@ -7,8 +7,8 @@ import java.io.IOException;
 
 
 public class BinaryIO {
-    public static boolean writeToSelectedByUser(BitSequence bitSequence) {
-        var optionalOut = GuiFileIO.getSaveDirectory();
+    public static boolean writeBitSequenceToUserSelected(BitSequence bitSequence) {
+        var optionalOut = GuiFileIO.getSaveDirectory("*.ls2");
         if (optionalOut.isPresent()) {
             byte[] data = bitSequence.getSeqArray();
             try {
@@ -18,7 +18,6 @@ public class BinaryIO {
             } catch (IOException e) {
                 return false;
             }
-
             return true;
         }
         return false;

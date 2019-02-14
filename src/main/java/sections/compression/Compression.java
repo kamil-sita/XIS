@@ -53,11 +53,14 @@ public class Compression {
         int size_X = (int) Math.ceil(input.getWidth() / blockSize);
         int size_Y = (int) Math.ceil(input.getHeight() / blockSize);
 
+        int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight);
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight);
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight);
+                i++;
+                interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
         }
 
@@ -84,7 +87,7 @@ public class Compression {
 
         var image = new YCbCrImage(h.width, h.height);
 
-
+        int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
                 boolean flag;
@@ -94,6 +97,8 @@ public class Compression {
                 if (!flag) {
                     return Optional.empty();
                 }
+                i++;
+                interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
         }
 

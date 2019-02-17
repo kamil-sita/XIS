@@ -32,8 +32,9 @@ public class YCbCrLayer {
 
 
     public void replace(int xStart, int xEnd, int yStart, int yEnd, List<Integer> palette, BitSequence compressionSequence, int encodeSize) {
-        for (int y = yStart; y < yEnd; y++) {
-            int newXEnd = xEnd > width() ? width() : xEnd;
+        int newXEnd = xEnd > width() ? width() : xEnd;
+        int newYEnd = yEnd > height() ? height() : yEnd;
+        for (int y = yStart; y < newYEnd; y++) {
             CompressionLine compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize);
             for (int x = xStart; x < newXEnd; x++) {
                 compressionLine.put(get(x, y));

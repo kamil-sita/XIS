@@ -72,7 +72,7 @@ public class CompressionLine {
 
     public void put(int v) {
         if (full) throw new IllegalArgumentException("Can't add new values after finalization");
-        if (line.size() + 1 == LINE_SIZE) throw  new IllegalArgumentException("Too much values");
+        if (line.size() == LINE_SIZE) throw  new IllegalArgumentException("Too much values");
         line.add(v);
 
     }
@@ -106,13 +106,13 @@ public class CompressionLine {
 
     private void compressRle() {
         compressedLine.put(1);
-        int colorId1 = findClosestInPalette(line.get(0));
+        int colorId1 = findIdInPaletteOfClosest(line.get(0));
         layer.set(xStart, y, palette.get(colorId1));
         int colorId2 = NOT_FOUND;
         int length = 0;
         for (int i = 1; i < line.size(); i++) {
             int value = line.get(i);
-            int id = findClosestInPalette(value);
+            int id = findIdInPaletteOfClosest(value);
             layer.set(xStart + i, y, palette.get(id));
             length++;
             if (id != colorId1) {
@@ -140,7 +140,7 @@ public class CompressionLine {
         int lastValueId = NOT_FOUND;
         for (int i = 0; i < line.size(); i++) {
             int value = line.get(i);
-            int valueId = findClosestInPalette(value);
+            int valueId = findIdInPaletteOfClosest(value);
             layer.set(xStart + i, y, palette.get(valueId));
             if (valueId == lastValueId) {
                 compressedLine.put(1);
@@ -157,7 +157,7 @@ public class CompressionLine {
         compressedLine.put(0);
         for (int i = 0; i < line.size(); i++) {
             int value = line.get(i);
-            int valueId = findClosestInPalette(value);
+            int valueId = findIdInPaletteOfClosest(value);
             layer.set(xStart + i, y, palette.get(valueId));
             compressedLine.put(valueId, ENCODE_SIZE);
         }
@@ -167,7 +167,7 @@ public class CompressionLine {
         int lastId = -1;
         int colors = 0;
         for (var val : line) {
-            int valId = findClosestInPalette(val);
+            int valId = findIdInPaletteOfClosest(val);
             if (valId != lastId) {
                 colors++;
                 lastId = valId;
@@ -246,16 +246,17 @@ public class CompressionLine {
     }
 
 
-    private int findClosestInPalette(int value) {
-        Integer best = null;
+    private int findIdInPaletteOfClosest(int value) {
+        int indexOfBest = NOT_FOUND;
         double bestDistance = Double.MAX_VALUE;
         for (int i = 0; i < palette.size(); i++) {
             double dist = Math.abs(value - palette.get(i));
             if (dist < bestDistance) {
-                best = palette.get(i);
                 bestDistance = dist;
+                indexOfBest = i;
             }
         }
-        return best;
+        return indexOfBest;
     }
+
 }

@@ -136,38 +136,24 @@ public class LosticCompression {
         KMeans.setLogger(s -> System.out.println("KMeans, at: (" + x + ", " + y + "): " + s));
         kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
-        var intResults = new ArrayList<Integer>();
+        var palette = new ArrayList<Integer>();
         for (var result : results) {
-            intResults.add(result.getVal());
+            palette.add(result.getVal());
         }
 
-        intResults.sort(Integer::compareTo);
+        palette.sort(Integer::compareTo);
 
         bitSequence.put(k - 1, K_SIZE); //k is min 1, so to use all of the space k-1 is saved instead
         for (int i = 0; i < k; i++) {
-            int v = intResults.get(i);
+            int v = palette.get(i);
             if (v > 255) v = 255;
             bitSequence.put(v, 8);
         }
 
         final int ENCODE_SIZE = IntegerMath.log2(k);
 
-        var list = layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, intResults);
+        layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, palette, bitSequence, ENCODE_SIZE);
 
-        int lastValue = -1;
-        for (int i = 0; i < list.size(); i++) {
-            if (ENCODE_SIZE == 1) {
-                bitSequence.put(list.get(i), 1);
-                continue;
-            }
-            int value = list.get(i);
-            if (value == lastValue) {
-                bitSequence.put(1, 1);
-            } else {
-                bitSequence.put(list.get(i), ENCODE_SIZE + 1);
-            }
-            lastValue = value;
-        }
     }
 
     private static boolean decompressBlock(int x, int y, int size, BitSequenceDecoder bitSequenceDecoder, YCbCrLayer layer, Header h) {

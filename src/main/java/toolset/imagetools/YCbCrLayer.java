@@ -1,6 +1,8 @@
 package toolset.imagetools;
 
-import java.util.ArrayList;
+import sections.compression.BitSequence;
+import sections.compression.CompressionLine;
+
 import java.util.List;
 
 public class YCbCrLayer {
@@ -29,33 +31,16 @@ public class YCbCrLayer {
     }
 
 
-    public List<Integer> replace(int xstart, int xend, int ystart, int yend, List<Integer> palette) {
-        var list = new ArrayList<Integer>();
-
-        for (int y = ystart; y < yend; y++) {
-            for (int x = xstart; x < xend; x++) {
-                if (x < width() && y < height()) {
-                    int value = get(x, y);
-                    int valueRepl = findClosestInPalette(value, palette);
-                    set(x, y, valueRepl);
-                    int idOf = palette.indexOf(valueRepl);
-                    list.add(idOf);
-                }
+    public void replace(int xStart, int xEnd, int yStart, int yEnd, List<Integer> palette, BitSequence compressionSequence, int encodeSize) {
+        for (int y = yStart; y < yEnd; y++) {
+            int newXEnd = xEnd > width() ? width() : xEnd;
+            CompressionLine compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize);
+            for (int x = xStart; x < newXEnd; x++) {
+                compressionLine.put(get(x, y));
             }
+            compressionLine.lockAdding();
+            compressionSequence.addAll(compressionLine.compress());
         }
-        return list;
     }
 
-    private static int findClosestInPalette(int value, List<Integer> palette) {
-        Integer best = null;
-        double bestDistance = Double.MAX_VALUE;
-        for (int i = 0; i < palette.size(); i++) {
-            double dist = Math.abs(value - palette.get(i));
-            if (dist < bestDistance) {
-                best = palette.get(i);
-                bestDistance = dist;
-            }
-        }
-        return best;
-    }
 }

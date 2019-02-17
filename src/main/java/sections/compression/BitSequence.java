@@ -3,9 +3,9 @@ package sections.compression;
 import java.util.ArrayList;
 
 public class BitSequence {
-    
+
     private final int BYTE_SIZE = 8; //byte size in bits
-    
+
     private ArrayList<Boolean> seq = new ArrayList<>();
 
     public BitSequence() {
@@ -21,11 +21,55 @@ public class BitSequence {
         }
     }
 
-    public void put(long a, int length) {
-        boolean[] arr = toBoolArray(a, length);
+    public void put(long value, int length) {
+        boolean[] arr = toBoolArray(value, length);
         for (boolean b : arr) {
             seq.add(b);
         }
+    }
+
+    public void put(int value) {
+        put(value, 1);
+    }
+
+    public void addAll(BitSequence bitSequence) {
+        this.seq.addAll(bitSequence.seq);
+    }
+
+    public BitSequence copy() {
+        return new BitSequence(getSeqArray());
+    }
+
+    public void consume(int size) {
+        for (int i = 0; i < size; i++) {
+            if (seq.size() > 0) {
+                seq.remove(0);
+            } else {
+                throw new IllegalArgumentException("Consumed more than is available");
+            }
+        }
+    }
+
+    public boolean getAt(int index) {
+        return seq.get(index);
+    }
+
+    public int getNext(int count) {
+        int out = 0;
+        count--;
+        for (int i = 0; i < count; i++) {
+            if (seq.get(i)) {
+                int value = 1 << (count - i);
+                out = (byte) (value | out);
+            }
+        }
+        return out;
+    }
+
+    public int getAndConsume(int count) {
+        int v = getNext(count);
+        consume(count);
+        return v;
     }
 
     public ArrayList<Boolean> getSeq() {
@@ -34,7 +78,7 @@ public class BitSequence {
 
     public byte[] getSeqArray() {
         fitByteSize();
-        byte[] data = new byte[getSize()/BYTE_SIZE];
+        byte[] data = new byte[getSize() / BYTE_SIZE];
         for (int i = 0; i < data.length; i += 1) {
             data[i] = fitBitsIntoByte(i);
         }
@@ -46,7 +90,7 @@ public class BitSequence {
     }
 
 
-    public boolean[] toBoolArray(long input, int length) {
+    private boolean[] toBoolArray(long input, int length) {
         boolean[] arr = new boolean[length];
         int i = 0;
         for (int j = length - 1; j >= 0; j--) {

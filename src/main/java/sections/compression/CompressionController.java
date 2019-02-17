@@ -92,7 +92,11 @@ public final class CompressionController {
     @FXML
     void saveFilePress(ActionEvent event) {
         if (compressedAndPreview == null) {
-            UserFeedback.popup("Can't save non-processed image.");
+            if (loadedImage == null) {
+                UserFeedback.popup("No image loaded!");
+            } else {
+                GuiFileIO.saveImage(loadedImage);
+            }
         } else {
             BinaryIO.writeBitSequenceToUserSelected(compressedAndPreview.getBitSequence());
         }
@@ -114,7 +118,7 @@ public final class CompressionController {
             @Override
             public Runnable getRunnable() {
                 return () -> {
-                    image = Compression.decompress(new BitSequenceDecoder(compressedImage), this);
+                    image = LosticCompression.decompress(new BitSequenceDecoder(compressedImage), this);
                 };
             }
 
@@ -159,7 +163,7 @@ public final class CompressionController {
 
             @Override
             public Runnable getRunnable() {
-                return () -> compressedAndPreview = Compression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).get();
+                return () -> compressedAndPreview = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).get();
             };
 
             @Override

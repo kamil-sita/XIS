@@ -3,6 +3,7 @@ package sections.compression;
 import pl.ksitarski.simplekmeans.KMeans;
 import sections.Interruptible;
 import sections.MockInterruptible;
+import toolset.IntegerMath;
 import toolset.imagetools.YCbCrImage;
 import toolset.imagetools.YCbCrLayer;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
 
-public class Compression {
+public class LosticCompression {
 
     private static final int ALG_NAME = 0x010571C2;
     private static final short VERSION = 0;
@@ -149,7 +150,7 @@ public class Compression {
             bitSequence.put(v, 8);
         }
 
-        final int ENCODE_SIZE = intLog2(k);
+        final int ENCODE_SIZE = IntegerMath.log2(k);
 
         var list = layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, intResults);
 
@@ -172,7 +173,7 @@ public class Compression {
     private static boolean decompressBlock(int x, int y, int size, BitSequenceDecoder bitSequenceDecoder, YCbCrLayer layer, Header h) {
         if (!bitSequenceDecoder.has(K_SIZE)) return false;
         int dictionarySize = bitSequenceDecoder.get(K_SIZE) + 1;
-        int encodeSize = intLog2(dictionarySize);
+        int encodeSize = IntegerMath.log2(dictionarySize);
         ArrayList<Integer> dictionary = new ArrayList<>();
         if (!bitSequenceDecoder.has(8 * dictionarySize)) return false;
         for (int i = 0; i < dictionarySize; i++) {
@@ -265,27 +266,6 @@ public class Compression {
             }
             power++;
         }
-    }
-
-    private static int intLog2(int v) {
-        int log = 0;
-        if ((v & 0xffff0000) != 0) {
-            v >>>= 16;
-            log = 16;
-        }
-        if (v >= 256) {
-            v >>>= 8;
-            log += 8;
-        }
-        if (v >= 16) {
-            v >>>= 4;
-            log += 4;
-        }
-        if (v >= 4) {
-            v >>>= 2;
-            log += 2;
-        }
-        return log + (v >>> 1);
     }
 
     private static double calculateContinuity(List<Integer> input) {

@@ -54,12 +54,18 @@ public class LosticCompression {
         int size_X = (int) Math.ceil(input.getWidth() / blockSize);
         int size_Y = (int) Math.ceil(input.getHeight() / blockSize);
 
+        KMeans.setLogger(s -> {});
+
         int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
+                System.out.println("Y");
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight);
+                System.out.println("Cb");
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight);
+                System.out.println("Cr");
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight);
+
                 i++;
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
@@ -71,13 +77,15 @@ public class LosticCompression {
         return Optional.of(new CompressedAndPreview(b, preview));
     }
 
-    public static Optional<BufferedImage> decompress(BitSequenceDecoder bitSequenceDecoder) {
-        return decompress(bitSequenceDecoder, new MockInterruptible());
+    public static Optional<BufferedImage> decompress(BitSequence bitSequence) {
+        return decompress(bitSequence, new MockInterruptible());
     }
 
-    public static Optional<BufferedImage> decompress(BitSequenceDecoder bitSequenceDecoder, Interruptible interruptible) {
-        if (bitSequenceDecoder == null) return Optional.empty();
-        Header h = new Header(bitSequenceDecoder);
+    public static Optional<BufferedImage> decompress(BitSequence bitSequence, Interruptible interruptible) {
+
+        if (bitSequence == null) return Optional.empty();
+        bitSequence.resetPointer();
+        Header h = new Header(bitSequence);
         if (!headerOkay(h)) {
             return Optional.empty();
         }
@@ -92,9 +100,9 @@ public class LosticCompression {
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
                 boolean flag;
-                flag = decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getYl(), h);
-                flag = flag & decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCbl(), h);
-                flag = flag & decompressBlock(x, y, h.blockSize, bitSequenceDecoder, image.getCrl(), h);
+                flag = decompressBlock(x, y, h.blockSize, bitSequence, image.getYl(), h);
+                flag = flag & decompressBlock(x, y, h.blockSize, bitSequence, image.getCbl(), h);
+                flag = flag & decompressBlock(x, y, h.blockSize, bitSequence, image.getCrl(), h);
                 if (!flag) {
                     return Optional.empty();
                 }
@@ -102,6 +110,8 @@ public class LosticCompression {
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
         }
+
+        System.out.println(bitSequence.getSize());
 
         return Optional.of(image.getBufferedImage());
     }
@@ -112,6 +122,7 @@ public class LosticCompression {
 
     private static BitSequence generateBitSequenceWithHeader(int blockSize, int width, int height) {
         BitSequence b = new BitSequence();
+
         Header h = new Header(
                 ALG_NAME,
                 VERSION,
@@ -133,7 +144,6 @@ public class LosticCompression {
 
 
         KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
-        KMeans.setLogger(s -> System.out.println("KMeans, at: (" + x + ", " + y + "): " + s));
         kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
         var palette = new ArrayList<Integer>();
@@ -156,41 +166,40 @@ public class LosticCompression {
 
     }
 
-    private static boolean decompressBlock(int x, int y, int size, BitSequenceDecoder bitSequenceDecoder, YCbCrLayer layer, Header h) {
-        if (!bitSequenceDecoder.has(K_SIZE)) return false;
-        int dictionarySize = bitSequenceDecoder.get(K_SIZE) + 1;
+    private static boolean decompressBlock(int xBlock, int yBlock, int size, BitSequence bitSequence, YCbCrLayer layer, Header header) {
+        if (!bitSequence.has(K_SIZE)) return false;
+        int dictionarySize = bitSequence.getAndConsume(K_SIZE) + 1;
         int encodeSize = IntegerMath.log2(dictionarySize);
         ArrayList<Integer> dictionary = new ArrayList<>();
-        if (!bitSequenceDecoder.has(8 * dictionarySize)) return false;
+        if (!bitSequence.has(8 * dictionarySize)) return false;
         for (int i = 0; i < dictionarySize; i++) {
-            dictionary.add(bitSequenceDecoder.get(8));
+            dictionary.add(bitSequence.getAndConsume(8));
         }
 
-        int lastValue = -1;
+        int xStart = xBlock * size;
+        int xEnd = (xBlock + 1) * size;
+        int yStart = yBlock * size;
+        int yEnd = (yBlock + 1) * size;
 
-        for (int j = y * size; j < (y + 1) * size; j++) {
-            for (int i = x * size; i < (x + 1) * size; i++) {
-                if (i < layer.width() && j < layer.height()) {
-                    if (!bitSequenceDecoder.has(encodeSize)) return false;
-                    if (encodeSize == 1) {
-                        int id = bitSequenceDecoder.get(encodeSize);
-                        int value = dictionary.get(id);
-                        layer.set(i, j, value);
-                    } else {
-                        int value;
-                        int copy = bitSequenceDecoder.get(1);
-                        if (copy == 1) {
-                            value = lastValue;
-                        } else {
-                            int id = bitSequenceDecoder.get(encodeSize);
-                            value = dictionary.get(id);
-                        }
-                        layer.set(i, j, value);
-                        lastValue = value;
-                    }
-                }
+        xEnd = xEnd > header.width ? header.width : xEnd;
+        yEnd = yEnd > header.height ? header.height : yEnd;
+
+        System.out.println("Before: " + bitSequence.getConsumedSize());
+        try {
+            for (int y = yStart; y < yEnd; y++) {
+
+                CompressionLine decompressionLine = new CompressionLine(bitSequence, dictionary, layer,
+                        xStart,
+                        xEnd,
+                        y,
+                        encodeSize);
+                decompressionLine.decompress();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
+
 
         return true;
     }

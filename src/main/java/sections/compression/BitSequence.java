@@ -7,6 +7,7 @@ public class BitSequence {
     private final int BYTE_SIZE = 8; //byte size in bits
 
     private ArrayList<Boolean> seq = new ArrayList<>();
+    int pointer = 0;
 
     public BitSequence() {
 
@@ -28,45 +29,44 @@ public class BitSequence {
         }
     }
 
-    public void put(int value) {
+    public void putOne(int value) {
         put(value, 1);
+    }
+
+    public boolean has(int size) {
+        return seq.size() - pointer >= size;
     }
 
     public void addAll(BitSequence bitSequence) {
         this.seq.addAll(bitSequence.seq);
     }
 
-    public BitSequence copy() {
-        return new BitSequence(getSeqArray());
+    public void resetPointer() {
+        pointer = 0;
     }
 
     public void consume(int size) {
-        for (int i = 0; i < size; i++) {
-            if (seq.size() > 0) {
-                seq.remove(0);
-            } else {
-                throw new IllegalArgumentException("Consumed more than is available");
-            }
-        }
+        pointer += size;
+        if (pointer > getSizeIgnoreConsumed()) throw new IllegalArgumentException("Consumed more than is available");
     }
 
     public boolean getAt(int index) {
-        return seq.get(index);
+        return seq.get(index + pointer);
     }
 
     public int getNext(int count) {
         int out = 0;
-        count--;
         for (int i = 0; i < count; i++) {
-            if (seq.get(i)) {
-                int value = 1 << (count - i);
-                out = (byte) (value | out);
+            if (seq.get(i + pointer)) {
+                int value = 1 << (count - i - 1);
+                out = (value | out);
             }
         }
         return out;
     }
 
     public int getAndConsume(int count) {
+        if (!has(count)) consume(count); //throwing error
         int v = getNext(count);
         consume(count);
         return v;
@@ -78,7 +78,7 @@ public class BitSequence {
 
     public byte[] getSeqArray() {
         fitByteSize();
-        byte[] data = new byte[getSize() / BYTE_SIZE];
+        byte[] data = new byte[getSizeIgnoreConsumed() / BYTE_SIZE];
         for (int i = 0; i < data.length; i += 1) {
             data[i] = fitBitsIntoByte(i);
         }
@@ -86,7 +86,15 @@ public class BitSequence {
     }
 
     public int getSize() {
+        return seq.size() - pointer;
+    }
+
+    public int getSizeIgnoreConsumed() {
         return seq.size();
+    }
+
+    public int getConsumedSize() {
+        return pointer;
     }
 
 
@@ -118,5 +126,12 @@ public class BitSequence {
             j--;
         }
         return out;
+    }
+
+    public void write() {
+        for (int i = 0; i < seq.size(); i++) {
+            System.out.print(seq.get(i) ? "1" : "0");
+        }
+        System.out.println();
     }
 }

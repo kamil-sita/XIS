@@ -118,7 +118,7 @@ public final class CompressionController {
             @Override
             public Runnable getRunnable() {
                 return () -> {
-                    image = LosticCompression.decompress(new BitSequenceDecoder(compressedImage), this);
+                    image = LosticCompression.decompress(compressedImage, this);
                 };
             }
 

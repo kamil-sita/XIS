@@ -20,18 +20,19 @@ public class Header {
         this.blockSize = blockSize;
     }
 
-    public Header(BitSequenceDecoder bitSequenceDecoder) {
-        if (!bitSequenceDecoder.has(136)) {
+    public Header(BitSequence bitSequence) {
+        if (!bitSequence.has(136)) {
             errors = true;
             return;
         }
-        algName = bitSequenceDecoder.get(32);
-        version = bitSequenceDecoder.get(8);
-        legacyVersion = bitSequenceDecoder.get(8);
-        flag = bitSequenceDecoder.get(8);
-        width = bitSequenceDecoder.get(32);
-        height = bitSequenceDecoder.get(32);
-        blockSize = bitSequenceDecoder.get(16);
+
+        algName = bitSequence.getAndConsume(32);
+        version = bitSequence.getAndConsume(8);
+        legacyVersion = bitSequence.getAndConsume(8);
+        flag = bitSequence.getAndConsume(8);
+        width = bitSequence.getAndConsume(32);
+        height = bitSequence.getAndConsume(32);
+        blockSize = bitSequence.getAndConsume(16);
     }
 
     public void addToBitSequence(BitSequence b) {

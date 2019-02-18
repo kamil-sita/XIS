@@ -49,7 +49,7 @@ public final class View1Controller {
 
     @FXML
     private void runButtonPress(ActionEvent event) {
-        String JAVAFX_NEWLINE = "\n";
+        final String JAVAFX_NEWLINE = "\n";
 
         final var folderComparator = new FolderImageComparator(folderLocations.getText().split(JAVAFX_NEWLINE),
                 imageSizeComboBox.getValue(),

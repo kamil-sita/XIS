@@ -23,8 +23,6 @@
                   <Button mnemonicParsing="false" onAction="#highPassFilterPress" prefHeight="42.0" prefWidth="200.0" text="High pass filter" />
                   <Button mnemonicParsing="false" onAction="#automatedFilteringPress" prefHeight="42.0" prefWidth="200.0" text="Automated filtering" />
                   <Button mnemonicParsing="false" onAction="#imageCompressionPress" prefHeight="42.0" prefWidth="200.0" text="Image compression" />
-                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Images competition [WIP]" />
-                  <Button disable="true" mnemonicParsing="false" prefHeight="42.0" prefWidth="200.0" text="Spritesheet builder" />
                </children>
             </TilePane>
             <GridPane prefHeight="523.0" prefWidth="644.0" GridPane.columnIndex="1">

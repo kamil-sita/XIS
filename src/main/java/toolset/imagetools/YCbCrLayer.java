@@ -42,7 +42,6 @@ public class YCbCrLayer {
             compressionLine.lockAdding();
             compressionSequence.addAll(compressionLine.compress());
         }
-        System.out.println();
     }
 
 }

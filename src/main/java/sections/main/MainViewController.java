@@ -183,17 +183,24 @@ public final class MainViewController {
         return progressBarGlobal;
     }
 
-    private static boolean targetSmall = false;
 
     /**
      * Changes preferred width of vista (AnchorPane) so it scales properly with stage size
      */
     private static void resizeAnchorPane() {
         if (currentVistaUIGlobal == null) return;
+        hideBarsIfLackSpace();
         currentVistaUIGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
-        if (scrollPaneGlobal.getViewportBounds().getWidth() <= 800) {
+    }
+
+    private static boolean targetSmall = false;
+    private static final int SMALL_THRESHOLD = 800;
+    private static final int BIG_THRESHOLD = 1000;
+
+    private static void hideBarsIfLackSpace() {
+        if (scrollPaneGlobal.getViewportBounds().getWidth() <= SMALL_THRESHOLD) {
             targetSmall = true;
-        } else if (scrollPaneGlobal.getViewportBounds().getWidth() >= 1000) {
+        } else if (scrollPaneGlobal.getViewportBounds().getWidth() >= BIG_THRESHOLD) {
             targetSmall = false;
         }
         if (targetSmall) {
@@ -215,7 +222,6 @@ public final class MainViewController {
             staticController.gridPaneBarRight.setMinWidth(0);
             staticController.gridPaneBarRight.setMaxWidth(10000);
         }
-
     }
 
     public static void addNotifier(Notifier notifier) {

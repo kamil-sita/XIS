@@ -19,12 +19,6 @@ public final class FileManagementTools {
         if (!file.renameTo(new File(localDeleteDirectory))) {
             UserFeedback.popup("Couldn't move file!");
         }
-        try {
-            System.out.println(file.getCanonicalPath());
-            System.out.println(file.getName());
-            System.out.println("+++++");
-        } catch (Exception e) {
-            //
-        }
+
     }
 }

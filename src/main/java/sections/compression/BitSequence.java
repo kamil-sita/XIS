@@ -128,10 +128,4 @@ public class BitSequence {
         return out;
     }
 
-    public void write() {
-        for (int i = 0; i < seq.size(); i++) {
-            System.out.print(seq.get(i) ? "1" : "0");
-        }
-        System.out.println();
-    }
 }

@@ -50,7 +50,7 @@ public final class AutomatedFilterController {
 
     @FXML
     void filterAndSavePress(ActionEvent event) {
-        var optionalSavePdf = GuiFileIO.getSaveDirectory();
+        var optionalSavePdf = GuiFileIO.getSaveDirectory("*.pdf");
         if (!optionalSavePdf.isPresent()) {
             UserFeedback.popup("Wrong save file!");
             return;

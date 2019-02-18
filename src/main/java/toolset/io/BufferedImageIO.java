@@ -21,4 +21,16 @@ public final class BufferedImageIO {
         if (bufferedImage == null) return Optional.empty();
         return Optional.of(bufferedImage);
     }
+
+    public static File saveImage(BufferedImage image, File file) {
+        if (file == null) {
+            file = new File("tmplst2.png");
+        }
+        try {
+            ImageIO.write(image, "png", file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return file;
+    }
 }

@@ -43,7 +43,6 @@ public class GuiFileIO {
             }
             lastFileDirectory = file.getParentFile();
         }
-
     }
 
     private enum FileChooserType {
@@ -88,16 +87,29 @@ public class GuiFileIO {
     }
 
 
-    public static Optional<File> getSaveDirectory() {
+    public static Optional<File> getSaveDirectory(String mainFormat) {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save image to file");
+        fileChooser.setTitle("Save to file");
         fileChooser.setInitialDirectory(lastFileDirectory);
         fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("File", mainFormat),
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
         return Optional.ofNullable(fileChooser.showSaveDialog(stage));
+    }
 
+
+    public static Optional<File> getLoadDirectory(String mainFormat) {
+        Stage stage = new Stage();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load from file");
+        fileChooser.setInitialDirectory(lastFileDirectory);
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("File", mainFormat),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        return Optional.ofNullable(fileChooser.showOpenDialog(stage));
     }
 
 

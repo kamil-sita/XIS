@@ -59,11 +59,8 @@ public class LosticCompression {
         int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
-                System.out.println("Y");
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight);
-                System.out.println("Cb");
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight);
-                System.out.println("Cr");
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight);
 
                 i++;
@@ -110,8 +107,6 @@ public class LosticCompression {
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
         }
-
-        System.out.println(bitSequence.getSize());
 
         return Optional.of(image.getBufferedImage());
     }
@@ -184,7 +179,6 @@ public class LosticCompression {
         xEnd = xEnd > header.width ? header.width : xEnd;
         yEnd = yEnd > header.height ? header.height : yEnd;
 
-        System.out.println("Before: " + bitSequence.getConsumedSize());
         try {
             for (int y = yStart; y < yEnd; y++) {
 

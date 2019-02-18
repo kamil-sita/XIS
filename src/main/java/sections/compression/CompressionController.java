@@ -150,10 +150,12 @@ public final class CompressionController {
             blockSizeValue = Integer.parseInt(blockSize.getText());
         } catch (Exception e) {
             UserFeedback.reportProgress("Some of values are not integer values.");
+            return;
         }
 
         if (yWeightValue < 0 || cWeightValue < 0 || blockSizeValue < 2) {
             UserFeedback.reportProgress("Some of values are smaller than their minimum size");
+            return;
         }
 
         int finalYWeightValue = yWeightValue;

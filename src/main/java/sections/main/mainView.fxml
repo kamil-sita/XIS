@@ -29,9 +29,9 @@
             </TilePane>
             <GridPane prefHeight="523.0" prefWidth="644.0" GridPane.columnIndex="1">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="100.0" />
+                <ColumnConstraints fx:id="gridPaneBarLeft" hgrow="SOMETIMES" minWidth="0.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="ALWAYS" maxWidth="1200.0" minWidth="612.0" prefWidth="612.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="7.0" prefWidth="100.0" />
+                  <ColumnConstraints fx:id="gridPaneBarRight" hgrow="SOMETIMES" minWidth="0.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

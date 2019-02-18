@@ -17,9 +17,14 @@ public class JavaFXTools {
             UserFeedback.reportProgress("Generated preview. Scaling to fit window...");
             double width = imageView.getFitWidth();
             double height = imageView.getFitHeight();
-            var scaledOutput = BufferedImageScale.getHighQualityScaledImage(previewImage, width, height);
-            Platform.runLater(() -> delegate.set(scaledOutput));
-            UserFeedback.reportProgress("Generated scaled preview.");
+            if (width < previewImage.getWidth()) {
+                Platform.runLater(() -> delegate.set(previewImage));
+                UserFeedback.reportProgress("Generated scaled preview.");
+            } else {
+                var scaledOutput = BufferedImageScale.getHighQualityScaledImage(previewImage, width, height);
+                Platform.runLater(() -> delegate.set(scaledOutput));
+                UserFeedback.reportProgress("Generated scaled preview.");
+            }
         } else {
             Platform.runLater(() -> delegate.set(previewImage));
             UserFeedback.reportProgress("Generated preview.");

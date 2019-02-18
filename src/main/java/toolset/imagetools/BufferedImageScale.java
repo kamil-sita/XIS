@@ -30,7 +30,7 @@ public final class BufferedImageScale {
 
     public static BufferedImage getHighQualityScaledImage(BufferedImage source, double width, double height) {
         if (source == null) return null;
-        return Scalr.resize(source, Scalr.Method.QUALITY, (int) width, (int) height, (BufferedImageOp) null);
+        return Scalr.resize(source, Scalr.Method.ULTRA_QUALITY, (int) width, (int) height, (BufferedImageOp) null);
     }
 
 }

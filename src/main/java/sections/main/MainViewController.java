@@ -8,6 +8,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Priority;
 import sections.Notifier;
 import sections.OneBackgroundJobManager;
 import sections.Vista;
@@ -29,6 +31,7 @@ public final class MainViewController {
     private static ScrollPane scrollPaneGlobal;
     private static Vista currentModule;
     private static ProgressBar progressBarGlobal;
+    private static MainViewController staticController;
 
     private static ArrayList<Notifier> notifiers = new ArrayList<>();
 
@@ -48,6 +51,13 @@ public final class MainViewController {
 
     @FXML
     private ProgressBar progressBar;
+
+    @FXML
+    private ColumnConstraints gridPaneBarLeft;
+
+    @FXML
+    private ColumnConstraints gridPaneBarRight;
+
 
     //Actions methods
 
@@ -117,6 +127,7 @@ public final class MainViewController {
         vistaParentGlobal = vistaParent;
         scrollPaneGlobal = scrollPane;
         progressBarGlobal = progressBar;
+        staticController = this;
         mainPress(null);
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
             MainViewController.onWindowSizeChange();
@@ -172,12 +183,39 @@ public final class MainViewController {
         return progressBarGlobal;
     }
 
+    private static boolean targetSmall = false;
+
     /**
      * Changes preferred width of vista (AnchorPane) so it scales properly with stage size
      */
     private static void resizeAnchorPane() {
         if (currentVistaUIGlobal == null) return;
         currentVistaUIGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
+        if (scrollPaneGlobal.getViewportBounds().getWidth() <= 800) {
+            targetSmall = true;
+        } else if (scrollPaneGlobal.getViewportBounds().getWidth() >= 1000) {
+            targetSmall = false;
+        }
+        if (targetSmall) {
+            staticController.gridPaneBarLeft.setHgrow(Priority.NEVER);
+            staticController.gridPaneBarLeft.setPrefWidth(0);
+            staticController.gridPaneBarLeft.setMinWidth(0);
+            staticController.gridPaneBarLeft.setMaxWidth(0);
+            staticController.gridPaneBarRight.setHgrow(Priority.NEVER);
+            staticController.gridPaneBarRight.setPrefWidth(0);
+            staticController.gridPaneBarRight.setMinWidth(0);
+            staticController.gridPaneBarRight.setMaxWidth(0);
+        } else {
+            staticController.gridPaneBarLeft.setHgrow(Priority.SOMETIMES);
+            staticController.gridPaneBarLeft.setPrefWidth(100);
+            staticController.gridPaneBarLeft.setMinWidth(0);
+            staticController.gridPaneBarLeft.setMaxWidth(10000);
+            staticController.gridPaneBarRight.setHgrow(Priority.SOMETIMES);
+            staticController.gridPaneBarRight.setPrefWidth(100);
+            staticController.gridPaneBarRight.setMinWidth(0);
+            staticController.gridPaneBarRight.setMaxWidth(10000);
+        }
+
     }
 
     public static void addNotifier(Notifier notifier) {

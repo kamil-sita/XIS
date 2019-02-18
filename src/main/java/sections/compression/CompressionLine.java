@@ -93,13 +93,10 @@ public class CompressionLine {
         compressedLine = new BitSequence();
 
         if (canBeRleCompressed()) {
-            System.out.print("R");
             compressRle();
         } else if (canBeCompressedDifferential()) {
-            System.out.print("D");
             compressDifferential();
         } else {
-            System.out.print("S");
             compressSimple();
         }
         return compressedLine;
@@ -183,13 +180,10 @@ public class CompressionLine {
 
     public void decompress() {
         if (isRleCompressed()) {
-            System.out.println("R");
             decompressRle();
         } else if (isDifferentialCompressed()) {
-            System.out.println("D");
             decompressDifferential();
         } else {
-            System.out.println("S");
             decompressSimple();
         }
     }

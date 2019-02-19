@@ -34,9 +34,6 @@ public final class AutomatedFilterController {
     private CheckBox scaleBrightness;
 
     @FXML
-    private CheckBox higherQualityPreview;
-
-    @FXML
     private Slider brightnessSlider;
 
     @FXML
@@ -123,7 +120,7 @@ public final class AutomatedFilterController {
             UserFeedback.reportProgress("Filtering image...");
             var output = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
 
-            JavaFXTools.showPreview(output, higherQualityPreview.isSelected(), imagePreview, this::setNewImage);
+            JavaFXTools.showPreview(output, imagePreview, this::setNewImage);
 
         }).start();
     }

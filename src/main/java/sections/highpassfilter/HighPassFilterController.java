@@ -31,8 +31,6 @@ public final class HighPassFilterController {
     @FXML
     private CheckBox scaleBrightness;
 
-    @FXML
-    private CheckBox higherQualityPreview;
 
 
     @FXML
@@ -88,7 +86,7 @@ public final class HighPassFilterController {
             UserFeedback.reportProgress("Converted image!");
             Platform.runLater(() -> setNewImage(output));
 
-            JavaFXTools.showPreview(output, higherQualityPreview.isSelected(), imagePreview, this::setNewImage);
+            JavaFXTools.showPreview(output, imagePreview, this::setNewImage);
         }).start();
 
     }

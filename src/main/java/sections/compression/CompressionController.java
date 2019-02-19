@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import sections.*;
 import sections.main.MainViewController;
 import toolset.JavaFXTools;
@@ -39,25 +38,13 @@ public final class CompressionController {
     @FXML
     private Label outputSize;
 
-
-    @FXML
-    void imageClick(MouseEvent event) {
-        if (processedImage != null) {
-            UserFeedback.openInDefault(processedImage);
-        } else if (loadedImage != null) {
-            UserFeedback.openInDefault(loadedImage);
-        }
-    }
-
     @FXML
     void loadFilePress(ActionEvent event) {
         //opens image. If image == null, uses old image instead
         var optionalInputImage = GuiFileIO.getImage();
         if (optionalInputImage.isPresent()) {
             loadedImage = optionalInputImage.get();
-            JavaFXTools.showPreview(loadedImage, true, imagePreview, this::setNewImage);
-            imagePreview.getStyleClass().add("clickable");
-
+            JavaFXTools.showPreview(loadedImage, imagePreview, this::setNewImage);
             processedImage = null;
             compressedImage = null;
         }
@@ -127,7 +114,7 @@ public final class CompressionController {
                 return () -> {
                     if (image.isPresent()) {
                         loadedImage = image.get();
-                        JavaFXTools.showPreview(loadedImage, true, imagePreview, bufferedImage -> setNewImage(loadedImage));
+                        JavaFXTools.showPreview(loadedImage, imagePreview, bufferedImage -> setNewImage(loadedImage));
                     }
                 };
             }
@@ -165,7 +152,9 @@ public final class CompressionController {
 
             @Override
             public Runnable getRunnable() {
-                return () -> compressedAndPreview = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).get();
+                return () -> {
+                    compressedAndPreview = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).orElse(null);
+                };
             };
 
             @Override

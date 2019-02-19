@@ -62,8 +62,8 @@ public class LosticCompression {
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight);
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight);
                 compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight);
-
                 i++;
+                if (interruptible.isInterrupted()) return Optional.empty();
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
         }
@@ -84,6 +84,8 @@ public class LosticCompression {
         bitSequence.resetPointer();
         Header h = new Header(bitSequence);
         if (!headerOkay(h)) {
+            interruptible.reportProgress("Invalid file");
+            interruptible.popup("Invalid file");
             return Optional.empty();
         }
 
@@ -101,9 +103,12 @@ public class LosticCompression {
                 flag = flag & decompressBlock(x, y, h.blockSize, bitSequence, image.getCbl(), h);
                 flag = flag & decompressBlock(x, y, h.blockSize, bitSequence, image.getCrl(), h);
                 if (!flag) {
+                    interruptible.reportProgress("Corrupted file");
+                    interruptible.popup("Corrupted file");
                     return Optional.empty();
                 }
                 i++;
+                if (interruptible.isInterrupted()) return Optional.empty();
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
         }

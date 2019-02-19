@@ -9,7 +9,6 @@
         <ImageView fx:id="imagePreview" fitHeight="242.0" fitWidth="271.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" smooth="false" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="922.0" AnchorPane.topAnchor="80.0" />
         <Separator layoutX="12.0" layoutY="73.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="73.0" />
         <CheckBox fx:id="scaleBrightness" layoutX="173.0" layoutY="11.0" mnemonicParsing="false" selected="true" text="correct brightness" />
-        <CheckBox fx:id="higherQualityPreview" layoutX="393.0" layoutY="46.0" mnemonicParsing="false" selected="true" text="higher quality preview (scaled to current window size)" />
         <Slider fx:id="brightnessSlider" layoutX="298.0" layoutY="1.0" majorTickUnit="10.0" minorTickCount="1" prefHeight="24.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" value="70.0" />
 
         <Button fx:id="filterAndSaveButton" disable="true" layoutX="62.0" layoutY="42.0" mnemonicParsing="false" onAction="#filterAndSavePress" text="Filter, save" />

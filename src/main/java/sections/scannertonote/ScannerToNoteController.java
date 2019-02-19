@@ -31,8 +31,6 @@ public final class ScannerToNoteController {
     private Slider brightnessDiffSlider;
     @FXML
     private Slider saturationDiffSlider;
-    @FXML
-    private CheckBox highQualityPreview;
 
     @FXML
     void isolateBackgroundAction(ActionEvent event) {
@@ -47,7 +45,7 @@ public final class ScannerToNoteController {
         if (optionalInputImage.isPresent()) {
             plainImage = optionalInputImage.get();
             processedImage = null;
-            JavaFXTools.showPreview(plainImage, highQualityPreview.isSelected(), imagePreview, this::setNewImage);
+            JavaFXTools.showPreview(plainImage, imagePreview, this::setNewImage);
         }
     }
 
@@ -106,7 +104,7 @@ public final class ScannerToNoteController {
                 return () -> {
                     if (image != null) {
                         processedImage = image;
-                        JavaFXTools.showPreview(processedImage, highQualityPreview.isSelected(), imagePreview, (BufferedImage bu) -> setNewImage(bu));
+                        JavaFXTools.showPreview(processedImage, imagePreview, (BufferedImage bu) -> setNewImage(bu));
                     }
                 };
             }

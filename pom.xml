@@ -6,7 +6,7 @@
 
     <groupId>pl.ksitarski.xis</groupId>
     <artifactId>XIS</artifactId>
-    <version>0.2.2b</version>
+    <version>0.3</version>
 
     <dependencies>
         <!-- pdfbox for opening pdfs-->

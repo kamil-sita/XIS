@@ -43,8 +43,6 @@ public final class ImageInfoViewController {
         setParentName(file);
         getAndFormatFileSize(file);
 
-        addNotifierToMakeImageFitWindow();
-
         loadImageInBackground(file);
     }
 
@@ -82,6 +80,8 @@ public final class ImageInfoViewController {
                 imageView.setImage(JavaFXTools.toFxImage(bufferedImage));
                 dimensionsValue.setText("(" + bufferedImage.getWidth() + "x" + bufferedImage.getHeight() + ")");
                 MainViewController.refreshVista();
+                addNotifierToMakeImageFitWindow();
+
             });
 
         }).start();

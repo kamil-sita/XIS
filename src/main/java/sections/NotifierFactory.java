@@ -16,9 +16,7 @@ public class NotifierFactory {
      * @return new notifier created with those arguments in mind
      */
     public static Notifier scalingImageNotifier(BufferedImage bufferedImage, ImageView imageView, int heightDiff, int widthDiff, double horizontalScaling) {
-        Notifier notifier;
-        notifier = (width, height) -> {
-
+        return (width, height) -> {
             if (bufferedImage == null) return;
             double ratio = (bufferedImage.getWidth() * 1.0)/(1.0 * bufferedImage.getHeight());
 
@@ -36,6 +34,5 @@ public class NotifierFactory {
             imageView.setFitWidth(imgWidth);
             imageView.setFitHeight(imgHeight);
         };
-        return notifier;
     }
 }

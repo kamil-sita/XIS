@@ -36,7 +36,7 @@ public class LosticCompression {
      * @param blockSize
      * @return
      */
-    public static Optional<CompressedAndPreview> compressedAndPreview(double yWeight, double cWeight, double blockSize, BufferedImage input) {
+    public static Optional<CompressionOutput> compressedAndPreview(double yWeight, double cWeight, double blockSize, BufferedImage input) {
         return compress(yWeight, cWeight, blockSize, new MockInterruptible(), input);
     }
 
@@ -47,8 +47,10 @@ public class LosticCompression {
      * @param interruptible
      * @return
      */
-    public static Optional<CompressedAndPreview> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input) {
+    public static Optional<CompressionOutput> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input) {
         if (input == null) return Optional.empty();
+        Statistic statistic = new Statistic();
+        statistic.setPixels(input.getWidth() * input.getHeight());
         BitSequence b = generateBitSequenceWithHeader((int) blockSize, input.getWidth(), input.getHeight());
         var ycbcr = new YCbCrImage(input);
         int size_X = (int) Math.ceil(input.getWidth() / blockSize);
@@ -59,9 +61,9 @@ public class LosticCompression {
         int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight, statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight, statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight, statistic);
                 i++;
                 if (interruptible.isInterrupted()) return Optional.empty();
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
@@ -70,8 +72,8 @@ public class LosticCompression {
 
         BufferedImage preview = ycbcr.getBufferedImage();
 
-
-        return Optional.of(new CompressedAndPreview(b, preview));
+        statistic.setSize(b.getSize());
+        return Optional.of(new CompressionOutput(b, preview, statistic));
     }
 
     public static Optional<BufferedImage> decompress(BitSequence bitSequence) {
@@ -137,12 +139,22 @@ public class LosticCompression {
         return b;
     }
 
-    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier) {
-        int k = calculateK(x, y, size, layer, multiplier);
+    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier, Statistic statistic) {
+        int dictionarySize = calculateDictionarySize(x, y, size, layer, multiplier);
 
+        statistic.addDictionarySize(dictionarySize);
+
+        ArrayList<Integer> dictionary = generateDictionary(x, y, size, layer, dictionarySize);
+        encodeDictionary(bitSequence, dictionarySize, dictionary);
+
+        final int ENCODE_SIZE = IntegerMath.log2(dictionarySize);
+
+        layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, dictionary, bitSequence, ENCODE_SIZE, statistic);
+
+    }
+
+    private static ArrayList<Integer> generateDictionary(int x, int y, int size, YCbCrLayer layer, int k) {
         ArrayList<IntKMeans> valueList = getListFromArea(x, y, size, layer);
-
-
         KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
         kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
@@ -152,18 +164,16 @@ public class LosticCompression {
         }
 
         palette.sort(Integer::compareTo);
+        return palette;
+    }
 
+    private static void encodeDictionary(BitSequence bitSequence, int k, ArrayList<Integer> palette) {
         bitSequence.put(k - 1, K_SIZE); //k is min 1, so to use all of the space k-1 is saved instead
         for (int i = 0; i < k; i++) {
             int v = palette.get(i);
             if (v > 255) v = 255;
             bitSequence.put(v, 8);
         }
-
-        final int ENCODE_SIZE = IntegerMath.log2(k);
-
-        layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, palette, bitSequence, ENCODE_SIZE);
-
     }
 
     private static boolean decompressBlock(int xBlock, int yBlock, int size, BitSequence bitSequence, YCbCrLayer layer, Header header) {
@@ -216,7 +226,7 @@ public class LosticCompression {
     }
 
     ///calculates k value for k means
-    private static int calculateK(int x, int y, int size, YCbCrLayer input, double multiplier) {
+    private static int calculateDictionarySize(int x, int y, int size, YCbCrLayer input, double multiplier) {
         var valueList = getListFromArea(x, y, size, input);
 
         final int INITIAL_RESULTS = 32;

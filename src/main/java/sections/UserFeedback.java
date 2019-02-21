@@ -1,8 +1,14 @@
 package sections;
 
 import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
+import javafx.stage.Stage;
 import sections.main.MainViewController;
 import toolset.io.BufferedImageIO;
 
@@ -39,5 +45,27 @@ public final class UserFeedback {
         }
     }
 
+    public static void longPopupTextArea(String message) {
+        Platform.runLater(() -> {
+            Parent root;
+            UserFeedback userFeedback;
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(UserFeedback.class.getClassLoader().getResource("sections/textAreaPopup.fxml"));
+                root = fxmlLoader.load();
+                Stage stage = new Stage();
+                stage.setTitle("Message");
+                stage.setScene(new Scene(root));
+
+                userFeedback = fxmlLoader.getController();
+                stage.show();
+                userFeedback.textArea.setText(message);
+            } catch (IOException e) {
+                //
+            }
+        });
+    }
+
+    @FXML
+    TextArea textArea;
 
 }

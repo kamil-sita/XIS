@@ -20,7 +20,7 @@ public final class CompressionController {
     Notifier notifier;
     private BufferedImage loadedImage = null;
     private BufferedImage processedImage = null;
-    private CompressedAndPreview compressedAndPreview = null;
+    private CompressionOutput compressionOutput = null;
     private BitSequence compressedImage = null;
 
     @FXML
@@ -78,14 +78,14 @@ public final class CompressionController {
 
     @FXML
     void saveFilePress(ActionEvent event) {
-        if (compressedAndPreview == null) {
+        if (compressionOutput == null) {
             if (loadedImage == null) {
                 UserFeedback.popup("No image loaded!");
             } else {
                 GuiFileIO.saveImage(loadedImage);
             }
         } else {
-            BinaryIO.writeBitSequenceToUserSelected(compressedAndPreview.getBitSequence());
+            BinaryIO.writeBitSequenceToUserSelected(compressionOutput.getBitSequence());
         }
     }
 
@@ -114,6 +114,11 @@ public final class CompressionController {
                 };
             }
         });
+    }
+
+    @FXML
+    void statisticPress() {
+        UserFeedback.longPopupTextArea(compressionOutput.getStatistic().toString());
     }
 
     @FXML
@@ -148,15 +153,15 @@ public final class CompressionController {
             @Override
             public Runnable getRunnable() {
                 return () -> {
-                    compressedAndPreview = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).orElse(null);
+                    compressionOutput = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).orElse(null);
                 };
             };
 
             @Override
             public Runnable onUninterruptedFinish() {
                 return () -> {
-                    processedImage = compressedAndPreview.getBufferedImage();
-                    int size = compressedAndPreview.getBitSequence().getSize()/8/1024;
+                    processedImage = compressionOutput.getPreviewImage();
+                    int size = compressionOutput.getBitSequence().getSize()/8/1024;
                     Platform.runLater(() -> {
                         outputSize.setText("Output size: " + size + "kB");
                         JavaFXTools.showPreview(processedImage, imagePreview, CompressionController.this::setNewImage);

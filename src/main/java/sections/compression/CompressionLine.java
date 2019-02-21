@@ -11,6 +11,7 @@ public class CompressionLine {
     private final int ONE_COLOR = 0;
     private final int TWO_COLORS = 1;
 
+    private Statistic statistic;
     private List<Integer> line;
     private List<Integer> palette;
     private boolean full = false;
@@ -35,13 +36,15 @@ public class CompressionLine {
      * @param y
      * @param encodeSize
      */
-    public CompressionLine(List<Integer> palette, YCbCrLayer layer, int xStart, int xEnd, int y, int encodeSize) {
+    public CompressionLine(List<Integer> palette, YCbCrLayer layer, int xStart, int xEnd, int y, int encodeSize, Statistic statistic) {
         LINE_SIZE = xEnd - xStart;
         line = new ArrayList<>(LINE_SIZE);
         this.PALETTE_SIZE = palette.size();
         this.palette = palette;
         this.ENCODE_SIZE = encodeSize;
         this.layer = layer;
+
+        this.statistic = statistic;
 
         this.y = y;
         this.xEnd = xEnd;
@@ -122,6 +125,7 @@ public class CompressionLine {
             //entire line is in one color
             compressedLine.putOne(ONE_COLOR);
             compressedLine.put(colorId1, ENCODE_SIZE);
+            statistic.addRleLineSize(2 + ENCODE_SIZE);
             return;
         }
         compressedLine.putOne(TWO_COLORS);
@@ -130,11 +134,13 @@ public class CompressionLine {
 
         int encodeSizeForLength = IntegerMath.log2(LINE_SIZE);
         compressedLine.put(length, encodeSizeForLength);
+        statistic.addRleLineSize(2 + 2 * ENCODE_SIZE + encodeSizeForLength);
     }
 
     private void compressDifferential() {
         compressedLine.putOne(0);
         compressedLine.putOne(1);
+        int size = 2;
         int lastValueId = NOT_FOUND;
         for (int i = 0; i < line.size(); i++) {
             int value = line.get(i);
@@ -142,12 +148,18 @@ public class CompressionLine {
             layer.set(xStart + i, y, palette.get(valueId));
             if (valueId == lastValueId) {
                 compressedLine.putOne(1);
+                size += 1;
                 continue;
             }
-            if (i != 0) compressedLine.putOne(0);
+            if (i != 0) {
+                size += 1;
+                compressedLine.putOne(0);
+            }
             compressedLine.put(valueId, ENCODE_SIZE);
+            size += ENCODE_SIZE;
             lastValueId = valueId;
         }
+        statistic.addDifferentialLinesSize(size);
     }
 
     private void compressSimple() {
@@ -159,6 +171,7 @@ public class CompressionLine {
             layer.set(xStart + i, y, palette.get(valueId));
             compressedLine.put(valueId, ENCODE_SIZE);
         }
+        statistic.addNormalLineSize(2 + line.size() * ENCODE_SIZE);
     }
 
     private boolean canBeRleCompressed() {

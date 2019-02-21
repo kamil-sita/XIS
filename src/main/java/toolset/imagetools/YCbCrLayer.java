@@ -2,6 +2,7 @@ package toolset.imagetools;
 
 import sections.compression.BitSequence;
 import sections.compression.CompressionLine;
+import sections.compression.Statistic;
 
 import java.util.List;
 
@@ -31,11 +32,11 @@ public class YCbCrLayer {
     }
 
 
-    public void replace(int xStart, int xEnd, int yStart, int yEnd, List<Integer> palette, BitSequence compressionSequence, int encodeSize) {
+    public void replace(int xStart, int xEnd, int yStart, int yEnd, List<Integer> palette, BitSequence compressionSequence, int encodeSize, Statistic statistic) {
         int newXEnd = xEnd > width() ? width() : xEnd;
         int newYEnd = yEnd > height() ? height() : yEnd;
         for (int y = yStart; y < newYEnd; y++) {
-            CompressionLine compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize);
+            CompressionLine compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize, statistic);
             for (int x = xStart; x < newXEnd; x++) {
                 compressionLine.put(get(x, y));
             }

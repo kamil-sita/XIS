@@ -21,6 +21,5 @@
       <Text layoutX="548.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Block size" AnchorPane.leftAnchor="548.0" AnchorPane.topAnchor="20.0" />
       <TextField fx:id="blockSize" layoutX="607.0" layoutY="16.0" prefHeight="25.0" prefWidth="74.0" text="32" AnchorPane.leftAnchor="607.0" AnchorPane.topAnchor="14.0" />
       <Button layoutX="89.0" layoutY="15.0" mnemonicParsing="false" onAction="#loadCompressedFilePress" text="load compressed image" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="14.0" />
-      <Button layoutX="1034.0" layoutY="16.0" mnemonicParsing="false" onAction="#decompressButton" text="decompress" AnchorPane.rightAnchor="86.0" AnchorPane.topAnchor="14.0" />
    </children>
 </AnchorPane>

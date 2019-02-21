@@ -32,7 +32,7 @@ public class ComparableImageIO {
 
             UserFeedback.reportProgress((1.0*i)/images.size());
 
-            var optionalImage = BufferedImageIO.getImage(file);
+            var optionalImage = BufferedImageIO.getImageWithFailsafe(file);
             if (optionalImage.isPresent()) {
                 ComparableImage comparableImage = new ComparableImage(file, optionalImage.get(), generatedMiniatureSize);
                 images.add(comparableImage);

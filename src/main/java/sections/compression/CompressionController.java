@@ -57,7 +57,7 @@ public final class CompressionController {
             compressedImage = file.get();
             processedImage = null;
             loadedImage = null;
-            //setNewImage(null);
+            decompress();
         }
     }
 
@@ -94,12 +94,7 @@ public final class CompressionController {
         reAddNotifier();
     }
 
-    @FXML
-    void decompressButton(ActionEvent event) {
-        if (compressedImage == null) {
-            UserFeedback.popup("No compressed image loaded");
-            return;
-        }
+    void decompress() {
         OneBackgroundJobManager.setAndRunJob(new Interruptible() {
             private Optional<BufferedImage> image;
             @Override
@@ -164,8 +159,8 @@ public final class CompressionController {
                     int size = compressedAndPreview.getBitSequence().getSize()/8/1024;
                     Platform.runLater(() -> {
                         outputSize.setText("Output size: " + size + "kB");
+                        JavaFXTools.showPreview(processedImage, imagePreview, CompressionController.this::setNewImage);
                     });
-                    setNewImage(processedImage);
                 };
             }
         });

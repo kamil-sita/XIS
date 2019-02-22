@@ -24,29 +24,18 @@ public class LosticCompression {
     private static final int K_SIZE = 5; // 2^K_SIZE = MAX_K
 
 
-    private static final int PRE_ITERATIONS = 5;
+    private static final int PRE_ITERATIONS = 3;
     private static final int POST_ITERATIONS = 5;
 
 
     /**
      * compress() delegate for outside calls to the function
-     *
-     * @param yWeight
-     * @param cWeight
-     * @param blockSize
      * @return
      */
     public static Optional<CompressionOutput> compressedAndPreview(double yWeight, double cWeight, double blockSize, BufferedImage input) {
         return compress(yWeight, cWeight, blockSize, new MockInterruptible(), input);
     }
 
-    /**
-     * @param yWeight
-     * @param cWeight
-     * @param blockSize
-     * @param interruptible
-     * @return
-     */
     public static Optional<CompressionOutput> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input) {
         if (input == null) return Optional.empty();
         Statistic statistic = new Statistic();

@@ -14,6 +14,7 @@ import toolset.io.BufferedImageIO;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -33,6 +34,15 @@ public final class UserFeedback {
             alert.show();
         });
 
+    }
+
+    public static void openInDefault(File file) {
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(file);
+        } catch (Exception e) {
+            //
+        }
     }
 
     public static void openInDefault(BufferedImage bufferedImage) {

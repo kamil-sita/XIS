@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane minWidth="295.0" prefHeight="385.0" prefWidth="10000.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imagecopyfinder.imageinfoview.ImageInfoViewController">
 <children>
-    <ImageView fx:id="imageView" fitHeight="281.0" fitWidth="281.0" layoutX="21.0" layoutY="106.0" pickOnBounds="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="100.0" />
+    <ImageView fx:id="imageView" fitHeight="281.0" fitWidth="281.0" layoutX="21.0" layoutY="106.0" onMouseClicked="#clickedImage" pickOnBounds="true" styleClass="clickable" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="100.0" />
     <Separator layoutX="7.0" layoutY="95.0" prefHeight="3.0" prefWidth="281.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="90.0" />
     <Label layoutX="14.0" layoutY="21.0" styleClass="caption" text="Name" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="7.0" />
     <Label layoutX="14.0" layoutY="59.0" styleClass="caption" text="Dimensions" textAlignment="RIGHT" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="45.0" />

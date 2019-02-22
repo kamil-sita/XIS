@@ -6,8 +6,8 @@
    <children>
       <ListView fx:id="comparableImagePairListView" layoutX="26.0" layoutY="41.0" prefHeight="205.0" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="41.0" />
       <Label layoutX="26.0" layoutY="14.0" styleClass="caption" text="Found copies:" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
-      <Slider fx:id="sliderPercentIdentical" layoutX="18.0" layoutY="253.0" majorTickUnit="5.0" min="90.0" minorTickCount="18" prefHeight="38.0" prefWidth="222.0" showTickLabels="true" showTickMarks="true" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="253.0" />
-      <Label layoutX="240.0" layoutY="253.0" text="\% identical previews" />
+      <Slider fx:id="sliderPercentIdentical" layoutX="18.0" layoutY="253.0" majorTickUnit="5.0" min="80.0" minorTickCount="18" prefHeight="38.0" prefWidth="316.0" showTickLabels="true" showTickMarks="true" value="80.0" AnchorPane.leftAnchor="18.0" AnchorPane.topAnchor="253.0" />
+      <Label layoutX="338.0" layoutY="253.0" text="\% identical previews" />
       <Button alignment="CENTER" layoutX="514.0" layoutY="299.0" mnemonicParsing="false" onAction="#deleteRightPress" text="Delete right" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="299.0" />
       <Button alignment="CENTER" layoutX="8.0" layoutY="299.0" mnemonicParsing="false" onAction="#deleteLeftPress" text="Delete left" AnchorPane.leftAnchor="8.0" AnchorPane.topAnchor="299.0" />
       <Button alignment="CENTER" layoutX="94.0" layoutY="299.0" mnemonicParsing="false" onAction="#hideButtonPress" text="Hide conflict" AnchorPane.leftAnchor="94.0" AnchorPane.topAnchor="299.0" />

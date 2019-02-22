@@ -9,8 +9,8 @@
    <Label layoutX="14.0" layoutY="14.0" styleClass="caption" text="Compared image size" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
       <ComboBox fx:id="imageSizeComboBox" layoutX="23.0" layoutY="39.0" prefWidth="150.0" promptText="128" visibleRowCount="16" AnchorPane.leftAnchor="23.0" AnchorPane.topAnchor="39.0" />
       <Label layoutX="23.0" layoutY="75.0" text="Bigger image size somewhat increases accuracy at cost of higher memory usage and longer comparison time." AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="75.0" />
-      <CheckBox fx:id="checkBoxGeometricalMode" layoutX="14.0" layoutY="102.0" mnemonicParsing="false" selected="true" text="Geometrical mode" />
-      <Label layoutX="23.0" layoutY="126.0" text="Geometrical mode shows images with slight differences as much more similar that images with bigger differences" AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" />
+      <CheckBox fx:id="checkBoxAlternativeMode" layoutX="14.0" layoutY="102.0" mnemonicParsing="false" selected="true" text="Alternative mode" />
+      <Label layoutX="23.0" layoutY="126.0" text="Alternative mode aims to improve comparing of images that should be similar, but due to artifacts they are not." AnchorPane.leftAnchor="23.0" AnchorPane.rightAnchor="23.0" />
       <TextArea fx:id="folderLocations" layoutX="14.0" layoutY="176.0" prefHeight="113.0" prefWidth="1158.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="176.0" />
       <Label layoutX="14.0" layoutY="300.0" styleClass="caption" text="Move deleted to" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="300.0" />
       <TextField fx:id="deleteFolder" layoutX="24.0" layoutY="329.0" prefHeight="25.0" prefWidth="1158.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="329.0" />

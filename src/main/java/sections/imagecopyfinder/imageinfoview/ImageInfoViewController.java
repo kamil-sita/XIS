@@ -4,8 +4,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import sections.Notifier;
 import sections.NotifierFactory;
+import sections.UserFeedback;
 import sections.main.MainViewController;
 import toolset.JavaFXTools;
 import toolset.io.BufferedImageIO;
@@ -32,12 +34,21 @@ public final class ImageInfoViewController {
 
     private Notifier notifier;
 
+    private File file;
+
+    @FXML
+    void clickedImage(MouseEvent event) {
+        UserFeedback.openInDefault(file);
+    }
+
     /**
      * Initializes imageInfoViewController with its file and its AnchorPane
      * @param file
      */
     public void initialize(File file) {
         if (file == null) throw new IllegalArgumentException();
+
+        this.file = file;
 
         nameValue.setText(file.getName());
         setParentName(file);
@@ -90,5 +101,6 @@ public final class ImageInfoViewController {
     public void removeItsNotifier() {
         MainViewController.removeNotifier(notifier);
     }
+
 
 }

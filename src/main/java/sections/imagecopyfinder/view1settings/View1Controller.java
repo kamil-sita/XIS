@@ -24,7 +24,7 @@ public final class View1Controller {
     private ComboBox<Integer> imageSizeComboBox;
 
     @FXML
-    private CheckBox checkBoxGeometricalMode;
+    private CheckBox checkBoxAlternativeMode;
 
     @FXML
     private TextField deleteFolder;
@@ -53,7 +53,7 @@ public final class View1Controller {
 
         final var folderComparator = new FolderImageComparator(folderLocations.getText().split(JAVAFX_NEWLINE),
                 imageSizeComboBox.getValue(),
-                checkBoxGeometricalMode.isSelected());
+                checkBoxAlternativeMode.isSelected());
 
         OneBackgroundJobManager.setAndRunJob(new Interruptible() {
             private ImageComparator imageComparator;

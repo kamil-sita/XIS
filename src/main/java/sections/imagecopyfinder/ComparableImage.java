@@ -1,5 +1,6 @@
 package sections.imagecopyfinder;
 
+import toolset.imagetools.BufferedImageBlur;
 import toolset.imagetools.BufferedImageScale;
 import toolset.imagetools.Hsb;
 import toolset.imagetools.Rgb;
@@ -23,8 +24,12 @@ public final class ComparableImage {
     private int height;
 
 
-    public ComparableImage(File file, BufferedImage image, final int COMPARED_IMAGE_SIZE) {
+    public ComparableImage(File file, BufferedImage image, final int COMPARED_IMAGE_SIZE, boolean alternativeMode) {
         imageFile = file;
+        if (alternativeMode) {
+            image = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE * 2);
+            image = BufferedImageBlur.simpleBlur(image, BufferedImageBlur.generateGaussianKernel(3));
+        }
 
         smallImage = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE);
 

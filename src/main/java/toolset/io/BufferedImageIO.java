@@ -49,7 +49,7 @@ public final class BufferedImageIO {
 
     public static File saveImage(BufferedImage image, File file) {
         if (file == null) {
-            file = new File("tmplst2.png");
+            file = new File("tmpxis.png");
         }
         try {
             ImageIO.write(image, "png", file);

@@ -10,6 +10,9 @@ import java.awt.image.BufferedImageOp;
 public final class BufferedImageScale {
 
 
+    /**
+     * Scales image down to SIZE x SIZE square
+     */
     public static BufferedImage getComparableScaledDownImage(BufferedImage source, final int SIZE) {
         if (source == null) return null;
         BufferedImage newImage = new BufferedImage(SIZE, SIZE, BufferedImage.TYPE_INT_ARGB);

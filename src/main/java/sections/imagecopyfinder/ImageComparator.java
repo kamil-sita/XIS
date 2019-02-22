@@ -21,7 +21,7 @@ public final class ImageComparator {
     //Minimum similarity of hues for given pair to be considered similar:
     private static final double MAXIMUM_HUE_DIFFERENCE = 0.1;
     //Minimum similarity for given pair to even be considered similar
-    private static final double MINIMUM_SIMILARITY = 0.90;
+    private static final double MINIMUM_SIMILARITY = 0.79;
     //Size of generated miniature of image
     private int generatedMiniatureSize;
 
@@ -46,9 +46,9 @@ public final class ImageComparator {
      * @param folders
      * @return true if initialized
      */
-    public boolean initialize(File[] folders, boolean isGeometricalMode, Interruptible interruptible) {
+    public boolean initialize(File[] folders, boolean isGeometricalMode, Interruptible interruptible, boolean alternativeMode) {
         this.interruptible = interruptible;
-        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize, interruptible);
+        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize, interruptible, alternativeMode);
         if (interruptible.isInterrupted()) return false;
         if (!optionalImages.isEmpty()) {
             images = optionalImages;
@@ -136,10 +136,10 @@ public final class ImageComparator {
      * @return % of similarity between images.
      */
 
-    public double compareImages(ComparableImage image1, ComparableImage image2, boolean geometricalMode) {
-        final double POWER = 1.25;
+    public double compareImages(ComparableImage image1, ComparableImage image2, boolean alternativeMode) {
+        final double POWER = 2.35;
 
-        if (!areProportionsAcceptable(image1, image2)) return 0;
+        if (!areProportionsAcceptable(image1, image2)) return -1;
 
         double equality = 0;
 
@@ -149,7 +149,7 @@ public final class ImageComparator {
                 Rgb rgb1 = new Rgb(image1.getPreview().getRGB(x, y));
                 Rgb rgb2 = new Rgb(image2.getPreview().getRGB(x, y));
 
-                if (geometricalMode) {
+                if (alternativeMode) {
                     equality += Math.pow(1 - rgb1.compareToRGB(rgb2), POWER);
                 } else {
                     equality += rgb1.compareToRGB(rgb2);
@@ -158,7 +158,7 @@ public final class ImageComparator {
             }
         }
 
-        if (geometricalMode) {
+        if (alternativeMode) {
             return 1 - Math.pow(equality/(generatedMiniatureSize * generatedMiniatureSize), 1/POWER);
         } else {
             return equality / (generatedMiniatureSize * generatedMiniatureSize);

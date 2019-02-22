@@ -3,10 +3,13 @@ package toolset.imagetools;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.util.HashMap;
 
 import static java.lang.Math.*;
 
 public class BufferedImageBlur {
+
+    private static HashMap<Integer, Kernel> flyweightLoader = new HashMap<>();
 
     public static BufferedImage simpleBlur(BufferedImage input, Kernel kernel) {
 
@@ -16,6 +19,11 @@ public class BufferedImageBlur {
     }
 
     public static Kernel generateGaussianKernel(int size) {
+
+        if (flyweightLoader.containsKey(size)) {
+            return flyweightLoader.get(size);
+        }
+
         final double SIGMA = 0.84089642;
 
         float[] f = new float[size * size];
@@ -42,7 +50,9 @@ public class BufferedImageBlur {
             f[i] = fNormalize;
         }
 
-        return new Kernel(size, size, f);
+        Kernel k = new Kernel(size, size, f);
+        flyweightLoader.put(size, k);
+        return k;
     }
 
 

@@ -148,6 +148,7 @@ public final class View2Controller {
     private void elementHovered(ComparableImagePair comparableImagePair) {
         if (comparableImagePair == null) return;
         if (hoveredElement == comparableImagePair) return;
+        System.out.println(comparableImagePair.toString() + " : " + comparableImagePair.getSimilarity());
         hoveredElement = comparableImagePair;
         setNewImageAnchorPanes(comparableImagePair);
     }

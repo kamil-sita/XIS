@@ -9,6 +9,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import sections.Notifier;
 import sections.OneBackgroundJobManager;
@@ -27,7 +28,7 @@ public final class MainViewController {
     //static elements
     private static Label labelStatusGlobal;
     private static AnchorPane vistaParentGlobal;
-    private static AnchorPane currentVistaUIGlobal;
+    private static Pane currentVistaUIGlobal;
     private static ScrollPane scrollPaneGlobal;
     private static Vista currentModule;
     private static ProgressBar progressBarGlobal;
@@ -150,7 +151,7 @@ public final class MainViewController {
             }
         });
     }
-    private static AnchorPane lastVistaUI = null;
+    private static Pane lastVistaUI = null;
 
     /**
      * Sets status (Label) in bottom left label
@@ -165,7 +166,8 @@ public final class MainViewController {
      */
     private static void onWindowSizeChange() {
         resizeAnchorPane();
-        for (Notifier notifier : notifiers) {
+        for (int i = 0; i < notifiers.size(); i++) {
+            Notifier notifier = notifiers.get(i);
             notifier.notify(scrollPaneGlobal.getViewportBounds().getWidth(), scrollPaneGlobal.getViewportBounds().getHeight());
         }
     }
@@ -224,6 +226,12 @@ public final class MainViewController {
         }
     }
 
+    private static boolean suppressRemoval = false; //workaround
+
+    public static void setSuppressRemoval(boolean suppressRemoval) {
+        MainViewController.suppressRemoval = suppressRemoval;
+    }
+
     public static void addNotifier(Notifier notifier) {
         notifiers.add(notifier);
     }
@@ -234,6 +242,9 @@ public final class MainViewController {
     }
 
     public static void removeAllNotifiers() {
-        notifiers.clear();
+        if (!suppressRemoval) {
+            notifiers.clear();
+        }
+        suppressRemoval = false;
     }
 }

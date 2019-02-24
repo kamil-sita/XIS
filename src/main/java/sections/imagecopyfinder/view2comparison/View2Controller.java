@@ -8,12 +8,15 @@ import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import sections.imagecopyfinder.ComparableImage;
 import sections.imagecopyfinder.ComparableImagePair;
 import sections.imagecopyfinder.ImageCopyFinder;
 import sections.imagecopyfinder.imageinfoview.ImageInfoView;
 import sections.imagecopyfinder.imageinfoview.ImageInfoViewController;
+import sections.main.MainViewController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +29,6 @@ public final class View2Controller {
     private ComparableImagePair hoveredElement;
     private String deleteLocation;
 
-
     @FXML
     private ListView<ComparableImagePair> comparableImagePairListView;
 
@@ -34,10 +36,13 @@ public final class View2Controller {
     private Slider sliderPercentIdentical;
 
     @FXML
-    private AnchorPane leftImageAnchorPane;
+    private StackPane leftPane;
 
     @FXML
-    private AnchorPane rightImageAnchorPane;
+    private StackPane rightPane;
+
+    @FXML
+    private GridPane gridPane;
 
     private double lastSimilarity;
 
@@ -66,6 +71,12 @@ public final class View2Controller {
 
     @FXML
     public void initialize() {
+
+        MainViewController.setSuppressRemoval(true);
+        MainViewController.addNotifier((width, height) -> {
+            gridPane.setPrefHeight(height - 300);
+        });
+
         deleteLocation = ImageCopyFinder.getDeleteDirectory();
 
         sliderPercentIdentical.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -91,6 +102,8 @@ public final class View2Controller {
         comparableImagePairListView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> elementHovered(newValue)
         );
+
+
     }
 
     private int getSelectedItemIndex() {
@@ -155,14 +168,15 @@ public final class View2Controller {
 
 
 
-    private ArrayList<ImageInfoViewController> oldNotifiers = new ArrayList();
+    private ArrayList<ImageInfoViewController> oldNotifiers = new ArrayList<>();
 
     //after selecting ComparableImagePair, the AnchorPanes on the bottom will be updated
     private void setNewImageAnchorPanes(ComparableImagePair comparableImagePair) {
         removeOldNotifiers();
 
-        setImageAnchorPane(leftImageAnchorPane, comparableImagePair.getComparableImageLeft());
-        setImageAnchorPane(rightImageAnchorPane, comparableImagePair.getComparableImageRight());
+        setImageAnchorPane(leftPane, comparableImagePair.getComparableImageLeft());
+        setImageAnchorPane(rightPane, comparableImagePair.getComparableImageRight());
+
     }
 
     private void removeOldNotifiers() {
@@ -172,7 +186,7 @@ public final class View2Controller {
         oldNotifiers.clear();
     }
 
-    private void setImageAnchorPane(AnchorPane anchorPane, ComparableImage comparableImage) {
+    private void setImageAnchorPane(Pane anchorPane, ComparableImage comparableImage) {
         var imageInfoView = new ImageInfoView();
         var infoViewController = imageInfoView.getController();
         infoViewController.initialize(comparableImage.getFile());

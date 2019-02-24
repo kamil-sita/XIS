@@ -1,7 +1,7 @@
 package sections;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,29 +11,29 @@ import java.net.URL;
  */
 public abstract class Vista {
 
-    private AnchorPane anchorPane = null;
+    private Pane pane = null;
     /**
      * defaultLocation should show location of .fxml file with interface to load
      */
     protected String defaultLocation = null;
 
-    public AnchorPane getUserInterface() {
+    public Pane getUserInterface() {
         OneBackgroundJobManager.interruptCurrentJobIfPossible();
         return lazyLoad();
     }
 
-    protected AnchorPane lazyLoad() {
-        if (anchorPane != null) {
-            return anchorPane;
+    protected Pane lazyLoad() {
+        if (pane != null) {
+            return pane;
         }
         setInterface(defaultLocation);
-        return anchorPane;
+        return pane;
     }
 
     protected void setInterface(String location) {
         URL url = Vista.class.getClassLoader().getResource(location);
         try {
-            anchorPane = FXMLLoader.load(url);
+            pane = FXMLLoader.load(url);
         } catch (IOException e) {
             e.printStackTrace();
         }

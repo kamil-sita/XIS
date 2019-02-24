@@ -36,11 +36,6 @@ public final class ImageInfoViewController {
 
     private File file;
 
-    @FXML
-    void clickedImage(MouseEvent event) {
-        UserFeedback.openInDefault(file);
-    }
-
     /**
      * Initializes imageInfoViewController with its file and its AnchorPane
      * @param file
@@ -49,7 +44,6 @@ public final class ImageInfoViewController {
         if (file == null) throw new IllegalArgumentException();
 
         this.file = file;
-
         nameValue.setText(file.getName());
         setParentName(file);
         getAndFormatFileSize(file);
@@ -57,10 +51,16 @@ public final class ImageInfoViewController {
         loadImageInBackground(file);
     }
 
+    @FXML
+    void clickedImage(MouseEvent event) {
+        UserFeedback.openInDefault(file);
+    }
+
+
     private void setParentName(File file) {
         File parentFile = file.getParentFile();
         if (parentFile == null) {
-            parentName.setText("Can't retrieve");
+            parentName.setText("Unknown");
         } else {
             parentName.setText(parentFile.getName());
         }
@@ -77,7 +77,7 @@ public final class ImageInfoViewController {
     }
 
     private void addNotifierToMakeImageFitWindow() {
-        notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imageView, 460,50, 0.5);
+        notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imageView, 400,50, 0.5);
         MainViewController.addNotifier(notifier);
         MainViewController.refreshVista();
     }

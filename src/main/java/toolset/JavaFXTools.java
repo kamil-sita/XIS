@@ -11,25 +11,25 @@ import java.awt.image.BufferedImage;
 
 public class JavaFXTools {
 
-    public static void showPreview(BufferedImage previewImage, ImageView imageView, final SetImageDelegate delegate) {
-        addClickability(previewImage, imageView);
+    public static void showPreview(BufferedImage previewImage, ImageView imageView, final SetImageDelegate delegate, UserFeedback userFeedback) {
+        addClickability(previewImage, imageView, userFeedback);
         Platform.runLater(() -> delegate.set(previewImage));
-        UserFeedback.reportProgress("Generated preview. Scaling to fit window...");
+        userFeedback.reportProgress("Generated preview. Scaling to fit window...");
         double width = imageView.getFitWidth();
         double height = imageView.getFitHeight();
         if (width < previewImage.getWidth()) {
             Platform.runLater(() -> delegate.set(previewImage));
-            UserFeedback.reportProgress("Generated scaled preview.");
+            userFeedback.reportProgress("Generated scaled preview.");
         } else {
             var scaledOutput = BufferedImageScale.getHighQualityScaledImage(previewImage, width, height);
             Platform.runLater(() -> delegate.set(scaledOutput));
-            UserFeedback.reportProgress("Generated scaled preview.");
+            userFeedback.reportProgress("Generated scaled preview.");
         }
     }
 
-    private static void addClickability(BufferedImage previewImage, ImageView imageView) {
+    private static void addClickability(BufferedImage previewImage, ImageView imageView, UserFeedback userFeedback) {
         imageView.getStyleClass().add("clickable");
-        imageView.setOnMouseClicked(event -> UserFeedback.openInDefault(previewImage));
+        imageView.setOnMouseClicked(event -> userFeedback.openInDefault(previewImage));
     }
 
 

@@ -1,7 +1,6 @@
 package sections.imagecopyfinder;
 
 import sections.Interruptible;
-import sections.UserFeedback;
 import toolset.imagetools.Rgb;
 
 import java.io.File;
@@ -55,7 +54,7 @@ public final class ImageComparator {
             findPairsMultithreaded(isGeometricalMode);
             return true;
         }
-        UserFeedback.reportProgress("No images found");
+        interruptible.reportProgress("No images found");
         return false;
     }
 
@@ -94,7 +93,7 @@ public final class ImageComparator {
             e.printStackTrace();
         }
 
-        UserFeedback.reportProgress("Images compared");
+        interruptible.reportProgress("Images compared");
     }
 
     private void findPairsFor(int i, boolean geometricalMode) {
@@ -118,12 +117,12 @@ public final class ImageComparator {
     private void reportFindPairingProgress(ImageComparatorClock clock, int i) {
         if (i >= 10) {
             double dt = clock.getApproximateTimeLeftComparing(i);
-            UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
+            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
         } else {
-            UserFeedback.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
+            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
         }
 
-        UserFeedback.reportProgress((1.0*i)/images.size());
+        interruptible.reportProgress((1.0*i)/images.size());
     }
 
 

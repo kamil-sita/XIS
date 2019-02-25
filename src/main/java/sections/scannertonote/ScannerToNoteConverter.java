@@ -2,7 +2,6 @@ package sections.scannertonote;
 
 import pl.ksitarski.simplekmeans.KMeans;
 import sections.Interruptible;
-import sections.UserFeedback;
 import toolset.imagetools.BufferedImageColorPalette;
 import toolset.imagetools.BufferedImageLayers;
 import toolset.imagetools.Rgb;
@@ -15,6 +14,7 @@ public final class ScannerToNoteConverter {
     public static Optional<BufferedImage> convert(ScannerToNoteParameters scannerToNoteParameters, Interruptible interruptable) {
 
         if (scannerToNoteParameters.getColors() <= 0) return Optional.empty();
+
 
         final int DEPTH = 5;
         final int ITERATIONS = 32;
@@ -32,14 +32,14 @@ public final class ScannerToNoteConverter {
         }
 
         if (rgbList.size() == 0) {
-            UserFeedback.popup("Not enough colors in the image. Consider turning off 'isolate background' option, if enabled.");
+            interruptable.popup("Not enough colors in the image. Consider turning off 'isolate background' option, if enabled.");
             return Optional.empty();
         }
 
         var kMeans = new KMeans<>(scannerToNoteParameters.getColors(), rgbList);
 
         kMeans.setOnUpdate(() -> {
-            UserFeedback.reportProgress(kMeans.getProgress());
+            interruptable.reportProgress(kMeans.getProgress());
             if (interruptable.isInterrupted()) {
                 kMeans.abort();
             }

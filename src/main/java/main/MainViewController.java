@@ -1,4 +1,4 @@
-package sections.main;
+package main;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -14,6 +14,7 @@ import javafx.scene.layout.Priority;
 import sections.Notifier;
 import sections.OneBackgroundJobManager;
 import sections.Vista;
+import sections.XisController;
 import sections.automatedfilter.AutomatedFilter;
 import sections.compression.CompressionVista;
 import sections.defaultpage.WelcomePage;
@@ -22,22 +23,15 @@ import sections.imagecopyfinder.ImageCopyFinder;
 import sections.scannertonote.ScannerToNote;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public final class MainViewController {
 
-    //static elements
-    private static Label labelStatusGlobal;
-    private static AnchorPane vistaParentGlobal;
-    private static Pane currentVistaUIGlobal;
-    private static ScrollPane scrollPaneGlobal;
-    private static Vista currentModule;
-    private static ProgressBar progressBarGlobal;
+    private Vista currentModule;
     private static MainViewController staticController;
 
-    private static ArrayList<Notifier> notifiers = new ArrayList<>();
-
-    public static ImageCopyFinder imageCopyFinder;
-
+    private final List<Notifier> notifiers = Collections.synchronizedList(new ArrayList<>());
 
     //JavaFX Elements
 
@@ -58,6 +52,8 @@ public final class MainViewController {
 
     @FXML
     private ColumnConstraints gridPaneBarRight;
+
+    private ImageCopyFinder imageCopyFinder;
 
 
     //Actions methods
@@ -124,14 +120,10 @@ public final class MainViewController {
      */
     @FXML
     public void initialize() {
-        labelStatusGlobal = labelStatus;
-        vistaParentGlobal = vistaParent;
-        scrollPaneGlobal = scrollPane;
-        progressBarGlobal = progressBar;
         staticController = this;
         mainPress(null);
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
-            MainViewController.onWindowSizeChange();
+            onWindowSizeChange();
         });
         onWindowSizeChange();
     }
@@ -140,35 +132,41 @@ public final class MainViewController {
      * Changes vista (main AnchorPane where content is displayed)
      * @param newVista module with AnchorPane
      */
-    public static void changeVistaIfChanged(Vista newVista) {
+    public void changeVistaIfChanged(Vista newVista) {
         Platform.runLater(() -> {
-            if (lastVistaUI == null || lastVistaUI != newVista.getUserInterface()) {
-                lastVistaUI = newVista.getUserInterface();
-                removeAllNotifiers();
-                currentVistaUIGlobal = newVista.getUserInterface();
-                vistaParentGlobal.getChildren().setAll((Node) newVista.getUserInterface());
+            if (currentVista == null || currentVista != newVista.getUserInterface()) {
+                if (currentController != null) {
+                    OneBackgroundJobManager.interruptCurrentJobIfPossible();
+                    currentController.deregisterAllNotifiers();
+                }
+                currentController = newVista.getController();
+                currentVista = newVista.getUserInterface();
+                vistaParent.getChildren().setAll((Node) newVista.getUserInterface());
                 onWindowSizeChange();
             }
         });
     }
-    private static Pane lastVistaUI = null;
+    private Pane currentVista = null;
+    private XisController currentController = null;
 
     /**
      * Sets status (Label) in bottom left label
      * @param text text of label
      */
-    public static void setStatus(String text) {
-        labelStatusGlobal.setText(text);
+    public void setStatus(String text) {
+        labelStatus.setText(text);
     }
 
     /**
      * Function called when Stage changes it's size
      */
-    private static void onWindowSizeChange() {
+    private void onWindowSizeChange() {
         resizeAnchorPane();
-        for (int i = 0; i < notifiers.size(); i++) {
-            Notifier notifier = notifiers.get(i);
-            notifier.notify(scrollPaneGlobal.getViewportBounds().getWidth(), scrollPaneGlobal.getViewportBounds().getHeight());
+        synchronized (notifiers) {
+            for (int i = 0; i < notifiers.size(); i++) { //can't be in for each loop as notifiers might be changed in another thread
+                Notifier notifier = notifiers.get(i);
+                notifier.notify(scrollPane.getViewportBounds().getWidth(), scrollPane.getViewportBounds().getHeight());
+            }
         }
     }
 
@@ -176,33 +174,33 @@ public final class MainViewController {
      * Notifies notifiers waiting for window size change.
      * If current vista was changed, loads it.
      */
-    public static void refreshVista() {
+    public void refreshVista() {
         changeVistaIfChanged(currentModule);
         onWindowSizeChange();
     }
 
-    public static ProgressBar getProgressBar() {
-        return progressBarGlobal;
+    public ProgressBar getProgressBar() {
+        return progressBar;
     }
 
 
     /**
      * Changes preferred width of vista (AnchorPane) so it scales properly with stage size
      */
-    private static void resizeAnchorPane() {
-        if (currentVistaUIGlobal == null) return;
+    private void resizeAnchorPane() {
+        if (currentVista == null) return;
         hideBarsIfLackSpace();
-        currentVistaUIGlobal.setPrefWidth(scrollPaneGlobal.getViewportBounds().getWidth());
+        currentVista.setPrefWidth(scrollPane.getViewportBounds().getWidth());
     }
 
     private static boolean targetSmall = false;
     private static final int SMALL_THRESHOLD = 800;
     private static final int BIG_THRESHOLD = 1000;
 
-    private static void hideBarsIfLackSpace() {
-        if (scrollPaneGlobal.getViewportBounds().getWidth() <= SMALL_THRESHOLD) {
+    private void hideBarsIfLackSpace() {
+        if (scrollPane.getViewportBounds().getWidth() <= SMALL_THRESHOLD) {
             targetSmall = true;
-        } else if (scrollPaneGlobal.getViewportBounds().getWidth() >= BIG_THRESHOLD) {
+        } else if (scrollPane.getViewportBounds().getWidth() >= BIG_THRESHOLD) {
             targetSmall = false;
         }
         if (targetSmall) {
@@ -226,25 +224,24 @@ public final class MainViewController {
         }
     }
 
-    private static boolean suppressRemoval = false; //workaround
-
-    public static void setSuppressRemoval(boolean suppressRemoval) {
-        MainViewController.suppressRemoval = suppressRemoval;
-    }
-
-    public static void addNotifier(Notifier notifier) {
+    public void addNotifier(Notifier notifier) {
         notifiers.add(notifier);
     }
 
-    public static void removeNotifier(Notifier notifier) {
+    public void removeNotifier(Notifier notifier) {
         if (notifier == null) return;
         notifiers.remove(notifier);
     }
 
-    public static void removeAllNotifiers() {
-        if (!suppressRemoval) {
-            notifiers.clear();
-        }
-        suppressRemoval = false;
+    public void removeAll(List<Notifier> notifiersToRemove) {
+        notifiers.removeAll(notifiersToRemove);
+    }
+
+    public static MainViewController getInstance() {
+        return staticController;
+    }
+
+    public ImageCopyFinder getImageCopyFinder() {
+        return imageCopyFinder;
     }
 }

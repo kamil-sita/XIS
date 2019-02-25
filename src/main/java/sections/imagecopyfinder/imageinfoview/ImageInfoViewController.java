@@ -5,17 +5,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import sections.Notifier;
 import sections.NotifierFactory;
-import sections.UserFeedback;
-import sections.main.MainViewController;
+import sections.XisController;
 import toolset.JavaFXTools;
 import toolset.io.BufferedImageIO;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public final class ImageInfoViewController {
+public final class ImageInfoViewController extends XisController {
     @FXML
     private ImageView imageView;
     private BufferedImage bufferedImage;
@@ -31,8 +29,6 @@ public final class ImageInfoViewController {
 
     @FXML
     private Label parentName;
-
-    private Notifier notifier;
 
     private File file;
 
@@ -53,7 +49,7 @@ public final class ImageInfoViewController {
 
     @FXML
     void clickedImage(MouseEvent event) {
-        UserFeedback.openInDefault(file);
+        getUserFeedback().openInDefault(file);
     }
 
 
@@ -77,9 +73,9 @@ public final class ImageInfoViewController {
     }
 
     private void addNotifierToMakeImageFitWindow() {
-        notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imageView, 400,50, 0.5);
-        MainViewController.addNotifier(notifier);
-        MainViewController.refreshVista();
+        var notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imageView, 400,50, 0.5);
+        registerNotifier(notifier);
+        refreshVista();
     }
 
     private void loadImageInBackground(File resourceFile) {
@@ -90,7 +86,7 @@ public final class ImageInfoViewController {
             Platform.runLater(() -> {
                 imageView.setImage(JavaFXTools.toFxImage(bufferedImage));
                 dimensionsValue.setText("(" + bufferedImage.getWidth() + "x" + bufferedImage.getHeight() + ")");
-                MainViewController.refreshVista();
+                refreshVista();
                 addNotifierToMakeImageFitWindow();
 
             });
@@ -99,7 +95,7 @@ public final class ImageInfoViewController {
     }
 
     public void removeItsNotifier() {
-        MainViewController.removeNotifier(notifier);
+        deregisterAllNotifiers();
     }
 
 

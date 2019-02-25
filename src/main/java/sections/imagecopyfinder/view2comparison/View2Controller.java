@@ -11,19 +11,19 @@ import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import sections.XisController;
 import sections.imagecopyfinder.ComparableImage;
 import sections.imagecopyfinder.ComparableImagePair;
 import sections.imagecopyfinder.ImageCopyFinder;
 import sections.imagecopyfinder.imageinfoview.ImageInfoView;
 import sections.imagecopyfinder.imageinfoview.ImageInfoViewController;
-import sections.main.MainViewController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static toolset.FileManagementTools.moveFile;
 
-public final class View2Controller {
+public final class View2Controller extends XisController {
 
     private List<ComparableImagePair> imagePairs;
     private ComparableImagePair hoveredElement;
@@ -72,8 +72,7 @@ public final class View2Controller {
     @FXML
     public void initialize() {
 
-        MainViewController.setSuppressRemoval(true);
-        MainViewController.addNotifier((width, height) -> {
+        registerNotifier((width, height) -> {
             gridPane.setPrefHeight(height - 300);
         });
 
@@ -133,7 +132,7 @@ public final class View2Controller {
             }
         }
         displayPairsWithSimilarityOver(lastSimilarity);
-        moveFile(cip.getFile(), deleteLocation);
+        moveFile(cip.getFile(), deleteLocation, getUserFeedback());
     }
 
     private void displayAllImages() {
@@ -173,7 +172,6 @@ public final class View2Controller {
     //after selecting ComparableImagePair, the AnchorPanes on the bottom will be updated
     private void setNewImageAnchorPanes(ComparableImagePair comparableImagePair) {
         removeOldNotifiers();
-
         setImageAnchorPane(leftPane, comparableImagePair.getComparableImageLeft());
         setImageAnchorPane(rightPane, comparableImagePair.getComparableImageRight());
 

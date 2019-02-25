@@ -18,10 +18,10 @@ public final class ImageCopyFinder extends Vista {
     public void setInterface(ImageCopyFinderViews view) {
         switch (view) {
             case mainView:
-                setInterface(LOCATION_VIEW1);
+                load(LOCATION_VIEW1);
                 break;
             case compareCopiedImagesView:
-                setInterface(LOCATION_VIEW2);
+                load(LOCATION_VIEW2);
                 break;
         }
     }

@@ -1,5 +1,7 @@
 package sections.defaultpage;
 
-public final class WelcomePageController {
+import sections.XisController;
+
+public final class WelcomePageController extends XisController {
 
 }

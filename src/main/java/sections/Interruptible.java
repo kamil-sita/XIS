@@ -1,13 +1,21 @@
 package sections;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 /**
  * Abstract class for job interruption and JavaFX progress feedback.
  */
 public abstract class Interruptible {
     protected boolean isInterrupted = false;
+    private UserFeedback userFeedback;
 
     public abstract Runnable getRunnable();
     public abstract Runnable onUninterruptedFinish();
+
+    public Interruptible() {
+        userFeedback = UserFeedback.getInstance();
+    }
 
     public boolean isInterrupted() {
         return isInterrupted;
@@ -18,14 +26,26 @@ public abstract class Interruptible {
     }
 
     public void reportProgress(double percentProgress) {
-        UserFeedback.reportProgress(percentProgress);
+        userFeedback.reportProgress(percentProgress);
     }
 
     public void reportProgress (String message) {
-        UserFeedback.reportProgress(message);
+        userFeedback.reportProgress(message);
     }
 
     public void popup(String message) {
-        UserFeedback.reportProgress(message);
+        userFeedback.reportProgress(message);
+    }
+
+    public void openInDefault(File file) {
+        userFeedback.openInDefault(file);
+    }
+
+    public void openInDefault(BufferedImage bufferedImage) {
+        userFeedback.openInDefault(bufferedImage);
+    }
+
+    public UserFeedback getUserFeedback() {
+        return userFeedback;
     }
 }

@@ -2,7 +2,6 @@ package sections;
 
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 
 import java.awt.image.BufferedImage;
 
@@ -41,9 +40,6 @@ public class NotifierFactory {
             imgWidth = imgWidth < 1 ? 1 : imgWidth;
             imgHeight = imgHeight < 1 ? 1 : imgHeight;
 
-            System.out.println("W: " + imgWidth);
-            System.out.println("H: " + imgHeight);
-
             imageView.setFitWidth(imgWidth);
             imageView.setFitHeight(imgHeight);
         };
@@ -51,30 +47,5 @@ public class NotifierFactory {
 
     public static Notifier scalingImageNotifier(BufferedImage bufferedImage, ImageView imageView, int heightDiff, int widthDiff, double horizontalScaling) {
         return scalingImageNotifier(bufferedImage, imageView, heightDiff, widthDiff, horizontalScaling, null);
-    }
-
-    public static Notifier scalingNotifier(Pane anchorPane, double horizontalScaling) {
-        return new Notifier() {
-            @Override
-            public void notify(double width, double height) {
-                System.out.println("scaling: " + width);
-                System.out.println("setting to: " + width * horizontalScaling);
-                anchorPane.maxWidth(width * horizontalScaling);
-                anchorPane.prefWidth(width * horizontalScaling);
-                System.out.println(anchorPane.getMaxWidth());
-                System.out.println(anchorPane.getPrefWidth());
-            }
-        };
-    }
-
-    public static Notifier simpleScaleNotifier(Pane pane, double horizontalScaling, double verticalScaling) {
-        return (width, height) -> {
-            pane.setMinWidth(width * horizontalScaling);
-            pane.setPrefWidth(width * horizontalScaling);
-            pane.setMaxWidth(width * horizontalScaling);
-            pane.setMinHeight(height * verticalScaling);
-            pane.setPrefHeight(height * verticalScaling);
-            pane.setMaxHeight(height * verticalScaling);
-        };
     }
 }

@@ -8,10 +8,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import sections.Notifier;
+import sections.Interruptible;
 import sections.NotifierFactory;
-import sections.UserFeedback;
-import sections.main.MainViewController;
+import sections.OneBackgroundJobManager;
+import sections.XisController;
 import toolset.JavaFXTools;
 import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.GuiFileIO;
@@ -20,7 +20,7 @@ import toolset.io.PdfIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public final class AutomatedFilterController {
+public final class AutomatedFilterController extends XisController {
 
     private File openPdf = null;
 
@@ -49,7 +49,7 @@ public final class AutomatedFilterController {
     void filterAndSavePress(ActionEvent event) {
         var optionalSavePdf = GuiFileIO.getSaveDirectory("*.pdf");
         if (!optionalSavePdf.isPresent()) {
-            UserFeedback.popup("Wrong save file!");
+            getUserFeedback().popup("Wrong save file!");
             return;
         }
         var savePdf = optionalSavePdf.get();
@@ -61,10 +61,25 @@ public final class AutomatedFilterController {
         }
         int finalBlurPasses = blurPasses;
 
+        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+            @Override
+            public Runnable getRunnable() {
+                return () -> {
+                    Platform.runLater(() -> getUserFeedback().popup("Popup will show up once PDF is filtered"));
+                    PdfFilter.filter(openPdf, savePdf, scaleBrightness.isSelected(), brightnessSlider.getValue() / 100.0, finalBlurPasses, this);
+
+                };
+            }
+
+            @Override
+            public Runnable onUninterruptedFinish() {
+                return () -> {
+                    Platform.runLater(() -> getUserFeedback().popup("Finished filtering pdf"));
+                };
+            }
+        });
+
         new Thread(() -> {
-            Platform.runLater(() -> UserFeedback.popup("Popup will show up once PDF is filtered"));
-            PdfFilter.filter(openPdf, savePdf, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, finalBlurPasses);
-            Platform.runLater(() -> UserFeedback.popup("Finished filtering pdf"));
         }).start();
     }
 
@@ -79,7 +94,7 @@ public final class AutomatedFilterController {
         } else {
             filterAndSaveButton.setDisable(true);
             previewButton.setDisable(true);
-            UserFeedback.popup("Wrong load file!");
+            getUserFeedback().popup("Wrong load file!");
         }
     }
 
@@ -88,7 +103,7 @@ public final class AutomatedFilterController {
 
     @FXML
     void previewPress(ActionEvent event) {
-        UserFeedback.reportProgress("Previewing page...");
+        getUserFeedback().reportProgress("Previewing page...");
         int page = PdfIO.getNumberOfPages(openPdf);
         page = (int) (page * 0.1);
         try {
@@ -109,32 +124,40 @@ public final class AutomatedFilterController {
         int finalPage = page;
         int finalBlurPasses = blurPasses;
 
-        new Thread(() -> {
-            UserFeedback.reportProgress("Loading image...");
-            if (finalPage == lastPage) {
-                inputImage[0] = lastImage;
-            } else {
-                inputImage[0] = PdfIO.getPdfAsImage(openPdf, finalPage);
-                lastImage = inputImage[0];
-            }
-            UserFeedback.reportProgress("Filtering image...");
-            var output = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
+        final BufferedImage[] output = new BufferedImage[1];
 
-            JavaFXTools.showPreview(output, imagePreview, this::setNewImage);
+       OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+           @Override
+           public Runnable getRunnable() {
+               return () -> {
+                   getUserFeedback().reportProgress("Loading image...");
+                   if (finalPage == lastPage) {
+                       inputImage[0] = lastImage;
+                   } else {
+                       inputImage[0] = PdfIO.getPdfAsImage(openPdf, finalPage, this);
+                       lastImage = inputImage[0];
+                   }
+                   getUserFeedback().reportProgress("Filtering image...");
+                   output[0] = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue() / 100.0);
+               };
+           }
 
-        }).start();
+           @Override
+           public Runnable onUninterruptedFinish() {
+               return () -> {
+                   JavaFXTools.showPreview(output[0], imagePreview, AutomatedFilterController.this::setNewImage, getUserFeedback());
+               };
+           }
+       });
+
     }
 
 
-    private Notifier oldNotifier;
-
     private void setNewImage(BufferedImage bufferedImage) {
-
         imagePreview.setImage(JavaFXTools.toFxImage(bufferedImage));
+        deregisterAllNotifiers();
         var notifier = NotifierFactory.scalingImageNotifier(bufferedImage, imagePreview, 90, 10, 1.0);
-        MainViewController.removeNotifier(oldNotifier);
-        MainViewController.addNotifier(notifier);
-        MainViewController.refreshVista();
-        oldNotifier = notifier;
+        registerNotifier(notifier);
+        refreshVista();
     }
 }

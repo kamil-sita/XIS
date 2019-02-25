@@ -1,7 +1,6 @@
 package sections.imagecopyfinder;
 
 import sections.Interruptible;
-import sections.UserFeedback;
 import toolset.io.MultipleFileIO;
 
 import java.util.Arrays;
@@ -24,12 +23,12 @@ public final class FolderImageComparator {
         var folderList = Arrays.asList(fileFolders);
         removeDuplicateStrings(folderList);
         if (folderList.size() == 0) {
-            UserFeedback.popup("No input given");
+            interruptible.getUserFeedback().popup("No input given");
             return null;
         }
-        var folders = MultipleFileIO.getFoldersFromStrings(folderList);
+        var folders = MultipleFileIO.getFoldersFromStrings(folderList, interruptible.getUserFeedback());
         if (folders == null || folders.length == 0) {
-            UserFeedback.popup("No folders found");
+            interruptible.getUserFeedback().popup("No folders found");
             return null;
         }
 

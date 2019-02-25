@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.*;
-import sections.main.MainViewController;
 import toolset.JavaFXTools;
 import toolset.io.BinaryIO;
 import toolset.io.GuiFileIO;
@@ -15,7 +14,7 @@ import toolset.io.GuiFileIO;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 
-public final class CompressionController {
+public final class CompressionController extends XisController {
 
     Notifier notifier;
     private BufferedImage loadedImage = null;
@@ -44,7 +43,7 @@ public final class CompressionController {
         var optionalInputImage = GuiFileIO.getImage();
         if (optionalInputImage.isPresent()) {
             loadedImage = optionalInputImage.get();
-            JavaFXTools.showPreview(loadedImage, imagePreview, this::setNewImage);
+            JavaFXTools.showPreview(loadedImage, imagePreview, this::setNewImage, getUserFeedback());
             processedImage = null;
             compressedImage = null;
         }
@@ -80,7 +79,7 @@ public final class CompressionController {
     void saveFilePress(ActionEvent event) {
         if (compressionOutput == null) {
             if (loadedImage == null) {
-                UserFeedback.popup("No image loaded!");
+                getUserFeedback().popup("No image loaded!");
             } else {
                 GuiFileIO.saveImage(loadedImage);
             }
@@ -109,7 +108,7 @@ public final class CompressionController {
                 return () -> {
                     if (image.isPresent()) {
                         loadedImage = image.get();
-                        JavaFXTools.showPreview(loadedImage, imagePreview, bufferedImage -> setNewImage(loadedImage));
+                        JavaFXTools.showPreview(loadedImage, imagePreview, bufferedImage -> setNewImage(loadedImage), getUserFeedback());
                     }
                 };
             }
@@ -118,13 +117,13 @@ public final class CompressionController {
 
     @FXML
     void statisticPress() {
-        UserFeedback.longPopupTextArea(compressionOutput.getStatistic().toString());
+        getUserFeedback().longPopupTextArea(compressionOutput.getStatistic().toString());
     }
 
     @FXML
     void compressButton(ActionEvent event) {
         if (loadedImage == null) {
-            UserFeedback.popup("Can't run without loaded file");
+            getUserFeedback().popup("Can't run without loaded file");
             return;
         }
 
@@ -136,12 +135,12 @@ public final class CompressionController {
             cWeightValue = Integer.parseInt(cWeight.getText());
             blockSizeValue = Integer.parseInt(blockSize.getText());
         } catch (Exception e) {
-            UserFeedback.reportProgress("Some of values are not integer values.");
+            getUserFeedback().reportProgress("Some of values are not integer values.");
             return;
         }
 
         if (yWeightValue < 0 || cWeightValue < 0 || blockSizeValue < 2) {
-            UserFeedback.reportProgress("Some of values are smaller than their minimum size");
+            getUserFeedback().reportProgress("Some of values are smaller than their minimum size");
             return;
         }
 
@@ -164,7 +163,7 @@ public final class CompressionController {
                     int size = compressionOutput.getBitSequence().getSize()/8/1024;
                     Platform.runLater(() -> {
                         outputSize.setText("Output size: " + size + "kB");
-                        JavaFXTools.showPreview(processedImage, imagePreview, CompressionController.this::setNewImage);
+                        JavaFXTools.showPreview(processedImage, imagePreview, CompressionController.this::setNewImage, getUserFeedback());
                     });
                 };
             }
@@ -178,10 +177,10 @@ public final class CompressionController {
     }
 
     private void reAddNotifier() {
-        MainViewController.removeNotifier(notifier);
+        deregisterNotifier(notifier);
         notifier = NotifierFactory.scalingImageNotifier(loadedImage, imagePreview, 130, 0, 1.0);
-        MainViewController.addNotifier(notifier);
-        MainViewController.refreshVista();
+        registerNotifier(notifier);
+        refreshVista();
     }
 
 }

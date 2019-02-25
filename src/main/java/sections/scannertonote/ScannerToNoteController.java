@@ -7,14 +7,13 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import sections.*;
-import sections.main.MainViewController;
 import toolset.JavaFXTools;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 
-public final class ScannerToNoteController {
+public final class ScannerToNoteController extends XisController {
 
     Notifier notifier;
     private BufferedImage plainImage = null;
@@ -45,14 +44,14 @@ public final class ScannerToNoteController {
         if (optionalInputImage.isPresent()) {
             plainImage = optionalInputImage.get();
             processedImage = null;
-            JavaFXTools.showPreview(plainImage, imagePreview, this::setNewImage);
+            JavaFXTools.showPreview(plainImage, imagePreview, this::setNewImage, getUserFeedback());
         }
     }
 
     @FXML
     void saveFilePress(ActionEvent event) {
         if (processedImage == null) {
-            UserFeedback.popup("Can't save non-processed image.");
+            getUserFeedback().popup("Can't save non-processed image.");
         } else {
             GuiFileIO.saveImage(processedImage);
         }
@@ -66,7 +65,7 @@ public final class ScannerToNoteController {
     @FXML
     void runButton(ActionEvent event) {
         if (plainImage == null) {
-            UserFeedback.popup("Can't run without loaded file");
+            getUserFeedback().popup("Can't run without loaded file");
             return;
         }
         OneBackgroundJobManager.setAndRunJob(new Interruptible() {
@@ -104,7 +103,7 @@ public final class ScannerToNoteController {
                 return () -> {
                     if (image != null) {
                         processedImage = image;
-                        JavaFXTools.showPreview(processedImage, imagePreview, (BufferedImage bu) -> setNewImage(bu));
+                        JavaFXTools.showPreview(processedImage, imagePreview, (BufferedImage bu) -> setNewImage(bu), getUserFeedback());
                     }
                 };
             }
@@ -118,10 +117,10 @@ public final class ScannerToNoteController {
     }
 
     private void reAddNotifier() {
-        MainViewController.removeNotifier(notifier);
+        deregisterAllNotifiers();
         notifier = NotifierFactory.scalingImageNotifier(plainImage, imagePreview, 130, 0, 1.0);
-        MainViewController.addNotifier(notifier);
-        MainViewController.refreshVista();
+        registerNotifier(notifier);
+        refreshVista();
     }
 
 }

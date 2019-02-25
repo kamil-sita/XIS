@@ -7,17 +7,15 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import sections.Notifier;
 import sections.NotifierFactory;
-import sections.UserFeedback;
-import sections.main.MainViewController;
+import sections.XisController;
 import toolset.JavaFXTools;
 import toolset.imagetools.HighPassFilterConverter;
 import toolset.io.GuiFileIO;
 
 import java.awt.image.BufferedImage;
 
-public final class HighPassFilterController {
+public final class HighPassFilterController extends XisController {
 
     private BufferedImage inputImage;
     private BufferedImage processedImage;
@@ -36,7 +34,6 @@ public final class HighPassFilterController {
     @FXML
     private Slider brightnessSlider;
 
-    Notifier notifier;
 
     @FXML
     void loadFilePress(ActionEvent event) {
@@ -56,7 +53,7 @@ public final class HighPassFilterController {
     void saveFilePress(ActionEvent event) {
         var imageToSave = processedImage != null ? processedImage : inputImage;
         if (imageToSave == null) {
-            UserFeedback.popup("Can't save non-opened image.");
+            getUserFeedback().popup("Can't save non-opened image.");
         } else {
             GuiFileIO.saveImage(imageToSave);
         }
@@ -70,7 +67,7 @@ public final class HighPassFilterController {
     @FXML
     void runButton(ActionEvent event) {
         if (inputImage == null) {
-            UserFeedback.popup("Can't run without loaded file");
+            getUserFeedback().popup("Can't run without loaded file");
             return;
         }
         new Thread(() -> {
@@ -80,26 +77,26 @@ public final class HighPassFilterController {
             } catch (Exception e) {
                 //failed parsing
             }
-            UserFeedback.reportProgress("Converting...");
+            getUserFeedback().reportProgress("Converting...");
             var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
             processedImage = output;
-            UserFeedback.reportProgress("Converted image!");
+            getUserFeedback().reportProgress("Converted image!");
             Platform.runLater(() -> setNewImage(output));
 
-            JavaFXTools.showPreview(output, imagePreview, this::setNewImage);
+            JavaFXTools.showPreview(output, imagePreview, this::setNewImage, getUserFeedback());
         }).start();
 
     }
     private void setNewImage(BufferedImage bufferedImage) {
         imagePreview.setImage(JavaFXTools.toFxImage(bufferedImage));
         reAddNotifier();
-        MainViewController.refreshVista();
+        refreshVista();
     }
 
     private void reAddNotifier() {
-        MainViewController.removeNotifier(notifier);
-        notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 90, 10, 1.0);
-        MainViewController.addNotifier(notifier);
+        deregisterAllNotifiers();
+        var notifier = NotifierFactory.scalingImageNotifier(processedImage, imagePreview, 90, 10, 1.0);
+        registerNotifier(notifier);
     }
 
 }

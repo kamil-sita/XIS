@@ -6,10 +6,10 @@ import java.io.File;
 
 public final class FileManagementTools {
 
-    public static void moveFile(File file, String deleteDirectory) {
+    public static void moveFile(File file, String deleteDirectory, UserFeedback userFeedback) {
         if (!new File(deleteDirectory).exists()) {
             if (!new File(deleteDirectory).mkdir()) {
-                UserFeedback.popup("Couldn't create directory");
+                if (userFeedback != null) userFeedback.popup("Couldn't create directory");
                 return;
             }
         }
@@ -17,7 +17,7 @@ public final class FileManagementTools {
         String localDeleteDirectory = deleteDirectory;
         localDeleteDirectory += s;
         if (!file.renameTo(new File(localDeleteDirectory))) {
-            UserFeedback.popup("Couldn't move file!");
+            if (userFeedback != null) userFeedback.popup("Couldn't move file!");
         }
 
     }

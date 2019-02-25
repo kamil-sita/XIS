@@ -1,7 +1,6 @@
 package sections.imagecopyfinder;
 
 import sections.Interruptible;
-import sections.UserFeedback;
 import toolset.io.BufferedImageIO;
 import toolset.io.MultipleFileIO;
 
@@ -13,7 +12,7 @@ import java.util.List;
 public class ComparableImageIO {
 
     public static List<ComparableImage> loadFiles(File[] folders, int generatedMiniatureSize, Interruptible interruptible, boolean alternativeMode) {
-        UserFeedback.reportProgress("Finding files in folder");
+        interruptible.reportProgress("Finding files in folder");
         var images = new ArrayList<ComparableImage>();
         List<File> files = MultipleFileIO.loadFilesFromFolders(folders);
 
@@ -25,14 +24,14 @@ public class ComparableImageIO {
             var file = files.get(i);
             if (i >= 10) {
                 double dt = getApproximateTimeLeftFileLoading(i, time, files.size() - i);
-                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
+                interruptible.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
             } else {
-                UserFeedback.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + ")");
+                interruptible.reportProgress("Generating preview for file (" + (i+1) + "/" + files.size() + ")");
             }
 
-            UserFeedback.reportProgress((1.0*i)/images.size());
+            interruptible.reportProgress((1.0*i)/images.size());
 
-            var optionalImage = BufferedImageIO.getImageWithFailsafe(file);
+            var optionalImage = BufferedImageIO.getImageWithFailsafe(file, interruptible);
             if (optionalImage.isPresent()) {
                 ComparableImage comparableImage = new ComparableImage(file, optionalImage.get(), generatedMiniatureSize, alternativeMode);
                 images.add(comparableImage);

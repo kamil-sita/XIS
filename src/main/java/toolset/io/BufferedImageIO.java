@@ -1,6 +1,6 @@
 package toolset.io;
 
-import sections.UserFeedback;
+import sections.Interruptible;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -25,7 +25,7 @@ public final class BufferedImageIO {
     }
 
 
-    public static Optional<BufferedImage> getImageWithFailsafe(File file) {
+    public static Optional<BufferedImage> getImageWithFailsafe(File file, Interruptible interruptible) {
         final BufferedImage[] bufferedImage = {null};
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -41,7 +41,7 @@ public final class BufferedImageIO {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         } catch (InterruptedException e) {
-            UserFeedback.popup("Failed to load: " + file.getName());
+            if (interruptible != null) interruptible.popup("Failed to load: " + file.getName());
         }
         if (bufferedImage[0] == null) return Optional.empty();
         return Optional.of(bufferedImage[0]);

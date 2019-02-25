@@ -9,7 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-import sections.main.MainViewController;
+import main.MainViewController;
 import toolset.io.BufferedImageIO;
 
 import java.awt.*;
@@ -20,15 +20,28 @@ import java.io.IOException;
 
 public final class UserFeedback {
 
-    public static void reportProgress (double percentProgress) {
-        Platform.runLater(() -> MainViewController.getProgressBar().setProgress(percentProgress));
+    private MainViewController mainViewController;
+
+    private static UserFeedback instance;
+
+    public static UserFeedback getInstance() {
+        if (instance == null) instance = new UserFeedback();
+        return instance;
     }
 
-    public static void reportProgress (String message) {
-        Platform.runLater(() -> MainViewController.setStatus(message));
+    public UserFeedback() {
+        this.mainViewController = MainViewController.getInstance();
     }
 
-    public static void popup(String message) {
+    public void reportProgress (double percentProgress) {
+        Platform.runLater(() -> mainViewController.getProgressBar().setProgress(percentProgress));
+    }
+
+    public void reportProgress (String message) {
+        Platform.runLater(() -> mainViewController.setStatus(message));
+    }
+
+    public void popup(String message) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.CLOSE);
             alert.show();
@@ -36,7 +49,7 @@ public final class UserFeedback {
 
     }
 
-    public static void openInDefault(File file) {
+    public void openInDefault(File file) {
         Desktop desktop = Desktop.getDesktop();
         try {
             desktop.open(file);
@@ -45,7 +58,7 @@ public final class UserFeedback {
         }
     }
 
-    public static void openInDefault(BufferedImage bufferedImage) {
+    public void openInDefault(BufferedImage bufferedImage) {
         var file = BufferedImageIO.saveImage(bufferedImage, null);
         Desktop desktop = Desktop.getDesktop();
         try {
@@ -55,7 +68,7 @@ public final class UserFeedback {
         }
     }
 
-    public static void longPopupTextArea(String message) {
+    public void longPopupTextArea(String message) {
         Platform.runLater(() -> {
             Parent root;
             UserFeedback userFeedback;
@@ -76,6 +89,6 @@ public final class UserFeedback {
     }
 
     @FXML
-    TextArea textArea;
+    private TextArea textArea;
 
 }

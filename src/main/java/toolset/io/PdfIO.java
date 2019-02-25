@@ -7,14 +7,14 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import sections.UserFeedback;
+import sections.Interruptible;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class PdfIO {
-    public static BufferedImage getPdfAsImage(File pdfFile, int i) {
+    public static BufferedImage getPdfAsImage(File pdfFile, int i, Interruptible interruptible) {
         PDDocument document = null;
         PDFRenderer pdfRenderer;
         BufferedImage bi;
@@ -23,7 +23,7 @@ public class PdfIO {
             pdfRenderer = new PDFRenderer(document);
             bi = pdfRenderer.renderImageWithDPI(i, 300, ImageType.RGB);
         } catch (Exception e) {
-            UserFeedback.popup("Error related to pdf");
+            interruptible.popup("Error related to pdf");
             return null;
         } finally {
             if (document != null) {

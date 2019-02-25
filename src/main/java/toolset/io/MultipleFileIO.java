@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class MultipleFileIO {
 
-    public static File[] getFoldersFromStrings(List<String> fileFolders) {
+    public static File[] getFoldersFromStrings(List<String> fileFolders, UserFeedback userFeedback) {
         File[] folders = new File[fileFolders.size()];
         for (int i = 0; i < fileFolders.size(); i++) {
             String s = fileFolders.get(i);
@@ -21,14 +21,14 @@ public class MultipleFileIO {
             try {
                 folder = new File(s);
             } catch (Exception e) {
-                UserFeedback.popup("Exception caused by: " + s);
+                userFeedback.popup("Exception caused by: " + s);
             }
             if (folder == null) {
-                UserFeedback.popup("Not a file/directory: " + s);
+                userFeedback.popup("Not a file/directory: " + s);
                 return null;
             }
             if (!folder.isDirectory()) {
-                UserFeedback.popup("Not a folder: " + s);
+                userFeedback.popup("Not a folder: " + s);
             }
             folders[i] = folder;
         }

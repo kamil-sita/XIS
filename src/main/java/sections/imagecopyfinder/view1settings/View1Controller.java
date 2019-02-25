@@ -9,13 +9,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import sections.Interruptible;
 import sections.OneBackgroundJobManager;
-import sections.UserFeedback;
+import sections.XisController;
 import sections.imagecopyfinder.FolderImageComparator;
 import sections.imagecopyfinder.ImageComparator;
 import sections.imagecopyfinder.ImageCopyFinder;
-import sections.main.MainViewController;
 
-public final class View1Controller {
+public final class View1Controller extends XisController {
 
     @FXML
     private TextArea folderLocations;
@@ -75,10 +74,10 @@ public final class View1Controller {
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESSFUL) {
             ImageCopyFinder.setImageComparator(imageComparator);
             ImageCopyFinder.setDeleteDirectory(deleteFolder.getText());
-            MainViewController.imageCopyFinder.setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
-            MainViewController.refreshVista();
+            getMainViewController().getImageCopyFinder().setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
+            refreshVista();
         } else {
-            UserFeedback.popup(imageComparator.getStatus().toString());
+            getUserFeedback().popup(imageComparator.getStatus().toString());
         }
     }
 }

@@ -32,11 +32,11 @@ public class YCbCrLayer {
     }
 
 
-    public void replace(int xStart, int xEnd, int yStart, int yEnd, List<Integer> palette, BitSequence compressionSequence, int encodeSize, Statistic statistic) {
+    public void replace(int xStart, int xEnd, int yStart, int yEnd, List<Integer> palette, BitSequence compressionSequence, int encodeSize, boolean allowReordering, Statistic statistic) {
         int newXEnd = xEnd > width() ? width() : xEnd;
         int newYEnd = yEnd > height() ? height() : yEnd;
         for (int y = yStart; y < newYEnd; y++) {
-            CompressionLine compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize, statistic);
+            CompressionLine compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize, statistic, allowReordering);
             for (int x = xStart; x < newXEnd; x++) {
                 compressionLine.put(get(x, y));
             }

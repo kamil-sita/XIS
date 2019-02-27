@@ -10,6 +10,7 @@ public class Statistic {
     private List<Integer> rleLines = new ArrayList<>();
     private List<Integer> differentialLines = new ArrayList<>();
     private List<Integer> normalLines = new ArrayList<>();
+    private int timesReordered = 0;
 
     //adders/setters
     public void setSize(int size) {
@@ -35,6 +36,10 @@ public class Statistic {
     public void addDictionarySize(int value) {
         dictionarySizes.add(value);
     }
+
+    public void incrementTimesReordered() {
+        timesReordered++;
+    };
 
     //getters
     public int getSize() {
@@ -99,6 +104,7 @@ public class Statistic {
                 "\nLines compressed by SIMPLE = " + normalLines.size() +
                 "\nAverage length of RLE = " + getAverageRleLineSize() +
                 "\nAverage length of DIFF = " + getAverageDifferentialLinesSize() +
-                "\nAverage length of SIMPLE = " + getAverageNormalLineSize();
+                "\nAverage length of SIMPLE = " + getAverageNormalLineSize() +
+                "\nTimes reordered = " + timesReordered;
     }
 }

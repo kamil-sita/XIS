@@ -3,6 +3,7 @@ package sections.compression;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -36,6 +37,9 @@ public final class CompressionController extends XisController {
 
     @FXML
     private Label outputSize;
+
+    @FXML
+    private CheckBox allowReordering;
 
     @FXML
     void loadFilePress(ActionEvent event) {
@@ -152,7 +156,7 @@ public final class CompressionController extends XisController {
             @Override
             public Runnable getRunnable() {
                 return () -> {
-                    compressionOutput = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage).orElse(null);
+                    compressionOutput = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage, allowReordering.isSelected()).orElse(null);
                 };
             };
 

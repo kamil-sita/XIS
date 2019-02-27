@@ -4,6 +4,7 @@ import toolset.IntegerMath;
 import toolset.imagetools.YCbCrLayer;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class CompressionLine {
@@ -12,8 +13,11 @@ public class CompressionLine {
     private final int TWO_COLORS = 1;
 
     private Statistic statistic;
-    private List<Integer> line;
+
+    private List<Integer> inputLine;
     private List<Integer> palette;
+    private List<Integer> quantizedLine;
+
     private boolean full = false;
     private BitSequence compressedLine = null;
 
@@ -23,28 +27,26 @@ public class CompressionLine {
     private int xStart;
     private int xEnd;
 
+    private boolean allowReordering;
+
     private final int PALETTE_SIZE;
     private final int ENCODE_SIZE;
     private final int LINE_SIZE;
 
     /**
      * Constructor for compression
-     * @param palette
-     * @param layer
-     * @param xStart
-     * @param xEnd
-     * @param y
-     * @param encodeSize
      */
-    public CompressionLine(List<Integer> palette, YCbCrLayer layer, int xStart, int xEnd, int y, int encodeSize, Statistic statistic) {
+    public CompressionLine(List<Integer> palette, YCbCrLayer layer, int xStart, int xEnd, int y, int encodeSize, Statistic statistic, boolean allowReordering) {
         LINE_SIZE = xEnd - xStart;
-        line = new ArrayList<>(LINE_SIZE);
+        inputLine = new ArrayList<>(LINE_SIZE);
         this.PALETTE_SIZE = palette.size();
         this.palette = palette;
         this.ENCODE_SIZE = encodeSize;
         this.layer = layer;
 
         this.statistic = statistic;
+
+        this.allowReordering = allowReordering;
 
         this.y = y;
         this.xEnd = xEnd;
@@ -54,12 +56,6 @@ public class CompressionLine {
 
     /**
      * Constructor for decompression
-     * @param dictionary
-     * @param layer
-     * @param xStart
-     * @param xEnd
-     * @param y
-     * @param encodeSize
      */
     public CompressionLine(BitSequence bitSequence, List<Integer> dictionary, YCbCrLayer layer, int xStart, int xEnd, int y, int encodeSize) {
         LINE_SIZE = xEnd - xStart;
@@ -77,13 +73,13 @@ public class CompressionLine {
 
     public void put(int v) {
         if (full) throw new IllegalArgumentException("Can't add new values after finalization");
-        if (line.size() == LINE_SIZE) throw  new IllegalArgumentException("Too much values");
-        line.add(v);
+        if (inputLine.size() == LINE_SIZE) throw  new IllegalArgumentException("Too much values");
+        inputLine.add(v);
 
     }
 
     public void lockAdding() {
-        if (line.size() != LINE_SIZE) throw new IllegalArgumentException("Locked with not enough values");
+        if (inputLine.size() != LINE_SIZE) throw new IllegalArgumentException("Locked with not enough values");
         full = true;
     }
 
@@ -92,7 +88,7 @@ public class CompressionLine {
 
         if (!full) throw new IllegalArgumentException("Can't compress before locking");
 
-
+        quantize();
         compressedLine = new BitSequence();
 
         if (canBeRleCompressed()) {
@@ -105,15 +101,22 @@ public class CompressionLine {
         return compressedLine;
     }
 
+    private void quantize() {
+        quantizedLine = new ArrayList<>();
+        for (int i = 0; i < inputLine.size(); i++) {
+            int id = findIdOfClosestInPalette(inputLine.get(i));
+            quantizedLine.add(id);
+        }
+    }
+
     private void compressRle() {
         compressedLine.putOne(1);
-        int colorId1 = findIdInPaletteOfClosest(line.get(0));
+        int colorId1 = quantizedLine.get(0);
         layer.set(xStart, y, palette.get(colorId1));
         int colorId2 = NOT_FOUND;
         int length = 0;
-        for (int i = 1; i < line.size(); i++) {
-            int value = line.get(i);
-            int id = findIdInPaletteOfClosest(value);
+        for (int i = 1; i < inputLine.size(); i++) {
+            int id = quantizedLine.get(i);
             layer.set(xStart + i, y, palette.get(id));
             length++;
             if (id != colorId1) {
@@ -122,7 +125,7 @@ public class CompressionLine {
         }
 
         if (colorId2 == NOT_FOUND) {
-            //entire line is in one color
+            //entire inputLine is in one color
             compressedLine.putOne(ONE_COLOR);
             compressedLine.put(colorId1, ENCODE_SIZE);
             statistic.addRleLineSize(2 + ENCODE_SIZE);
@@ -138,13 +141,15 @@ public class CompressionLine {
     }
 
     private void compressDifferential() {
+        if (allowReordering) {
+            reorder();
+        }
         compressedLine.putOne(0);
         compressedLine.putOne(1);
         int size = 2;
         int lastValueId = NOT_FOUND;
-        for (int i = 0; i < line.size(); i++) {
-            int value = line.get(i);
-            int valueId = findIdInPaletteOfClosest(value);
+        for (int i = 0; i < inputLine.size(); i++) {
+            int valueId = quantizedLine.get(i);
             layer.set(xStart + i, y, palette.get(valueId));
             if (valueId == lastValueId) {
                 compressedLine.putOne(1);
@@ -162,23 +167,97 @@ public class CompressionLine {
         statistic.addDifferentialLinesSize(size);
     }
 
+    /**
+     * This method attempts to optimize differential compression with minor reordering. <br/><br/>
+     *
+     * Changes sequence: <br/>
+     * <b>ABAB</b> and similar <br/>
+     * <i>into</i>  <br/>
+     * <b>AABB</b><br/> <br/>
+     *
+     * Changes sequence: <br/>
+     * <b>BBAB</b> and similar <br/>
+     * <i>into</i> <br/>
+     * <b>BBBA </b><br/>
+     *
+     */
+    private void reorder() {
+        final int REORDER_SIZE = 4;
+        for (int i = 0; i < quantizedLine.size(); i+= REORDER_SIZE) {
+            if (i + REORDER_SIZE > quantizedLine.size()) return; //can't optimize sequences of sizes other than 4
+
+            //if for any sequence number of unique colors is different than 2, it cannot be optimized
+            var list = new ArrayList<Integer>();
+            for (int j = i; j < i + REORDER_SIZE; j++) {
+                list.add(quantizedLine.get(j));
+            }
+
+            int un = getUniqueColors(list);
+            if (un != 2) continue;
+
+            statistic.incrementTimesReordered();
+
+            //getting colors and occurrence count
+            int color0id = quantizedLine.get(i);
+            int color0Occurrences = 1;
+            int color1id = NOT_FOUND;
+
+            for (int j = i + 1; j < i + REORDER_SIZE; j++) {
+                int id = quantizedLine.get(j);
+                if (id == color0id) {
+                    color0Occurrences++;
+                } else {
+                    color1id = id;
+                }
+            }
+
+            //if color0Occurrences == color1Occurrences == 2 then sequence is AABB. Otherwise it's AAAB.
+            if (color0Occurrences == 2) {
+                quantizedLine.set(i    , color0id);
+                quantizedLine.set(i + 1, color0id);
+                quantizedLine.set(i + 2, color1id);
+                quantizedLine.set(i + 3, color1id);
+            } else {
+                int threeOccurencesColor;
+                int oneOccurenceColor;
+                if (color0Occurrences == 3) {
+                    threeOccurencesColor = color0id;
+                    oneOccurenceColor = color1id;
+                } else {
+                    threeOccurencesColor = color1id;
+                    oneOccurenceColor = color0id;
+                }
+                quantizedLine.set(i,     threeOccurencesColor);
+                quantizedLine.set(i + 1, threeOccurencesColor);
+                quantizedLine.set(i + 2, threeOccurencesColor);
+                quantizedLine.set(i + 3, oneOccurenceColor);
+
+            }
+        }
+
+    }
+
+    private int getUniqueColors(List<Integer> list) {
+        var set = new HashSet<Integer>(list);
+        return set.size();
+    }
+
     private void compressSimple() {
         compressedLine.putOne(0);
         compressedLine.putOne(0);
-        for (int i = 0; i < line.size(); i++) {
-            int value = line.get(i);
-            int valueId = findIdInPaletteOfClosest(value);
+        for (int i = 0; i < inputLine.size(); i++) {
+            int valueId = quantizedLine.get(i);
             layer.set(xStart + i, y, palette.get(valueId));
             compressedLine.put(valueId, ENCODE_SIZE);
         }
-        statistic.addNormalLineSize(2 + line.size() * ENCODE_SIZE);
+        statistic.addNormalLineSize(2 + inputLine.size() * ENCODE_SIZE);
     }
 
     private boolean canBeRleCompressed() {
         int lastId = -1;
         int colors = 0;
-        for (var val : line) {
-            int valId = findIdInPaletteOfClosest(val);
+        for (var val : inputLine) {
+            int valId = findIdOfClosestInPalette(val);
             if (valId != lastId) {
                 colors++;
                 lastId = valId;
@@ -257,7 +336,7 @@ public class CompressionLine {
     }
 
 
-    private int findIdInPaletteOfClosest(int value) {
+    private int findIdOfClosestInPalette(int value) {
         int indexOfBest = NOT_FOUND;
         double bestDistance = Double.MAX_VALUE;
         for (int i = 0; i < palette.size(); i++) {
@@ -269,5 +348,6 @@ public class CompressionLine {
         }
         return indexOfBest;
     }
+
 
 }

@@ -32,11 +32,11 @@ public class LosticCompression {
      * compress() delegate for outside calls to the function
      * @return
      */
-    public static Optional<CompressionOutput> compressedAndPreview(double yWeight, double cWeight, double blockSize, BufferedImage input) {
-        return compress(yWeight, cWeight, blockSize, new MockInterruptible(), input);
+    public static Optional<CompressionOutput> compressedAndPreview(double yWeight, double cWeight, double blockSize, BufferedImage input, boolean allowReordering) {
+        return compress(yWeight, cWeight, blockSize, new MockInterruptible(), input, allowReordering);
     }
 
-    public static Optional<CompressionOutput> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input) {
+    public static Optional<CompressionOutput> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input, boolean allowReordering) {
         if (input == null) return Optional.empty();
         Statistic statistic = new Statistic();
         statistic.setPixels(input.getWidth() * input.getHeight());
@@ -50,9 +50,9 @@ public class LosticCompression {
         int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight, statistic);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight, statistic);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight, statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight, allowReordering, statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight, allowReordering, statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight, allowReordering, statistic);
                 i++;
                 if (interruptible.isInterrupted()) return Optional.empty();
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
@@ -128,7 +128,7 @@ public class LosticCompression {
         return b;
     }
 
-    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier, Statistic statistic) {
+    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier, boolean allowReordering, Statistic statistic) {
         int dictionarySize = calculateDictionarySize(x, y, size, layer, multiplier);
 
         statistic.addDictionarySize(dictionarySize);
@@ -138,7 +138,7 @@ public class LosticCompression {
 
         final int ENCODE_SIZE = IntegerMath.log2(dictionarySize);
 
-        layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, dictionary, bitSequence, ENCODE_SIZE, statistic);
+        layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, dictionary, bitSequence, ENCODE_SIZE, allowReordering, statistic);
 
     }
 

@@ -22,5 +22,6 @@
       <TextField fx:id="blockSize" layoutX="607.0" layoutY="16.0" prefHeight="25.0" prefWidth="74.0" text="32" AnchorPane.leftAnchor="607.0" AnchorPane.topAnchor="14.0" />
       <Button layoutX="89.0" layoutY="15.0" mnemonicParsing="false" onAction="#loadCompressedFilePress" text="load compressed image" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="14.0" />
       <Button layoutX="1063.0" layoutY="49.0" mnemonicParsing="false" onAction="#statisticPress" text="Statistic" />
+      <CheckBox fx:id="allowReordering" layoutX="694.0" layoutY="18.0" mnemonicParsing="false" text="Allow reordering" AnchorPane.leftAnchor="694.0" />
    </children>
 </AnchorPane>

@@ -37,7 +37,7 @@ public class ComparableImageIO {
                 images.add(comparableImage);
             }
 
-            if (interruptible.isInterrupted()) return null;
+            if (interruptible.isInterrupted()) return Collections.emptyList();
         }
 
         return images;

@@ -33,7 +33,7 @@ public final class FolderImageComparator {
         }
 
 
-        boolean status = imageComparator.initialize(folders, alternativeMode, interruptible, alternativeMode);
+        boolean status = imageComparator.run(folders, alternativeMode, interruptible, alternativeMode);
         if (interruptible.isInterrupted()) return null;
 
         if (!status) {

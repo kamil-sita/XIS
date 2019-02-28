@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public final class BufferedImageIO {
@@ -24,27 +26,27 @@ public final class BufferedImageIO {
         return Optional.of(bufferedImage);
     }
 
+    private static ExecutorService executorService = Executors.newFixedThreadPool(1);
 
     public static Optional<BufferedImage> getImageWithFailsafe(File file, Interruptible interruptible) {
         final BufferedImage[] bufferedImage = {null};
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
-            new Thread(() -> {
+            executorService.submit(() -> {
                 try {
                     bufferedImage[0] = ImageIO.read(file);
                     countDownLatch.countDown();
                 } catch (IOException e) {
                     countDownLatch.countDown();
                 }
-            }).start();
+            });
             countDownLatch.await(10, TimeUnit.SECONDS);
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         } catch (InterruptedException e) {
             if (interruptible != null) interruptible.popup("Failed to load: " + file.getName());
         }
-        if (bufferedImage[0] == null) return Optional.empty();
-        return Optional.of(bufferedImage[0]);
+        return Optional.ofNullable(bufferedImage[0]);
     }
 
     public static File saveImage(BufferedImage image, File file) {

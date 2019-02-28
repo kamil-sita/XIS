@@ -1,5 +1,6 @@
 package sections.imagecopyfinder;
 
+import sections.GlobalSettings;
 import sections.Interruptible;
 import toolset.imagetools.Rgb;
 
@@ -45,7 +46,7 @@ public final class ImageComparator {
      * @param folders
      * @return true if initialized
      */
-    public boolean initialize(File[] folders, boolean isGeometricalMode, Interruptible interruptible, boolean alternativeMode) {
+    public boolean run(File[] folders, boolean isGeometricalMode, Interruptible interruptible, boolean alternativeMode) {
         this.interruptible = interruptible;
         var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize, interruptible, alternativeMode);
         if (interruptible.isInterrupted()) return false;
@@ -68,8 +69,7 @@ public final class ImageComparator {
 
         var clock = new ImageComparatorClock(images.size());
 
-        final int AVAILABLE_THREADS = Runtime.getRuntime().availableProcessors();
-        ExecutorService exec = Executors.newFixedThreadPool(AVAILABLE_THREADS);
+        ExecutorService exec = Executors.newFixedThreadPool(GlobalSettings.getThreadCount());
         AtomicInteger finishedThreads = new AtomicInteger();
         CountDownLatch latch = new CountDownLatch(images.size());
 

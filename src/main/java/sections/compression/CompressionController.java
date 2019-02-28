@@ -148,15 +148,17 @@ public final class CompressionController extends XisController {
             return;
         }
 
-        int finalYWeightValue = yWeightValue;
-        int finalCWeightValue = cWeightValue;
-        int finalBlockSizeValue = blockSizeValue;
-        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+        CompressionArguments compressionArguments = new CompressionArguments();
+        compressionArguments.setyWeight(yWeightValue);
+        compressionArguments.setcWeight(cWeightValue);
+        compressionArguments.setBlockSize(blockSizeValue);
+        compressionArguments.setAllowReordering(allowReordering.isSelected());
 
+        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
             @Override
             public Runnable getRunnable() {
                 return () -> {
-                    compressionOutput = LosticCompression.compress(finalYWeightValue, finalCWeightValue, finalBlockSizeValue, this, loadedImage, allowReordering.isSelected()).orElse(null);
+                    compressionOutput = LosticCompression.compress(compressionArguments, this).orElse(null);
                 };
             };
 

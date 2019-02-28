@@ -32,14 +32,16 @@ public class LosticCompression {
      * compress() delegate for outside calls to the function
      * @return
      */
-    public static Optional<CompressionOutput> compressedAndPreview(double yWeight, double cWeight, double blockSize, BufferedImage input, boolean allowReordering) {
-        return compress(yWeight, cWeight, blockSize, new MockInterruptible(), input, allowReordering);
+    public static Optional<CompressionOutput> compressedAndPreview(CompressionArguments compressionArguments) {
+        return compress(compressionArguments, new MockInterruptible());
     }
 
-    public static Optional<CompressionOutput> compress(double yWeight, double cWeight, double blockSize, Interruptible interruptible, BufferedImage input, boolean allowReordering) {
+    public static Optional<CompressionOutput> compress(CompressionArguments arguments, Interruptible interruptible) {
+        var input = arguments.getInput();
         if (input == null) return Optional.empty();
         Statistic statistic = new Statistic();
         statistic.setPixels(input.getWidth() * input.getHeight());
+        var blockSize = arguments.getBlockSize();
         BitSequence b = generateBitSequenceWithHeader((int) blockSize, input.getWidth(), input.getHeight());
         var ycbcr = new YCbCrImage(input);
         int size_X = (int) Math.ceil(input.getWidth() / blockSize);
@@ -50,9 +52,9 @@ public class LosticCompression {
         int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), yWeight, allowReordering, statistic);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), cWeight, allowReordering, statistic);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), cWeight, allowReordering, statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), arguments.getyWeight(), arguments.allowReordering(), statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), arguments.getcWeight(), arguments.allowReordering(), statistic);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), arguments.getcWeight(), arguments.allowReordering(), statistic);
                 i++;
                 if (interruptible.isInterrupted()) return Optional.empty();
                 interruptible.reportProgress(1.0 * i/ (size_X * size_Y));

@@ -46,13 +46,13 @@ public final class ImageComparator {
      * @param folders
      * @return true if initialized
      */
-    public boolean run(File[] folders, boolean isGeometricalMode, Interruptible interruptible, boolean alternativeMode) {
+    public boolean run(File[] folders,Interruptible interruptible) {
         this.interruptible = interruptible;
-        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize, interruptible, alternativeMode);
+        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize, interruptible);
         if (interruptible.isInterrupted()) return false;
         if (!optionalImages.isEmpty()) {
             images = optionalImages;
-            findPairsMultithreaded(isGeometricalMode);
+            findPairsMultithreaded();
             return true;
         }
         interruptible.reportProgress("No images found");
@@ -62,9 +62,8 @@ public final class ImageComparator {
 
     /**
      * Finds pairs of similar images using all of available cores.
-     * @param geometricalMode
      */
-    private void findPairsMultithreaded(boolean geometricalMode) {
+    private void findPairsMultithreaded() {
         imagePairs = Collections.synchronizedList(new ArrayList<>());
 
         var clock = new ImageComparatorClock(images.size());
@@ -77,7 +76,7 @@ public final class ImageComparator {
             for (int i = 0; i < images.size(); i++) {
                 final int c = i;
                 exec.submit(() -> {
-                    findPairsFor(c, geometricalMode);
+                    findPairsFor(c);
                     finishedThreads.getAndIncrement();
                     reportFindPairingProgress(clock, finishedThreads.getAcquire());
                     latch.countDown();
@@ -96,18 +95,18 @@ public final class ImageComparator {
         interruptible.reportProgress("Images compared");
     }
 
-    private void findPairsFor(int i, boolean geometricalMode) {
+    private void findPairsFor(int i) {
         ComparableImage image1 = images.get(i);
         for (int j = i + 1; j < images.size(); j++) {
             if (interruptible.isInterrupted()) return;
             ComparableImage image2 = images.get(j);
-            addPairIfSimilar(geometricalMode, image1, image2);
+            addPairIfSimilar(image1, image2);
         }
     }
 
-    private void addPairIfSimilar(boolean geometricalMode, ComparableImage image1, ComparableImage image2) {
-        if (image1.getHsb().hueDiff(image2.getHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
-            double similarity = compareImages(image1, image2, geometricalMode);
+    private void addPairIfSimilar(ComparableImage image1, ComparableImage image2) {
+        if (image1.getAverageHsb().hueDiff(image2.getAverageHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
+            double similarity = compareImages(image1, image2);
             if (similarity >= MINIMUM_SIMILARITY) {
                 imagePairs.add(new ComparableImagePair(image1, image2, similarity));
             }
@@ -135,7 +134,7 @@ public final class ImageComparator {
      * @return % of similarity between images.
      */
 
-    public double compareImages(ComparableImage image1, ComparableImage image2, boolean alternativeMode) {
+    public double compareImages(ComparableImage image1, ComparableImage image2) {
         final double POWER = 2.35;
 
         if (!areProportionsAcceptable(image1, image2)) return -1;
@@ -148,25 +147,16 @@ public final class ImageComparator {
                 Rgb rgb1 = new Rgb(image1.getPreview().getRGB(x, y));
                 Rgb rgb2 = new Rgb(image2.getPreview().getRGB(x, y));
 
-                if (alternativeMode) {
-                    equality += Math.pow(1 - rgb1.compareToRGB(rgb2), POWER);
-                } else {
-                    equality += rgb1.compareToRGB(rgb2);
-                }
+                equality += Math.pow(1 - rgb1.compareToRGB(rgb2), POWER);
 
             }
         }
 
-        if (alternativeMode) {
-            return 1 - Math.pow(equality/(generatedMiniatureSize * generatedMiniatureSize), 1/POWER);
-        } else {
-            return equality / (generatedMiniatureSize * generatedMiniatureSize);
-        }
+        return 1 - Math.pow(equality/(generatedMiniatureSize * generatedMiniatureSize), 1/POWER);
     }
 
     private boolean areProportionsAcceptable(ComparableImage image1, ComparableImage image2) {
         double imagesProportionRatio = image1.getProportion()/image2.getProportion();
-
         final double MAXIMUM_PROPORTIONS_DIFFERENCE = 1.1;
         final double MINIMUM_PROPORTIONS_DIFFERENCE = 1.0/MAXIMUM_PROPORTIONS_DIFFERENCE;
         return MINIMUM_PROPORTIONS_DIFFERENCE <= imagesProportionRatio && imagesProportionRatio <= MAXIMUM_PROPORTIONS_DIFFERENCE;

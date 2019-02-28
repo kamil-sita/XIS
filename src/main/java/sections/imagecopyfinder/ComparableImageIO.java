@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ComparableImageIO {
 
-    public static List<ComparableImage> loadFiles(File[] folders, int generatedMiniatureSize, Interruptible interruptible, boolean alternativeMode) {
+    public static List<ComparableImage> loadFiles(File[] folders, int generatedMiniatureSize, Interruptible interruptible) {
         interruptible.reportProgress("Finding files in folder");
         var images = new ArrayList<ComparableImage>();
         List<File> files = MultipleFileIO.loadFilesFromFolders(folders);
@@ -33,7 +33,7 @@ public class ComparableImageIO {
 
             var optionalImage = BufferedImageIO.getImageWithFailsafe(file, interruptible);
             if (optionalImage.isPresent()) {
-                ComparableImage comparableImage = new ComparableImage(file, optionalImage.get(), generatedMiniatureSize, alternativeMode);
+                ComparableImage comparableImage = new ComparableImage(file, optionalImage.get(), generatedMiniatureSize);
                 images.add(comparableImage);
             }
 

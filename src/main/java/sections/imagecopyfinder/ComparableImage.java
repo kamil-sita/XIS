@@ -17,35 +17,37 @@ public final class ComparableImage {
     //file containing image
     private File imageFile;
 
-    private Hsb hsb;
+    private Hsb averageHsb;
 
+    private CompareGroup compareGroup;
+    private int groupId;
 
     private int width;
     private int height;
 
 
-    public ComparableImage(File file, BufferedImage image, final int COMPARED_IMAGE_SIZE, boolean alternativeMode) {
+    public ComparableImage(File file, BufferedImage image, final int COMPARED_IMAGE_SIZE) {
         imageFile = file;
-        if (alternativeMode) {
-            image = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE * 2);
-            image = BufferedImageBlur.simpleBlur(image, BufferedImageBlur.generateGaussianKernel(3));
-        }
-
-        smallImage = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE);
 
         width = image.getWidth();
         height = image.getHeight();
 
+        image = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE * 2);
+        image = BufferedImageBlur.simpleBlur(image, BufferedImageBlur.generateGaussianKernel(3));
+
+        smallImage = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE);
+
+
         Rgb rgb = new Rgb(BufferedImageScale.getComparableScaledDownImage(smallImage, 1).getRGB(0, 0));
-        hsb = rgb.toHSB();
+        averageHsb = rgb.toHSB();
     }
 
     public double getProportion() {
         return (getHeight() * 1.0)/(getWidth() * 1.0);
     }
 
-    public Hsb getHsb() {
-        return hsb;
+    public Hsb getAverageHsb() {
+        return averageHsb;
     }
 
     public BufferedImage getPreview() {

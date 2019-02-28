@@ -10,12 +10,9 @@ public final class FolderImageComparator {
 
     private ImageComparator imageComparator;
     private String[] fileFolders;
-    private boolean alternativeMode;
-
-    public FolderImageComparator(String[] fileFolders, int miniatureSize, boolean alternativeMode) {
+    public FolderImageComparator(String[] fileFolders, int miniatureSize) {
         imageComparator = new ImageComparator(miniatureSize);
         this.fileFolders = fileFolders;
-        this.alternativeMode = alternativeMode;
     }
 
     public ImageComparator compare(Interruptible interruptible) {
@@ -33,7 +30,7 @@ public final class FolderImageComparator {
         }
 
 
-        boolean status = imageComparator.run(folders, alternativeMode, interruptible, alternativeMode);
+        boolean status = imageComparator.run(folders, interruptible);
         if (interruptible.isInterrupted()) return null;
 
         if (!status) {

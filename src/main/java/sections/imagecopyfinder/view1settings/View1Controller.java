@@ -3,7 +3,6 @@ package sections.imagecopyfinder.view1settings;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -21,9 +20,6 @@ public final class View1Controller extends XisController {
 
     @FXML
     private ComboBox<Integer> imageSizeComboBox;
-
-    @FXML
-    private CheckBox checkBoxAlternativeMode;
 
     @FXML
     private TextField deleteFolder;
@@ -51,8 +47,8 @@ public final class View1Controller extends XisController {
         final String JAVAFX_NEWLINE = "\n";
 
         final var folderComparator = new FolderImageComparator(folderLocations.getText().split(JAVAFX_NEWLINE),
-                imageSizeComboBox.getValue(),
-                checkBoxAlternativeMode.isSelected());
+                imageSizeComboBox.getValue()
+        );
 
         OneBackgroundJobManager.setAndRunJob(new Interruptible() {
             private ImageComparator imageComparator;

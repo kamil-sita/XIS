@@ -1,0 +1,119 @@
+<html lang="en">
+<head>
+    <title>XIS General Guide</title>
+    <link rel="stylesheet" href="ss.css">
+</head>
+<body>
+<h1>XIS</h1>
+<h2>KS Image Suite General Guide</h2>
+<hr/>
+<h3>Modules:</h3>
+<p>
+<ul>
+    <b>General:</b>
+    <li>Image copy finder</li>
+    <li>Image compression</li>
+    <br/>
+    <b>Processing scans and notes:</b>
+    <li>Scanner to note</li>
+    <li>High pass filter</li>
+    <li>Automated filtering</li>
+    Those modules might be merged in the future into a single one.
+</ul>
+</p>
+<hr/>
+<p>
+<h3>Image copy finder</h3>
+<h4>Description:</h4>
+Image copy finder attempts to find copies of images in folders selected by the user. After initial scan
+should any pairs of similar-looking images be found, they are displayed to the user, who can decide
+to move one of them into user-selected "delete" folder or hide that pair.
+<h4>How it works:</h4>
+Image copy finder (ICF) works in two phases:<br/>
+<ol>
+    <li>Finding and preparing images</li>
+    During this phase ICF looks for images in given folders. For all of the images, it scaled them down, and if
+    alternative mode is selected, blur them.
+    This allows for elimination of artifacts caused by compression. <br/> <br/>
+
+    <li>Comparing images</li>
+    All of the processed images are compared with each other on pixel-by-pixel basis. If they are similar enough, they
+    are added as a pair to list containing similar images.
+</ol>
+After completing those two phases images displayed to the user.
+</p>
+<hr/>
+
+
+<p>
+<h3>Image compression</h3>
+<h4>Description:</h4>
+Image compression uses my custom lossy compression algorithm to compress images. It uses a combination of chroma
+subsampling, dictionary compression and RLE compression. Additional improvements are planned.
+<h4>File structure:</h4>
+Best way to describe algorithm is to describe its file structure:
+<ol>
+    <li>Header</li>
+    Header contains information about:
+    <ol>
+        <li>Algorithm name</li>
+        <li>Version that this file was compressed with</li>
+        <li>Last version that can decode this file</li>
+        <li>Flags (currently unused)</li>
+        <li>Width</li>
+        <li>Height</li>
+        <li>Block size - image is divided into blocks of this size</li>
+    </ol>
+    <li>Blocks:</li>
+    Each block describes Y, Cb or Cr layer in YCbCr color space.
+    Each block contains information about:
+    <ol>
+        <li>Dictionary</li>
+        Dictionary is generated using K-Means algorithm and Y and CbCr weights provided by user. Contains:
+        <ol>
+            <li>Dictionary size</li>
+            <li>Y/Cb/Cr values ordered by ID</li>
+        </ol>
+        <li>Compressed lines</li>
+        Each of the lines is compressed using one of the compression algorithms:
+        <ol>
+            <li>RLE</li>
+            RLE handles simple cases where only one or two colors are used and they exists simple way to describe them.
+            <li>Differential</li>
+            Differential handles most cases. If value is the same as the last value, only "REPEAT" information is
+            encoded.
+            <li>Simple</li>
+            Simple handles basic cases, where only two values are present. In those cases using differential method
+            would always lead to increase in compressed file size.
+        </ol>
+    </ol>
+</ol>
+</p>
+<hr/>
+
+<p>
+<h3>Scanner to note</h3>
+<h4>Description:</h4>
+Scanner to note attempts to convert scanned images into ones that are easier to read.
+<h4>How it works:</h4>
+Based on: <a href ="https://mzucker.github.io/2016/09/20/noteshrink.html">https://mzucker.github.io/2016/09/20/noteshrink.html</a>
+</p>
+<hr/>
+
+<p>
+<h3>High pass filter</h3>
+<h4>Description:</h4>
+Similar to Scanner to note. Attempts to remove gradients and backgrounds from images/scans/photos.
+<h4>How it works:</h4>
+High pass filter. That's all.
+</p>
+<hr/>
+
+<p>
+<h3>Automated filter</h3>
+<h4>Description:</h4>
+Works exactly like High pass filter but allows to use .pdf files instead.
+</p>
+
+</body>
+</html>

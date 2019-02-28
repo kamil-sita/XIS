@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane prefHeight="300.0" prefWidth="600.0" styleClass="front-anchor-pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.imagecopyfinder.view1settings.View1Controller">
+<?import javafx.scene.web.WebView?>
+<AnchorPane prefHeight="300.0" prefWidth="600.0" styleClass="front-anchor-pane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sections.defaultpage.WelcomePageController">
    <children>
       <Label layoutX="40.0" layoutY="14.0" text="Thank you for using XIS">
          <font>
@@ -15,5 +16,6 @@
             <Font size="14.0" />
          </font>
       </Label>
+      <WebView fx:id="webView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="80.0" />
    </children>
 </AnchorPane>

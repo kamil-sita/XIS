@@ -32,6 +32,7 @@ public final class MainViewController {
     private static MainViewController staticController;
 
     private final List<Notifier> notifiers = Collections.synchronizedList(new ArrayList<>());
+    private boolean appClosed = false;
 
     //JavaFX Elements
 
@@ -121,7 +122,7 @@ public final class MainViewController {
     @FXML
     public void initialize() {
         new Thread(() -> {
-            while (true) {
+            while (!appClosed) {
                 try {
                     System.out.println("Notifier count: " + notifiers.size());
                     Thread.sleep(1000);
@@ -253,5 +254,13 @@ public final class MainViewController {
 
     public ImageCopyFinder getImageCopyFinder() {
         return imageCopyFinder;
+    }
+
+    public boolean isAppClosed() {
+        return appClosed;
+    }
+
+    public void setAppClosed(boolean appClosed) {
+        this.appClosed = appClosed;
     }
 }

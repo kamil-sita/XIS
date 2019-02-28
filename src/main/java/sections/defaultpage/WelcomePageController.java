@@ -19,7 +19,7 @@ public final class WelcomePageController extends XisController {
     public void initialize() {
         new Thread(() -> {
             try {
-                URL url = new URL("http://kamil-sita.github.io/xis");
+                URL url = new URL("http://kamil-sita.github.io/XIS/");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.connect();

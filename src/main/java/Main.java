@@ -3,6 +3,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import main.MainViewController;
 import sections.StageWithListener;
 
 public final class Main extends Application {
@@ -22,6 +23,7 @@ public final class Main extends Application {
         stage.show();
 
         new StageWithListener(stage).addListeners();
-    }
 
+        stage.setOnHiding(event -> MainViewController.getInstance().setAppClosed(true));
+    }
 }

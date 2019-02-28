@@ -16,19 +16,16 @@ public class XisController {
     }
 
     public void registerNotifier(Notifier notifier) {
-        System.out.println("+");
         notifiers.add(notifier);
         mainViewController.addNotifier(notifier);
     }
 
     public void deregisterNotifier(Notifier notifier) {
-        System.out.println("-");
         notifiers.remove(notifier);
         mainViewController.removeNotifier(notifier);
     }
 
     public void deregisterAllNotifiers() {
-        System.out.println("-ALL");
         mainViewController.removeAll(notifiers);
     }
 

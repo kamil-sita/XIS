@@ -4,7 +4,6 @@ import sections.GlobalSettings;
 import sections.Interruptible;
 import toolset.imagetools.Rgb;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,12 +42,11 @@ public final class ImageComparator {
 
     /**
      * Runs image comparator
-     * @param folders
      * @return true if initialized
      */
-    public boolean run(File[] folders,Interruptible interruptible) {
+    public boolean run(List<GroupedFolder> groupedFolders, Interruptible interruptible) {
         this.interruptible = interruptible;
-        var optionalImages = ComparableImageIO.loadFiles(folders, generatedMiniatureSize, interruptible);
+        var optionalImages = ComparableImageIO.loadFiles(groupedFolders, generatedMiniatureSize, interruptible);
         if (interruptible.isInterrupted()) return false;
         if (!optionalImages.isEmpty()) {
             images = optionalImages;
@@ -105,6 +103,7 @@ public final class ImageComparator {
     }
 
     private void addPairIfSimilar(ComparableImage image1, ComparableImage image2) {
+        if (!image1.canCompare(image2)) return;
         if (image1.getAverageHsb().hueDiff(image2.getAverageHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
             double similarity = compareImages(image1, image2);
             if (similarity >= MINIMUM_SIMILARITY) {

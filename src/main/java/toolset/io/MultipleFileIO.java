@@ -1,68 +1,69 @@
 package toolset.io;
 
-import sections.UserFeedback;
+import sections.imagecopyfinder.GroupedFile;
+import sections.imagecopyfinder.GroupedFolder;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class MultipleFileIO {
 
-    public static File[] getFoldersFromStrings(List<String> fileFolders, UserFeedback userFeedback) {
-        File[] folders = new File[fileFolders.size()];
-        for (int i = 0; i < fileFolders.size(); i++) {
-            String s = fileFolders.get(i);
-            File folder = null;
-            try {
-                folder = new File(s);
-            } catch (Exception e) {
-                userFeedback.popup("Exception caused by: " + s);
-            }
-            if (folder == null) {
-                userFeedback.popup("Not a file/directory: " + s);
-                return null;
-            }
-            if (!folder.isDirectory()) {
-                userFeedback.popup("Not a folder: " + s);
-            }
-            folders[i] = folder;
+    public static List<GroupedFolder> openRecursiveFolders(List<GroupedFolder> groupedFolders) {
+        var out = new ArrayList<GroupedFolder>();
+        for (var groupedFolder : groupedFolders) {
+            out.add(groupedFolder);
+            if (!groupedFolder.isOpenRecursively()) continue;
+            openRecursively(out, groupedFolder);
         }
-        return folders;
+        return out;
     }
 
-    public static List<File> loadFilesFromFolders(File[] folders) {
-        ArrayList<File> files = getFiles(folders);
+    private static void openRecursively(List<GroupedFolder> groupedFolders, GroupedFolder template) {
+        for (var file : Objects.requireNonNull(template.getFolder().listFiles())) {
+            if (!file.isDirectory()) continue;
+            var groupedFolder = new GroupedFolder(template, file);
+            groupedFolders.add(groupedFolder);
+            openRecursively(groupedFolders, groupedFolder);
+        }
+    }
+
+    public static List<GroupedFile> loadFilesFromFolders(List<GroupedFolder> groupedFolders) {
+        var files = getFiles(groupedFolders);
         if (files.size() == 0) return Collections.emptyList();
         return files;
     }
 
-    private static ArrayList<File> getFiles(File[] folders) {
-        ArrayList<File> files = new ArrayList<>();
-        for (File folder : folders) {
-            File[] filesToAdd = folder.listFiles();
+    private static List<GroupedFile> getFiles(List<GroupedFolder> groupedFolders) {
+        var groupedFiles = new ArrayList<GroupedFile>();
+        for (var groupedFolder : groupedFolders) {
+            File[] filesToAdd = groupedFolder.getFolder().listFiles();
             if (filesToAdd == null) continue;
-            files.addAll(Arrays.asList(filesToAdd));
+            for (var file : filesToAdd) {
+                groupedFiles.add(new GroupedFile(groupedFolder.getGroupId(), groupedFolder.getCompareGroup(), file));
+            }
         }
-        return files;
+
+        return filterOutNonImages(groupedFiles);
     }
 
-    public static List<File> filterOutNonImages(List<File> files) {
+    public static List<GroupedFile> filterOutNonImages(List<GroupedFile> files) {
         return files
                 .stream()
                 .filter(MultipleFileIO::isImage)
                 .collect(Collectors.toList());
     }
 
-    private static boolean isImage(File file) {
-        if (file.isDirectory()) return false;
+    private static boolean isImage(GroupedFile file) {
+        if (file.getFile().isDirectory()) return false;
         String s = "";
         try {
-            s = Files.probeContentType(file.toPath());
+            s = Files.probeContentType(file.getFile().toPath());
         } catch (IOException e) {
             e.printStackTrace();
         }

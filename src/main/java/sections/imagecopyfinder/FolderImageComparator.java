@@ -9,28 +9,29 @@ import java.util.List;
 public final class FolderImageComparator {
 
     private ImageComparator imageComparator;
-    private String[] fileFolders;
-    public FolderImageComparator(String[] fileFolders, int miniatureSize) {
+    private String[] input;
+    public FolderImageComparator(String[] input, int miniatureSize) {
         imageComparator = new ImageComparator(miniatureSize);
-        this.fileFolders = fileFolders;
+        this.input = input;
     }
 
     public ImageComparator compare(Interruptible interruptible) {
 
-        var folderList = Arrays.asList(fileFolders);
+        var folderList = Arrays.asList(input);
         removeDuplicateStrings(folderList);
         if (folderList.size() == 0) {
             interruptible.getUserFeedback().popup("No input given");
             return null;
         }
-        var folders = MultipleFileIO.getFoldersFromStrings(folderList, interruptible.getUserFeedback());
-        if (folders == null || folders.length == 0) {
+        var groupedFolders = GroupedFoldersParser.parse(input);
+        if (groupedFolders == null || groupedFolders.size() == 0) {
             interruptible.getUserFeedback().popup("No folders found");
             return null;
         }
 
+       var groupedFoldersOpened =  MultipleFileIO.openRecursiveFolders(groupedFolders);
 
-        boolean status = imageComparator.run(folders, interruptible);
+        boolean status = imageComparator.run(groupedFoldersOpened, interruptible);
         if (interruptible.isInterrupted()) return null;
 
         if (!status) {

@@ -8,6 +8,8 @@ import toolset.imagetools.Rgb;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import static sections.imagecopyfinder.CompareGroup.*;
+
 /**
  * ComparableImage is image that can be compared by ImageComparator
  */
@@ -26,9 +28,10 @@ public final class ComparableImage {
     private int height;
 
 
-    public ComparableImage(File file, BufferedImage image, final int COMPARED_IMAGE_SIZE) {
-        imageFile = file;
-
+    public ComparableImage(GroupedFile file, BufferedImage image, final int COMPARED_IMAGE_SIZE) {
+        imageFile = file.getFile();
+        compareGroup = file.getCompareGroup();
+        groupId = file.getGroupId();
         width = image.getWidth();
         height = image.getHeight();
 
@@ -40,6 +43,42 @@ public final class ComparableImage {
 
         Rgb rgb = new Rgb(BufferedImageScale.getComparableScaledDownImage(smallImage, 1).getRGB(0, 0));
         averageHsb = rgb.toHSB();
+    }
+
+    public boolean canCompare(ComparableImage comparableImage) {
+
+        //localOnly
+        if (compareGroup == localOnly) {
+            //check if other can compare locally
+            if (comparableImage.compareGroup == localOnly || comparableImage.compareGroup == all) { //theoretically the
+                // other group cannot have other compareGroup status due to the creation method
+
+                //check if share group
+                return groupId == comparableImage.groupId;
+            } else {
+                return false;
+            }
+        }
+
+        //globalOnly
+        if (compareGroup == globalOnly) {
+            if (comparableImage.compareGroup == all || comparableImage.compareGroup == globalOnly) {
+                //check if in other groups
+                return groupId != comparableImage.groupId;
+            }
+            return false;
+        }
+
+        //all
+        if (comparableImage.compareGroup == globalOnly) {
+            return groupId != comparableImage.groupId;
+        }
+
+        if (comparableImage.compareGroup == localOnly) {
+            return groupId == comparableImage.groupId;
+        }
+
+        return true;
     }
 
     public double getProportion() {

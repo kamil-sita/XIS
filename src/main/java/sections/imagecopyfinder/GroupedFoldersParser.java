@@ -63,6 +63,7 @@ public class GroupedFoldersParser {
             //not in group
 
             CompareGroup compareGroup = getCompareGroupFolders(lineTrimmed);
+            lineTrimmed = stripLineFromCompareArgument(lineTrimmed);
             boolean isOpenRecursively = isOpenRecursively(lineTrimmed);
             var finalLine = stripFromOpenRecursively(lineTrimmed);
             File f = getFolder(finalLine);

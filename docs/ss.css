@@ -9,5 +9,11 @@ body {
 }
 
 p, h1, h2, h3, h4 {
-    color: rgb(16, 16, 16);
+    color: rgb(8, 8, 8);
+    font-weight: 900;
+}
+
+div {
+    font-weight: lighter;
+    color: rgb(32, 32, 32);
 }

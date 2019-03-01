@@ -28,6 +28,54 @@
 Image copy finder attempts to find copies of images in folders selected by the user. After initial scan
 should any pairs of similar-looking images be found, they are displayed to the user, who can decide
 to move one of them into user-selected "delete" folder or hide that pair.
+    <h4>Syntax:</h4>
+
+    <b>Simple queries:</b> <br/>
+    Put each folder into different line: <br/>
+    <code>C:\example folder <br/>
+        C:\example folder2</code><br/><br/>
+
+    <b>Recursive queries:</b> <br/>
+    Put a plus sign before folder which you want to open recursively: <br/>
+    <code>+C:\example folder <br/>
+        C:\example folder2</code><br/>
+    "example folder" will be opened recursively<br/><br/>
+
+    <b>Local queries</b> <br/>
+    If contents of one folder should be compared only locally (within this group), put at "L" the start of the line: <br/>
+    <code>L +C:\example folder <br/>
+        L C:\example folder2</code><br/>
+    Contents of "example folder" will not be compared with contents of "example folder2" <br/><br/>
+
+    <b>Global queries</b> <br/>
+    If contents of one folder should be compared only globally (with files from outside this group), put "G" at the start of the line: <br/>
+    <code>G +C:\example folder <br/>
+        G C:\example folder2 <br/>
+        L +C:\example folder3
+    </code><br/>
+    Contents of "example folder" will be compared with contents of "example folder2" but not "example folder3". Contents of "example folder" and "example folder2" will not be compared locally.<br/><br/>
+
+    <b>Join groups</b> <br/>
+    If you want for a list of folders to behave like a one folder put "JOIN (" at the start of the group and ")" at the end: <br/>
+    <code>
+        JOIN ( <br/>
+        +C:\example folder <br/>
+        C:\example folder2 <br/>
+        )
+    </code> <br/>
+    Both operators need to be alone in the line. Folders inside of group cannot have local or global modifiers. <br/>
+    Joined folders behave like a single folder. Local or global modifier can be placed before "JOIN (": <br/>
+    <code>
+        C:\example folder3
+        G JOIN ( <br/>
+        +C:\example folder <br/>
+        +C:\example folder2 <br/>
+        )
+    </code> <br/>
+    Contents of "example folder3" will be compared with contents of "example folder" amd "example folder2" as if the latter were a single folder.
+    <br/>
+
+    <b></b>
 <h4>How it works:</h4>
 Image copy finder (ICF) works in two phases:<br/>
 <ol>

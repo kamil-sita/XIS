@@ -64,7 +64,7 @@ public final class ImageComparator {
     private void findPairsMultithreaded() {
         imagePairs = Collections.synchronizedList(new ArrayList<>());
 
-        var clock = new ImageComparatorClock(images.size());
+        var clock = new ImageComparatorTimer(images.size());
 
         ExecutorService exec = Executors.newFixedThreadPool(GlobalSettings.getThreadCount());
         AtomicInteger finishedThreads = new AtomicInteger();
@@ -112,7 +112,7 @@ public final class ImageComparator {
         }
     }
 
-    private void reportFindPairingProgress(ImageComparatorClock clock, int i) {
+    private void reportFindPairingProgress(ImageComparatorTimer clock, int i) {
         if (i >= 10) {
             double dt = clock.getApproximateTimeLeftComparing(i);
             interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
@@ -170,7 +170,7 @@ public final class ImageComparator {
     }
 
     public enum ImageComparatorStatus {
-        SUCCESSFUL, NO_IMAGES_IN_DIRECTORY, NOT_FOLDER, IO_ERROR, NO_PAIRS;
+        SUCCESSFUL, NO_IMAGES_IN_DIRECTORY, NOT_FOLDER, IO_ERROR, NO_PAIRS, ERROR_ALREADY_HANDLED;
 
         @Override
         public String toString() {

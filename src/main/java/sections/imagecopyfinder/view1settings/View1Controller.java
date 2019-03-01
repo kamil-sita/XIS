@@ -73,6 +73,7 @@ public final class View1Controller extends XisController {
             getMainViewController().getImageCopyFinder().setInterface(ImageCopyFinder.ImageCopyFinderViews.compareCopiedImagesView);
             refreshVista();
         } else {
+            if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.ERROR_ALREADY_HANDLED) return;
             getUserFeedback().popup(imageComparator.getStatus().toString());
         }
     }

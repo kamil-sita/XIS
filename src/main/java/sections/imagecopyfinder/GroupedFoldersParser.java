@@ -53,7 +53,7 @@ public class GroupedFoldersParser {
                     boolean isOpenRecursively = isOpenRecursively(lineTrimmed);
                     var finalLine = stripFromOpenRecursively(lineTrimmed);
                     File f = getFolder(finalLine);
-                    if (f == null) handleError(lineId, "failed to open file", line);
+                    if (f == null) handleError(lineId, "failed to open file OR it's not a file", line);
                     var groupedFolder = new GroupedFolder(currentGroupdId, compareGroupForCurrentGroup, isOpenRecursively, f);
                     groupedFolders.add(groupedFolder);
                     continue;
@@ -67,7 +67,7 @@ public class GroupedFoldersParser {
             boolean isOpenRecursively = isOpenRecursively(lineTrimmed);
             var finalLine = stripFromOpenRecursively(lineTrimmed);
             File f = getFolder(finalLine);
-            if (f == null) handleError(lineId, "failed to open file", line);
+            if (f == null) handleError(lineId, "failed to open file OR it's not a file", line);
             var groupedFolder = new GroupedFolder(currentGroupdId, compareGroup, isOpenRecursively, f);
             groupedFolders.add(groupedFolder);
         }

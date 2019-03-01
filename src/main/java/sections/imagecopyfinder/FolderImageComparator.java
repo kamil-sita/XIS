@@ -23,13 +23,21 @@ public final class FolderImageComparator {
             interruptible.getUserFeedback().popup("No input given");
             return null;
         }
-        var groupedFolders = GroupedFoldersParser.parse(input);
+        List<GroupedFolder> groupedFolders = null;
+        try {
+            groupedFolders = GroupedFoldersParser.parse(input);
+        } catch (Exception e) {
+            interruptible.getUserFeedback().popup(e.getMessage());
+            imageComparator.setStatus(ImageComparator.ImageComparatorStatus.ERROR_ALREADY_HANDLED);
+            return null;
+        }
         if (groupedFolders == null || groupedFolders.size() == 0) {
             interruptible.getUserFeedback().popup("No folders found");
+            imageComparator.setStatus(ImageComparator.ImageComparatorStatus.ERROR_ALREADY_HANDLED);
             return null;
         }
 
-       var groupedFoldersOpened =  MultipleFileIO.openRecursiveFolders(groupedFolders);
+       var groupedFoldersOpened =  MultipleFileIO.openRecursiveFolders(groupedFolders, interruptible);
 
         boolean status = imageComparator.run(groupedFoldersOpened, interruptible);
         if (interruptible.isInterrupted()) return null;

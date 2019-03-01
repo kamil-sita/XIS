@@ -1,5 +1,6 @@
 package toolset.io;
 
+import sections.Interruptible;
 import sections.imagecopyfinder.GroupedFile;
 import sections.imagecopyfinder.GroupedFolder;
 
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 
 public class MultipleFileIO {
 
-    public static List<GroupedFolder> openRecursiveFolders(List<GroupedFolder> groupedFolders) {
+    public static List<GroupedFolder> openRecursiveFolders(List<GroupedFolder> groupedFolders, Interruptible interruptible) {
         var out = new ArrayList<GroupedFolder>();
-        for (var groupedFolder : groupedFolders) {
+        for (int i = 0; i < groupedFolders.size(); i++) {
+            interruptible.reportProgress("Opening recursively (" + (i+1) + "/" + groupedFolders.size() + "): " + groupedFolders.get(i).getFolder().getName());
+            GroupedFolder groupedFolder = groupedFolders.get(i);
             out.add(groupedFolder);
             if (!groupedFolder.isOpenRecursively()) continue;
             openRecursively(out, groupedFolder);
@@ -27,6 +30,7 @@ public class MultipleFileIO {
     private static void openRecursively(List<GroupedFolder> groupedFolders, GroupedFolder template) {
         for (var file : Objects.requireNonNull(template.getFolder().listFiles())) {
             if (!file.isDirectory()) continue;
+            System.out.println(file.getAbsolutePath());
             var groupedFolder = new GroupedFolder(template, file);
             groupedFolders.add(groupedFolder);
             openRecursively(groupedFolders, groupedFolder);
@@ -49,7 +53,7 @@ public class MultipleFileIO {
             }
         }
 
-        return filterOutNonImages(groupedFiles);
+        return groupedFiles;
     }
 
     public static List<GroupedFile> filterOutNonImages(List<GroupedFile> files) {

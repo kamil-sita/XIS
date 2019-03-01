@@ -1,10 +1,10 @@
 package sections.imagecopyfinder;
 
-class ImageComparatorClock {
+class ImageComparatorTimer {
     private long timeStart = System.nanoTime();
     private int length;
     
-    public ImageComparatorClock(int length) {
+    public ImageComparatorTimer(int length) {
         this.length = length;
     }
 

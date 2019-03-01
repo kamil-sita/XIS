@@ -6,6 +6,7 @@ import toolset.imagetools.Rgb;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -59,16 +60,23 @@ public final class ImageComparator {
 
 
     /**
-     * Finds pairs of similar images using all of available cores.
+     * Finds pairs of similar images using multithreading.
+     * Instead of comparing every element of array with every other element, it sorts them first and for every element compares it until they're not similar enough (to be exact
+     * it compares their H element in average HSB.
+     * Instead of O(n^2) it is O(nlogn) (sorting) + k * n, where k << n
      */
     private void findPairsMultithreaded() {
         imagePairs = Collections.synchronizedList(new ArrayList<>());
 
-        var clock = new ImageComparatorTimer(images.size());
+        var startTime = System.nanoTime();
 
         ExecutorService exec = Executors.newFixedThreadPool(GlobalSettings.getThreadCount());
         AtomicInteger finishedThreads = new AtomicInteger();
         CountDownLatch latch = new CountDownLatch(images.size());
+
+        interruptible.reportProgress("Sorting");
+        images.sort(Comparator.comparingDouble(o -> o.getAverageHsb().H));
+        interruptible.reportProgress("Sorted");
 
         try {
             for (int i = 0; i < images.size(); i++) {
@@ -76,7 +84,7 @@ public final class ImageComparator {
                 exec.submit(() -> {
                     findPairsFor(c);
                     finishedThreads.getAndIncrement();
-                    reportFindPairingProgress(clock, finishedThreads.getAcquire());
+                    reportFindPairingProgress(startTime, finishedThreads.getAcquire(), images.size());
                     latch.countDown();
                 });
             }
@@ -93,14 +101,21 @@ public final class ImageComparator {
         interruptible.reportProgress("Images compared");
     }
 
-    private void findPairsFor(int i) {
-        ComparableImage image1 = images.get(i);
-        for (int j = i + 1; j < images.size(); j++) {
-            if (interruptible.isInterrupted()) return;
-            ComparableImage image2 = images.get(j);
-            addPairIfSimilar(image1, image2);
+    private void findPairsFor(int index) {
+        final double HUE_DIFF_MAX = 0.2;
+        //comparing with all other images until hues differ enough
+        double hForIndex = images.get(index).getAverageHsb().H;
+        for (int i = 1; i < images.size(); i++) {
+            int compareIndex = (i + index)%images.size();
+
+            if (Math.abs(images.get(compareIndex).getAverageHsb().H - hForIndex) > HUE_DIFF_MAX) {
+                System.out.println(i);
+                return;
+            }
+            addPairIfSimilar(images.get(index), images.get(compareIndex));
         }
     }
+
 
     private void addPairIfSimilar(ComparableImage image1, ComparableImage image2) {
         if (!image1.canCompare(image2)) return;
@@ -112,10 +127,9 @@ public final class ImageComparator {
         }
     }
 
-    private void reportFindPairingProgress(ImageComparatorTimer clock, int i) {
+    private void reportFindPairingProgress(long startTime, int i, int all) {
         if (i >= 10) {
-            double dt = clock.getApproximateTimeLeftComparing(i);
-            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + ((int) (dt)) + " seconds.");
+            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + getApproximateTimeLeftLinear(i, startTime, all - i) + " seconds.");
         } else {
             interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
         }
@@ -123,6 +137,12 @@ public final class ImageComparator {
         interruptible.reportProgress((1.0*i)/images.size());
     }
 
+    private static double getApproximateTimeLeftLinear(int currentIteration, long time, int left) {
+        double dt = System.nanoTime() - time;
+        dt = dt * (left) / (currentIteration);
+        dt /= 1000000000;
+        return dt;
+    }
 
 
 

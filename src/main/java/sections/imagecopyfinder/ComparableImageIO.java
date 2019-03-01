@@ -42,9 +42,9 @@ public class ComparableImageIO {
         return images;
     }
 
-    private static double getApproximateTimeLeftFileLoading(int i, long time, int i2) {
+    private static double getApproximateTimeLeftFileLoading(int currentIteration, long time, int left) {
         double dt = System.nanoTime() - time;
-        dt = dt * (i2) / (i);
+        dt = dt * (left) / (currentIteration);
         dt /= 1000000000;
         return dt;
     }

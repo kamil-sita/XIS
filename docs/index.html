@@ -39,13 +39,13 @@ to move one of them into user-selected "delete" folder or hide that pair.
     Put a plus sign before folder which you want to open recursively: <br/>
     <code>+C:\example folder <br/>
         C:\example folder2</code><br/>
-    "example folder" will be opened recursively<br/><br/>
+    "example folder" will be opened recursively. All folders found recursively are considered to be the same as parent folder during comparison (they belong in the same group).<br/><br/>
 
     <b>Local queries</b> <br/>
     If contents of one folder should be compared only locally (within this group), put at "L" the start of the line: <br/>
     <code>L +C:\example folder <br/>
         L C:\example folder2</code><br/>
-    Contents of "example folder" will not be compared with contents of "example folder2" <br/><br/>
+    Contents of "example folder" will not be compared with contents of "example folder2".<br/><br/>
 
     <b>Global queries</b> <br/>
     If contents of one folder should be compared only globally (with files from outside this group), put "G" at the start of the line: <br/>
@@ -63,16 +63,16 @@ to move one of them into user-selected "delete" folder or hide that pair.
         C:\example folder2 <br/>
         )
     </code> <br/>
-    Both operators need to be alone in the line. Folders inside of group cannot have local or global modifiers. <br/>
+    Both operators need to be the only things in their line. Folders inside of group cannot have local or global modifiers. <br/>
     Joined folders behave like a single folder. Local or global modifier can be placed before "JOIN (": <br/>
     <code>
-        C:\example folder3
+        C:\example folder3 <br/>
         G JOIN ( <br/>
         +C:\example folder <br/>
         +C:\example folder2 <br/>
         )
     </code> <br/>
-    Contents of "example folder3" will be compared with contents of "example folder" amd "example folder2" as if the latter were a single folder.
+    Contents of "example folder3" will be compared with contents of "example folder" and "example folder2" as if the latter were a single folder.
     <br/>
 
     <b></b>

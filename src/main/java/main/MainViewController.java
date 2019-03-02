@@ -121,16 +121,6 @@ public final class MainViewController {
      */
     @FXML
     public void initialize() {
-        new Thread(() -> {
-            while (!appClosed) {
-                try {
-                    System.out.println("Notifier count: " + notifiers.size());
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
         staticController = this;
         mainPress(null);
         scrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {

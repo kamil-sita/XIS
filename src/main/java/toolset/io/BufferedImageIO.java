@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public final class BufferedImageIO {
+public final class BufferedImageIO implements AutoCloseable {
     public static Optional<BufferedImage> getImage(File file) {
         BufferedImage bufferedImage = null;
         try {
@@ -26,9 +26,9 @@ public final class BufferedImageIO {
         return Optional.of(bufferedImage);
     }
 
-    private static ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private ExecutorService executorService = Executors.newFixedThreadPool(1);
 
-    public static Optional<BufferedImage> getImageWithFailsafe(File file, Interruptible interruptible) {
+    public Optional<BufferedImage> getImageWithFailsafe(File file, Interruptible interruptible) {
         final BufferedImage[] bufferedImage = {null};
         try {
             CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -47,6 +47,10 @@ public final class BufferedImageIO {
             if (interruptible != null) interruptible.popup("Failed to load: " + file.getName());
         }
         return Optional.ofNullable(bufferedImage[0]);
+    }
+
+    public void close() {
+        executorService.shutdown();
     }
 
     public static File saveImage(BufferedImage image, File file) {

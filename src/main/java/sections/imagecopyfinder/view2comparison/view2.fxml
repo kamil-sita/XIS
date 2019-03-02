@@ -25,5 +25,6 @@
             <StackPane fx:id="rightPane" GridPane.columnIndex="1" />
          </children>
       </GridPane>
+      <Label fx:id="numberOfImages" layoutX="451.0" layoutY="7.0" text="x images at current view" AnchorPane.rightAnchor="20.0" />
    </children>
 </AnchorPane>

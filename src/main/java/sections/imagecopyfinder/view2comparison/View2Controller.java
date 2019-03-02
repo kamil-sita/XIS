@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
@@ -43,6 +44,10 @@ public final class View2Controller extends XisController {
 
     @FXML
     private GridPane gridPane;
+
+    @FXML
+    private Label numberOfImages;
+
 
     private double lastSimilarity;
 
@@ -155,6 +160,7 @@ public final class View2Controller extends XisController {
 
     private void refreshListView() {
         comparableImagePairListView.refresh();
+        numberOfImages.setText(comparableImagePairListView.getItems().size() + " images at current view");
     }
 
     private void elementHovered(ComparableImagePair comparableImagePair) {

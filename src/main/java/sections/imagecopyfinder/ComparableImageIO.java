@@ -19,25 +19,29 @@ public class ComparableImageIO {
 
         long time = System.nanoTime();
 
-        for (int i = 0; i < groupedFiles.size(); i++) {
-            var groupedFile = groupedFiles.get(i);
-            if (i >= 10) {
-                double dt = getApproximateTimeLeftFileLoading(i, time, groupedFiles.size() - i);
-                interruptible.reportProgress("Generating preview for file (" + (i+1) + "/" + groupedFiles.size() + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
-            } else {
-                interruptible.reportProgress("Generating preview for file (" + (i+1) + "/" + groupedFiles.size() + ")");
+        try (var bufferedImageIo = new BufferedImageIO()){
+            for (int i = 0; i < groupedFiles.size(); i++) {
+                var groupedFile = groupedFiles.get(i);
+                if (i >= 10) {
+                    double dt = getApproximateTimeLeftFileLoading(i, time, groupedFiles.size() - i);
+                    interruptible.reportProgress("Generating preview for file (" + (i+1) + "/" + groupedFiles.size() + "). Estimated time left for generating previews: " + ((int) (dt)) + " seconds.");
+                } else {
+                    interruptible.reportProgress("Generating preview for file (" + (i+1) + "/" + groupedFiles.size() + ")");
+                }
+
+                interruptible.reportProgress((1.0*i)/images.size());
+
+                var optionalImage = bufferedImageIo.getImageWithFailsafe(groupedFile.getFile(), interruptible);
+                if (optionalImage.isPresent()) {
+                    ComparableImage comparableImage = new ComparableImage(groupedFile, optionalImage.get(), generatedMiniatureSize);
+                    images.add(comparableImage);
+                }
+
+                if (interruptible.isInterrupted()) return Collections.emptyList();
             }
-
-            interruptible.reportProgress((1.0*i)/images.size());
-
-            var optionalImage = BufferedImageIO.getImageWithFailsafe(groupedFile.getFile(), interruptible);
-            if (optionalImage.isPresent()) {
-                ComparableImage comparableImage = new ComparableImage(groupedFile, optionalImage.get(), generatedMiniatureSize);
-                images.add(comparableImage);
-            }
-
-            if (interruptible.isInterrupted()) return Collections.emptyList();
         }
+
+
 
         return images;
     }

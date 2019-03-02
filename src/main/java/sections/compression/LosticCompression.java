@@ -1,6 +1,7 @@
 package sections.compression;
 
 import pl.ksitarski.simplekmeans.KMeans;
+import sections.GlobalSettings;
 import sections.Interruptible;
 import sections.MockInterruptible;
 import toolset.IntegerMath;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutorService;
 
 public class LosticCompression {
 
@@ -49,17 +51,24 @@ public class LosticCompression {
 
         KMeans.setLogger(s -> {});
 
-        int i = 0;
-        for (int y = 0; y < size_Y; y++) {
-            for (int x = 0; x < size_X; x++) {
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), arguments.getyWeight(), arguments.allowReordering(), statistic);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), arguments.getcWeight(), arguments.allowReordering(), statistic);
-                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), arguments.getcWeight(), arguments.allowReordering(), statistic);
-                i++;
-                if (interruptible.isInterrupted()) return Optional.empty();
-                interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
+        ExecutorService executorService = null;
+        try {
+            executorService = GlobalSettings.getInstance().getExecutorServiceForMostThreads();
+            int i = 0;
+            for (int y = 0; y < size_Y; y++) {
+                for (int x = 0; x < size_X; x++) {
+                    compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), arguments.getyWeight(), arguments.allowReordering(), statistic, executorService);
+                    compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), arguments.getcWeight(), arguments.allowReordering(), statistic, executorService);
+                    compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), arguments.getcWeight(), arguments.allowReordering(), statistic, executorService);
+                    i++;
+                    if (interruptible.isInterrupted()) return Optional.empty();
+                    interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
+                }
             }
+        } finally {
+            if (executorService != null) executorService.shutdown();
         }
+
 
         BufferedImage preview = ycbcr.getBufferedImage();
 
@@ -130,12 +139,12 @@ public class LosticCompression {
         return b;
     }
 
-    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier, boolean allowReordering, Statistic statistic) {
-        int dictionarySize = calculateDictionarySize(x, y, size, layer, multiplier);
+    private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier, boolean allowReordering, Statistic statistic, ExecutorService executorService) {
+        int dictionarySize = calculateDictionarySize(x, y, size, layer, multiplier, executorService);
 
         statistic.addDictionarySize(dictionarySize);
 
-        ArrayList<Integer> dictionary = generateDictionary(x, y, size, layer, dictionarySize);
+        ArrayList<Integer> dictionary = generateDictionary(x, y, size, layer, dictionarySize, executorService);
         encodeDictionary(bitSequence, dictionarySize, dictionary);
 
         final int ENCODE_SIZE = IntegerMath.log2(dictionarySize);
@@ -144,9 +153,9 @@ public class LosticCompression {
 
     }
 
-    private static ArrayList<Integer> generateDictionary(int x, int y, int size, YCbCrLayer layer, int k) {
+    private static ArrayList<Integer> generateDictionary(int x, int y, int size, YCbCrLayer layer, int k, ExecutorService executorService) {
         ArrayList<IntKMeans> valueList = getListFromArea(x, y, size, layer);
-        KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
+        KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList, executorService);
         kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
         var palette = new ArrayList<Integer>();
@@ -217,12 +226,12 @@ public class LosticCompression {
     }
 
     ///calculates k value for k means
-    private static int calculateDictionarySize(int x, int y, int size, YCbCrLayer input, double multiplier) {
+    private static int calculateDictionarySize(int x, int y, int size, YCbCrLayer input, double multiplier, ExecutorService executorService) {
         var valueList = getListFromArea(x, y, size, input);
 
         final int INITIAL_RESULTS = 32;
 
-        KMeans<IntKMeans> kMeans = new KMeans<>(INITIAL_RESULTS, valueList);
+        KMeans<IntKMeans> kMeans = new KMeans<>(INITIAL_RESULTS, valueList, executorService);
         kMeans.iterate(PRE_ITERATIONS);
         var results = kMeans.getCalculatedMeanPoints();
 

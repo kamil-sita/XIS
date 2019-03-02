@@ -153,11 +153,13 @@ public final class CompressionController extends XisController {
         compressionArguments.setcWeight(cWeightValue);
         compressionArguments.setBlockSize(blockSizeValue);
         compressionArguments.setAllowReordering(allowReordering.isSelected());
+        compressionArguments.setInput(loadedImage);
 
         OneBackgroundJobManager.setAndRunJob(new Interruptible() {
             @Override
             public Runnable getRunnable() {
                 return () -> {
+                    System.out.println("D");
                     compressionOutput = LosticCompression.compress(compressionArguments, this).orElse(null);
                 };
             };

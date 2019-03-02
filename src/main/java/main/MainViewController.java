@@ -19,7 +19,7 @@ import sections.automatedfilter.AutomatedFilter;
 import sections.compression.CompressionVista;
 import sections.defaultpage.WelcomePage;
 import sections.highpassfilter.HighPassFilter;
-import sections.imagecopyfinder.ImageCopyFinder;
+import sections.imagecopyfinder.ImageCopyFinderVista;
 import sections.scannertonote.ScannerToNote;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public final class MainViewController {
     @FXML
     private ColumnConstraints gridPaneBarRight;
 
-    private ImageCopyFinder imageCopyFinder;
+    private ImageCopyFinderVista imageCopyFinder;
 
 
     //Actions methods
@@ -69,7 +69,7 @@ public final class MainViewController {
 
     @FXML
     void imageCopyFinderPress(ActionEvent event) {
-        imageCopyFinder = new ImageCopyFinder();
+        imageCopyFinder = new ImageCopyFinderVista();
         changeVistaIfChanged(imageCopyFinder);
         currentModule = imageCopyFinder;
         setStatus("imagecopyfinder module loaded");
@@ -242,7 +242,7 @@ public final class MainViewController {
         return staticController;
     }
 
-    public ImageCopyFinder getImageCopyFinder() {
+    public ImageCopyFinderVista getImageCopyFinder() {
         return imageCopyFinder;
     }
 

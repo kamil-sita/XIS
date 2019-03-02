@@ -154,7 +154,7 @@ public final class ImageComparator {
      */
 
     public double compareImages(ComparableImage image1, ComparableImage image2) {
-        final double POWER = 2.35;
+        final double POWER = 6;
 
         if (!areProportionsAcceptable(image1, image2)) return -1;
 

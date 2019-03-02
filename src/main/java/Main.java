@@ -4,11 +4,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import main.MainViewController;
+import sections.GlobalSettings;
 import sections.StageWithListener;
 
 public final class Main extends Application {
 
     public static void main(String[] args) {
+        GlobalSettings.getInstance(); //initializing global settings
         launch(args);
     }
 

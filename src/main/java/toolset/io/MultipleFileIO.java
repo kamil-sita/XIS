@@ -30,7 +30,6 @@ public class MultipleFileIO {
     private static void openRecursively(List<GroupedFolder> groupedFolders, GroupedFolder template) {
         for (var file : Objects.requireNonNull(template.getFolder().listFiles())) {
             if (!file.isDirectory()) continue;
-            System.out.println(file.getAbsolutePath());
             var groupedFolder = new GroupedFolder(template, file);
             groupedFolders.add(groupedFolder);
             openRecursively(groupedFolders, groupedFolder);

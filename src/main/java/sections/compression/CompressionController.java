@@ -159,7 +159,6 @@ public final class CompressionController extends XisController {
             @Override
             public Runnable getRunnable() {
                 return () -> {
-                    System.out.println("D");
                     compressionOutput = LosticCompression.compress(compressionArguments, this).orElse(null);
                 };
             };

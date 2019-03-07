@@ -62,7 +62,7 @@ public final class ImageComparator {
      * Finds pairs of similar images using multithreading.
      * Instead of comparing every element of array with every other element, it sorts them first and for every element compares it until they're not similar enough (to be exact
      * it compares their H element in average HSB.
-     * Instead of O(n^2) it is O(nlogn) (sorting) + k * n, where k << n
+     * Instead of O(n^2) it is (sorting) + k * n, where k << n
      */
     private void findPairsMultithreaded() {
         imagePairs = Collections.synchronizedList(new ArrayList<>());
@@ -101,14 +101,12 @@ public final class ImageComparator {
     }
 
     private void findPairsFor(int index) {
-        final double HUE_DIFF_MAX = 0.2;
         //comparing with all other images until hues differ enough
         double hForIndex = images.get(index).getAverageHsb().H;
         for (int i = 1; i < images.size(); i++) {
             int compareIndex = (i + index)%images.size();
 
-            if (Math.abs(images.get(compareIndex).getAverageHsb().H - hForIndex) > HUE_DIFF_MAX) {
-                System.out.println(i);
+            if (Math.abs(images.get(compareIndex).getAverageHsb().H - hForIndex) > MAXIMUM_HUE_DIFFERENCE) {
                 return;
             }
             addPairIfSimilar(images.get(index), images.get(compareIndex));
@@ -128,7 +126,7 @@ public final class ImageComparator {
 
     private void reportFindPairingProgress(long startTime, int i, int all) {
         if (i >= 10) {
-            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + getApproximateTimeLeftLinear(i, startTime, all - i) + " seconds.");
+            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + getApproximateTimeLeftLinear(all, startTime, all - i) + " seconds.");
         } else {
             interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
         }
@@ -136,11 +134,11 @@ public final class ImageComparator {
         interruptible.reportProgress((1.0*i)/images.size());
     }
 
-    private static double getApproximateTimeLeftLinear(int currentIteration, long time, int left) {
+    private static int getApproximateTimeLeftLinear(int allTime, long time, int left) {
         double dt = System.nanoTime() - time;
-        dt = dt * (left) / (currentIteration);
+        dt = dt * (left) / (allTime);
         dt /= 1000000000;
-        return dt;
+        return (int) dt;
     }
 
 

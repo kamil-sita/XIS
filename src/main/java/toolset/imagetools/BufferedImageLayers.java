@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 public class BufferedImageLayers {
     public static BufferedImage divide(BufferedImage image0, BufferedImage image1) {
-        var output = copyImage(image0);
+        var output = sameImage(image0);
 
         for (int x = 0; x < output.getWidth(); x++) {
             for (int y = 0; y < output.getHeight(); y++) {
@@ -32,5 +32,9 @@ public class BufferedImageLayers {
         g.drawImage(input, 0, 0, null);
         g.dispose();
         return imageCopy;
+    }
+
+    private static BufferedImage sameImage(BufferedImage input) {
+        return new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 }

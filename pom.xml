@@ -6,7 +6,7 @@
 
     <groupId>pl.ksitarski.xis</groupId>
     <artifactId>XIS</artifactId>
-    <version>0.3</version>
+    <version>0.3.1</version>
 
     <dependencies>
         <!-- pdfbox for opening pdfs-->
@@ -19,7 +19,7 @@
         <!-- local dependency for kmeans-->
         <dependency>
             <groupId>pl.ksitarski.simplekmeans</groupId>
-            <artifactId>sample</artifactId>
+            <artifactId>simplekmeans</artifactId>
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/resources/simple_kmeans.jar</systemPath>

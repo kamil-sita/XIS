@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="mainPane" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.imagecopyfinder.view2comparison.View2Controller">
+   <children>
+      <Label styleClass="caption" text="Found copies:" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
+      <Label layoutX="339.0" layoutY="211.0" text="\% identical previews" AnchorPane.rightAnchor="153.0" AnchorPane.topAnchor="211.0" />
+      <ListView fx:id="comparableImagePairListView" layoutY="26.0" maxHeight="175.0" minHeight="175.0" prefHeight="175.0" prefWidth="572.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="26.0" />
+      <Slider fx:id="sliderPercentIdentical" layoutX="14.0" layoutY="211.0" majorTickUnit="5.0" min="80.0" minorTickCount="18" prefHeight="38.0" prefWidth="316.0" showTickLabels="true" showTickMarks="true" value="80.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="270.0" AnchorPane.topAnchor="211.0" />
+      <Button alignment="CENTER" layoutX="514.0" layoutY="249.0" mnemonicParsing="false" onAction="#deleteRightPress" text="Delete right" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="249.0" />
+      <Button alignment="CENTER" layoutX="7.0" layoutY="249.0" mnemonicParsing="false" onAction="#deleteLeftPress" text="Delete left" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="249.0" />
+      <Button alignment="CENTER" layoutX="87.0" layoutY="249.0" mnemonicParsing="false" onAction="#hideButtonPress" text="Hide conflict" AnchorPane.leftAnchor="87.0" AnchorPane.topAnchor="249.0" />
+      <Separator layoutX="3.0" layoutY="209.0" prefHeight="3.0" prefWidth="572.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="280.0" />
+      <GridPane fx:id="gridPane" prefHeight="350.0" prefWidth="586.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="290.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <StackPane fx:id="leftPane" />
+            <StackPane fx:id="rightPane" GridPane.columnIndex="1" />
+         </children>
+      </GridPane>
+      <Label fx:id="numberOfImages" layoutX="451.0" layoutY="7.0" text="x images at current view" AnchorPane.rightAnchor="20.0" />
+   </children>
+</AnchorPane>

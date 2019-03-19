@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<AnchorPane prefHeight="339.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.compression.CompressionController">
+   <children>
+      <Button layoutX="7.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadFilePress" text="load image" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="14.0" />
+      <Button layoutX="1127.0" layoutY="14.0" mnemonicParsing="false" onAction="#saveFilePress" text="save file" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="49.0" />
+      <Button layoutX="1018.0" layoutY="14.0" mnemonicParsing="false" onAction="#compressButton" text="compress" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="14.0" />
+      <ImageView fx:id="imagePreview" fitHeight="195.0" fitWidth="1152.0" layoutX="14.0" layoutY="96.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="96.0" />
+      <Separator layoutX="12.0" layoutY="82.0" prefWidth="200.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="82.0" />
+      <TextField fx:id="yWeight" layoutX="299.0" layoutY="16.0" prefHeight="25.0" prefWidth="74.0" AnchorPane.leftAnchor="299.0" AnchorPane.topAnchor="14.0" />
+      <Text layoutX="245.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Y weight" AnchorPane.leftAnchor="245.0" AnchorPane.topAnchor="20.0" />
+      <Text layoutX="386.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CbCr weight" AnchorPane.leftAnchor="386.0" AnchorPane.topAnchor="20.0" />
+      <TextField fx:id="cWeight" layoutX="461.0" layoutY="15.0" prefHeight="25.0" prefWidth="74.0" AnchorPane.leftAnchor="461.0" AnchorPane.topAnchor="14.0" />
+      <Button layoutX="14.0" layoutY="49.0" mnemonicParsing="false" onAction="#highQualityImagesPress" text="Preset for high quality images" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="49.0" />
+      <Button layoutX="205.0" layoutY="49.0" mnemonicParsing="false" onAction="#mediumQualityPhotosPress" text="Preset for medium quality photos" AnchorPane.leftAnchor="190.0" AnchorPane.topAnchor="49.0" />
+      <Label fx:id="outputSize" layoutX="393.0" layoutY="53.0" text="Output size: n/a" AnchorPane.leftAnchor="393.0" AnchorPane.topAnchor="53.0" />
+      <Text layoutX="548.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Block size" AnchorPane.leftAnchor="548.0" AnchorPane.topAnchor="20.0" />
+      <TextField fx:id="blockSize" layoutX="607.0" layoutY="16.0" prefHeight="25.0" prefWidth="74.0" text="32" AnchorPane.leftAnchor="607.0" AnchorPane.topAnchor="14.0" />
+      <Button layoutX="89.0" layoutY="15.0" mnemonicParsing="false" onAction="#loadCompressedFilePress" text="load compressed image" AnchorPane.leftAnchor="90.0" AnchorPane.topAnchor="14.0" />
+      <Button layoutX="1063.0" layoutY="49.0" mnemonicParsing="false" onAction="#statisticPress" text="Statistic" />
+      <CheckBox fx:id="allowReordering" layoutX="694.0" layoutY="18.0" mnemonicParsing="false" text="Allow reordering" AnchorPane.leftAnchor="694.0" />
+   </children>
+</AnchorPane>

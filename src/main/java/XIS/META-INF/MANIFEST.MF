@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+XIS.Main-Class: XIS.Main
+

@@ -10,5 +10,18 @@ module XIS {
     requires java.sql;
 
     requires simple.kmeans;
+
     exports XIS;
+
+    exports XIS.main;
+
+    opens XIS.sections.defaultpage to javafx.fxml;
+    opens XIS.sections.automatedfilter to javafx.fxml;
+    opens XIS.sections.compression to javafx.fxml;
+    opens XIS.sections.highpassfilter to javafx.fxml;
+    opens XIS.sections.imagecopyfinder to javafx.fxml;
+    opens XIS.sections.imagecopyfinder.view1settings to javafx.fxml;
+    opens XIS.sections.imagecopyfinder.view2comparison to javafx.fxml;
+    opens XIS.sections.scannertonote to javafx.fxml;
+    opens XIS.main to javafx.fxml;
 }

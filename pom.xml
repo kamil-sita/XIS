@@ -71,6 +71,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.0</version>
                 <configuration>
+                    <release>11</release>
                     <source>11</source>
                     <target>11</target>
                 </configuration>
@@ -109,10 +110,7 @@
                 <filtering>false</filtering>
                 <directory>src/main/java</directory>
                 <includes>
-                    <include>**/*.fxml</include>
-                    <include>**/*.html</include>
-                    <include>**/*.css</include>
-                    <include>**/*.MF</include>
+                    <include>**/*</include>
                 </includes>
             </resource>
         </resources>

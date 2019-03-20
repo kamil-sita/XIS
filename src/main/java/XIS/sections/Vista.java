@@ -4,7 +4,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Abstract class of XIS.main vista in user interface.
@@ -35,10 +34,10 @@ public abstract class Vista {
     }
 
     protected void load(String location) {
-        URL url = Vista.class.getClassLoader().getResource(location);
+        var str = getClass().getResourceAsStream(location);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader();
-            pane = fxmlLoader.load(url.openStream());
+            pane = fxmlLoader.load(str);
             xisController = fxmlLoader.getController();
         } catch (IOException e) {
             e.printStackTrace();

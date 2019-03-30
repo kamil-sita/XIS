@@ -1,5 +1,6 @@
 module XIS {
     requires javafx.controls;
+    requires javafx.graphics;
     requires javafx.fxml;
     requires javafx.web;
     requires javafx.swing;
@@ -10,6 +11,9 @@ module XIS {
     requires java.sql;
 
     requires simple.kmeans;
+
+    requires imgscalr.lib;
+    requires pdfbox;
 
     exports XIS;
 

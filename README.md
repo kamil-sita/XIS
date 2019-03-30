@@ -8,6 +8,8 @@ KS Image Suite will combine my previous graphical projects into a single project
 * automated filtering - same as high-pass-filter but for .pdf files
 * compression - custom image compression that uses a combination of chroma subsampling, dictionary and RLE compression
 
+For more information see docs at: https://kamil-sita.github.io/XIS/
+
 ----
 
 ## Building and running

@@ -45,6 +45,10 @@ public final class ComparableImage {
         averageHsb = rgb.toHSB();
     }
 
+    public boolean isSameFile(ComparableImage comparableImage) {
+        return imageFile.equals(comparableImage.imageFile);
+    }
+
     public boolean canCompare(ComparableImage comparableImage) {
 
         //localOnly

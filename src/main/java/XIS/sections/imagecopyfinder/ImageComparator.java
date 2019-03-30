@@ -116,6 +116,7 @@ public final class ImageComparator {
 
     private void addPairIfSimilar(ComparableImage image1, ComparableImage image2) {
         if (!image1.canCompare(image2)) return;
+        if (image1.isSameFile(image2)) return;
         if (image1.getAverageHsb().hueDiff(image2.getAverageHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
             double similarity = compareImages(image1, image2);
             if (similarity >= MINIMUM_SIMILARITY) {

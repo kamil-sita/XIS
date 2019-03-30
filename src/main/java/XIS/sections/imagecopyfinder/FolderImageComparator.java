@@ -18,7 +18,6 @@ public final class FolderImageComparator {
     public ImageComparator compare(Interruptible interruptible) {
 
         var folderList = Arrays.asList(input);
-        removeDuplicateStrings(folderList);
         if (folderList.size() == 0) {
             interruptible.getUserFeedback().popup("No input given");
             return null;
@@ -54,19 +53,5 @@ public final class FolderImageComparator {
         }
 
         return imageComparator;
-    }
-
-    private static void removeDuplicateStrings(List<String> strings) {
-        for (int i = 0; i < strings.size(); i++) {
-            final int[] occurrenceCount = {0};
-            var stringToCheckFor = strings.get(i);
-            strings.removeIf(s -> {
-                if (s.equals(stringToCheckFor)) {
-                    occurrenceCount[0]++;
-                    return occurrenceCount[0] != 1;
-                }
-                return false;
-            });
-        }
     }
 }

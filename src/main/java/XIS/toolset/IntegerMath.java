@@ -1,24 +1,15 @@
 package XIS.toolset;
 
 public class IntegerMath {
+    /**
+     * Returns floor(log(2,v)) for integer values.
+     */
     public static int log2(int v) {
         int log = 0;
-        if ((v & 0xffff0000) != 0) {
-            v >>>= 16;
-            log = 16;
+        while (v >= 2) {
+            log++;
+            v /= 2;
         }
-        if (v >= 256) {
-            v >>>= 8;
-            log += 8;
-        }
-        if (v >= 16) {
-            v >>>= 4;
-            log += 4;
-        }
-        if (v >= 4) {
-            v >>>= 2;
-            log += 2;
-        }
-        return log + (v >>> 1);
+        return log;
     }
 }

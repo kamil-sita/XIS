@@ -137,7 +137,7 @@ public final class View2Controller extends XisController {
             }
         }
         displayPairsWithSimilarityOver(lastSimilarity);
-        moveFile(cip.getFile(), deleteLocation, getUserFeedback());
+        moveFile(cip.getFile(), deleteLocation, (mainInformation, reporter) -> getUserFeedback().popup(mainInformation));
     }
 
     private void displayAllImages() {

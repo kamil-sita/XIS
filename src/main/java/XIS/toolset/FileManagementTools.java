@@ -1,15 +1,15 @@
 package XIS.toolset;
 
-import XIS.sections.UserFeedback;
+import XIS.sections.Feedback;
 
 import java.io.File;
 
 public final class FileManagementTools {
 
-    public static void moveFile(File file, String deleteDirectory, UserFeedback userFeedback) {
+    public static void moveFile(File file, String deleteDirectory, Feedback feedback) {
         if (!new File(deleteDirectory).exists()) {
             if (!new File(deleteDirectory).mkdir()) {
-                if (userFeedback != null) userFeedback.popup("Couldn't create directory");
+                feedback.report("Couldn't create directory: " + deleteDirectory, FileManagementTools.class);
                 return;
             }
         }
@@ -17,7 +17,7 @@ public final class FileManagementTools {
         String localDeleteDirectory = deleteDirectory;
         localDeleteDirectory += s;
         if (!file.renameTo(new File(localDeleteDirectory))) {
-            if (userFeedback != null) userFeedback.popup("Couldn't move file!");
+            feedback.report("Couldn't move file: " + file.getName() + " to " + localDeleteDirectory, FileManagementTools.class);
         }
 
     }

@@ -2,7 +2,7 @@ package XIS.sections.automatedfilter;
 
 import XIS.sections.Interruptible;
 import XIS.sections.NotifierFactory;
-import XIS.sections.OneBackgroundJobManager;
+import XIS.sections.SingleJobManager;
 import XIS.sections.XisController;
 import XIS.toolset.JavaFXTools;
 import XIS.toolset.imagetools.HighPassFilterConverter;
@@ -61,7 +61,7 @@ public final class AutomatedFilterController extends XisController {
         }
         int finalBlurPasses = blurPasses;
 
-        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+        SingleJobManager.setAndRunJob(new Interruptible() {
             @Override
             public Runnable getRunnable() {
                 return () -> {
@@ -126,7 +126,7 @@ public final class AutomatedFilterController extends XisController {
 
         final BufferedImage[] output = new BufferedImage[1];
 
-       OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+       SingleJobManager.setAndRunJob(new Interruptible() {
            @Override
            public Runnable getRunnable() {
                return () -> {

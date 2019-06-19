@@ -68,7 +68,7 @@ public final class ScannerToNoteController extends XisController {
             getUserFeedback().popup("Can't run without loaded file");
             return;
         }
-        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+        SingleJobManager.setAndRunJob(new Interruptible() {
 
             BufferedImage image = null;
 

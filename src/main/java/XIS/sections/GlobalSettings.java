@@ -13,12 +13,12 @@ public class GlobalSettings {
 
     }
 
-    private int getThreadCount() {
+    private int getNormalizedThreadCount() {
         return Math.max(Math.min(Runtime.getRuntime().availableProcessors(), maxThreads), 1);
     }
 
     public ExecutorService getExecutorServiceForMostThreads() {
-        return Executors.newFixedThreadPool(getThreadCount());
+        return Executors.newFixedThreadPool(getNormalizedThreadCount());
     }
 
     public static GlobalSettings getInstance() {

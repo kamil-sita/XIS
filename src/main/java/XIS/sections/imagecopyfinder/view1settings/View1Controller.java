@@ -1,7 +1,7 @@
 package XIS.sections.imagecopyfinder.view1settings;
 
 import XIS.sections.Interruptible;
-import XIS.sections.OneBackgroundJobManager;
+import XIS.sections.SingleJobManager;
 import XIS.sections.XisController;
 import XIS.sections.imagecopyfinder.FolderImageComparator;
 import XIS.sections.imagecopyfinder.ImageComparator;
@@ -50,7 +50,7 @@ public final class View1Controller extends XisController {
                 imageSizeComboBox.getValue()
         );
 
-        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+        SingleJobManager.setAndRunJob(new Interruptible() {
             private ImageComparator imageComparator;
 
             @Override

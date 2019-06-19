@@ -1,7 +1,7 @@
 package XIS.main;
 
 import XIS.sections.Notifier;
-import XIS.sections.OneBackgroundJobManager;
+import XIS.sections.SingleJobManager;
 import XIS.sections.Vista;
 import XIS.sections.XisController;
 import XIS.sections.automatedfilter.AutomatedFilter;
@@ -110,7 +110,7 @@ public final class MainViewController {
 
     @FXML
     public void interruptPress(ActionEvent event) {
-        OneBackgroundJobManager.interruptCurrentJobIfPossible();
+        SingleJobManager.attemptInterrupt();
     }
 
 
@@ -137,7 +137,7 @@ public final class MainViewController {
         Platform.runLater(() -> {
             if (currentVista == null || currentVista != newVista.getUserInterface()) {
                 if (currentController != null) {
-                    OneBackgroundJobManager.interruptCurrentJobIfPossible();
+                    SingleJobManager.attemptInterrupt();
                     currentController.deregisterAllNotifiers();
                 }
                 currentController = newVista.getController();

@@ -98,7 +98,7 @@ public final class CompressionController extends XisController {
     }
 
     void decompress() {
-        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+        SingleJobManager.setAndRunJob(new Interruptible() {
             private Optional<BufferedImage> image;
             @Override
             public Runnable getRunnable() {
@@ -155,7 +155,7 @@ public final class CompressionController extends XisController {
         compressionArguments.setAllowReordering(allowReordering.isSelected());
         compressionArguments.setInput(loadedImage);
 
-        OneBackgroundJobManager.setAndRunJob(new Interruptible() {
+        SingleJobManager.setAndRunJob(new Interruptible() {
             @Override
             public Runnable getRunnable() {
                 return () -> {

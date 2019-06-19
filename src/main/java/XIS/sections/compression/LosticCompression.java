@@ -1,6 +1,5 @@
 package XIS.sections.compression;
 
-import XIS.sections.GlobalSettings;
 import XIS.sections.Interruptible;
 import XIS.sections.MockInterruptible;
 import XIS.toolset.IntegerMath;
@@ -51,21 +50,16 @@ public class LosticCompression {
         KMeans.setLogger(s -> {});
 
         ExecutorService executorService = null;
-        try {
-            executorService = GlobalSettings.getInstance().getExecutorServiceForMostThreads();
-            int i = 0;
-            for (int y = 0; y < size_Y; y++) {
-                for (int x = 0; x < size_X; x++) {
-                    compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), arguments.getyWeight(), arguments.allowReordering(), statistic, executorService);
-                    compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), arguments.getcWeight(), arguments.allowReordering(), statistic, executorService);
-                    compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), arguments.getcWeight(), arguments.allowReordering(), statistic, executorService);
-                    i++;
-                    if (interruptible.isInterrupted()) return Optional.empty();
-                    interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
-                }
+        int i = 0;
+        for (int y = 0; y < size_Y; y++) {
+            for (int x = 0; x < size_X; x++) {
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getYl(), arguments.getyWeight(), arguments.allowReordering(), statistic, executorService);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCbl(), arguments.getcWeight(), arguments.allowReordering(), statistic, executorService);
+                compressBlock(x, y, (int) blockSize, b, ycbcr.getCrl(), arguments.getcWeight(), arguments.allowReordering(), statistic, executorService);
+                i++;
+                if (interruptible.isInterrupted()) return Optional.empty();
+                interruptible.reportProgress(1.0 * i/ (size_X * size_Y));
             }
-        } finally {
-            if (executorService != null) executorService.shutdown();
         }
 
 
@@ -154,7 +148,7 @@ public class LosticCompression {
 
     private static ArrayList<Integer> generateDictionary(int x, int y, int size, YCbCrLayer layer, int k, ExecutorService executorService) {
         ArrayList<IntKMeans> valueList = getListFromArea(x, y, size, layer);
-        KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList, executorService);
+        KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
         kMeansKMeans.iterate(POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
         var palette = new ArrayList<Integer>();
@@ -230,7 +224,7 @@ public class LosticCompression {
 
         final int INITIAL_RESULTS = 32;
 
-        KMeans<IntKMeans> kMeans = new KMeans<>(INITIAL_RESULTS, valueList, executorService);
+        KMeans<IntKMeans> kMeans = new KMeans<>(INITIAL_RESULTS, valueList);
         kMeans.iterate(PRE_ITERATIONS);
         var results = kMeans.getCalculatedMeanPoints();
 

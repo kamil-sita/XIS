@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Base class for all JavaFX controllers of XIS. Allows them to operate on their Notifiers and use methods related to main XIS window
+ */
 public class XisController {
     private List<Notifier> notifiers = Collections.synchronizedList(new ArrayList<>());
     private MainViewController mainViewController;

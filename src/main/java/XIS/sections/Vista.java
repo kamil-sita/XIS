@@ -6,7 +6,7 @@ import javafx.scene.layout.Pane;
 import java.io.IOException;
 
 /**
- * Abstract class of XIS.main vista in user interface.
+ * Abstract class of main vista in user interface.
  */
 public abstract class Vista {
 

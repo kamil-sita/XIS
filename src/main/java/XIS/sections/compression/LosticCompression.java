@@ -26,13 +26,12 @@ public class LosticCompression {
     private static final int K_SIZE = 5; // 2^K_SIZE = MAX_K
 
 
-    private static final int PRE_ITERATIONS = 3;
-    private static final int POST_ITERATIONS = 5;
+    private static final int PRE_ITERATIONS = 2;
+    private static final int POST_ITERATIONS = 2;
 
 
     /**
      * compress() delegate for outside calls to the function
-     * @return
      */
     public static Optional<CompressionOutput> compressedAndPreview(CompressionArguments compressionArguments) {
         return compress(compressionArguments, new MockInterruptible());

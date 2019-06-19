@@ -13,7 +13,7 @@ public class BinaryIO {
     public static boolean writeBitSequenceToUserSelected(BitSequence bitSequence) {
         var optionalOut = GuiFileIO.getSaveDirectory(FORMAT);
         if (optionalOut.isPresent()) {
-            byte[] data = bitSequence.getSeqArray();
+            byte[] data = bitSequence.getAllAsByteArray();
             try {
                 FileOutputStream fos = new FileOutputStream(optionalOut.get());
                 fos.write(data, 0, data.length);

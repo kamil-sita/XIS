@@ -26,23 +26,23 @@ public class Header {
             return;
         }
 
-        algName = bitSequence.getAndConsume(32);
-        version = bitSequence.getAndConsume(8);
-        legacyVersion = bitSequence.getAndConsume(8);
-        flag = bitSequence.getAndConsume(8);
-        width = bitSequence.getAndConsume(32);
-        height = bitSequence.getAndConsume(32);
-        blockSize = bitSequence.getAndConsume(16);
+        algName = bitSequence.remove(32);
+        version = bitSequence.remove(8);
+        legacyVersion = bitSequence.remove(8);
+        flag = bitSequence.remove(8);
+        width = bitSequence.remove(32);
+        height = bitSequence.remove(32);
+        blockSize = bitSequence.remove(16);
     }
 
     public void addToBitSequence(BitSequence b) {
-        b.put(algName, 32);
-        b.put(version, 8);
-        b.put(legacyVersion, 8);
-        b.put(flag, 8);
-        b.put(width, 32);
-        b.put(height, 32);
-        b.put(blockSize, 16);
+        b.insert(algName, 32);
+        b.insert(version, 8);
+        b.insert(legacyVersion, 8);
+        b.insert(flag, 8);
+        b.insert(width, 32);
+        b.insert(height, 32);
+        b.insert(blockSize, 16);
     }
 
 }

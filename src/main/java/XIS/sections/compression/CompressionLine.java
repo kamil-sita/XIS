@@ -110,7 +110,7 @@ public class CompressionLine {
     }
 
     private void compressRle() {
-        compressedLine.putOne(1);
+        compressedLine.insert(1);
         int colorId1 = quantizedLine.get(0);
         layer.set(xStart, y, palette.get(colorId1));
         int colorId2 = NOT_FOUND;
@@ -126,17 +126,17 @@ public class CompressionLine {
 
         if (colorId2 == NOT_FOUND) {
             //entire inputLine is in one color
-            compressedLine.putOne(ONE_COLOR);
-            compressedLine.put(colorId1, ENCODE_SIZE);
+            compressedLine.insert(ONE_COLOR);
+            compressedLine.insert(colorId1, ENCODE_SIZE);
             statistic.addRleLineSize(2 + ENCODE_SIZE);
             return;
         }
-        compressedLine.putOne(TWO_COLORS);
-        compressedLine.put(colorId1, ENCODE_SIZE);
-        compressedLine.put(colorId2, ENCODE_SIZE);
+        compressedLine.insert(TWO_COLORS);
+        compressedLine.insert(colorId1, ENCODE_SIZE);
+        compressedLine.insert(colorId2, ENCODE_SIZE);
 
         int encodeSizeForLength = IntegerMath.log2(LINE_SIZE);
-        compressedLine.put(length, encodeSizeForLength);
+        compressedLine.insert(length, encodeSizeForLength);
         statistic.addRleLineSize(2 + 2 * ENCODE_SIZE + encodeSizeForLength);
     }
 
@@ -144,23 +144,23 @@ public class CompressionLine {
         if (allowReordering) {
             reorder();
         }
-        compressedLine.putOne(0);
-        compressedLine.putOne(1);
+        compressedLine.insert(0);
+        compressedLine.insert(1);
         int size = 2;
         int lastValueId = NOT_FOUND;
         for (int i = 0; i < inputLine.size(); i++) {
             int valueId = quantizedLine.get(i);
             layer.set(xStart + i, y, palette.get(valueId));
             if (valueId == lastValueId) {
-                compressedLine.putOne(1);
+                compressedLine.insert(1);
                 size += 1;
                 continue;
             }
             if (i != 0) {
                 size += 1;
-                compressedLine.putOne(0);
+                compressedLine.insert(0);
             }
-            compressedLine.put(valueId, ENCODE_SIZE);
+            compressedLine.insert(valueId, ENCODE_SIZE);
             size += ENCODE_SIZE;
             lastValueId = valueId;
         }
@@ -243,12 +243,12 @@ public class CompressionLine {
     }
 
     private void compressSimple() {
-        compressedLine.putOne(0);
-        compressedLine.putOne(0);
+        compressedLine.insert(0);
+        compressedLine.insert(0);
         for (int i = 0; i < inputLine.size(); i++) {
             int valueId = quantizedLine.get(i);
             layer.set(xStart + i, y, palette.get(valueId));
-            compressedLine.put(valueId, ENCODE_SIZE);
+            compressedLine.insert(valueId, ENCODE_SIZE);
         }
         statistic.addNormalLineSize(2 + inputLine.size() * ENCODE_SIZE);
     }
@@ -281,19 +281,19 @@ public class CompressionLine {
     }
 
     private boolean isRleCompressed() {
-        return compressedLine.getAt(0);
+        return compressedLine.peekAt(0);
     }
 
     private boolean isDifferentialCompressed() {
-        return !compressedLine.getAt(0) && compressedLine.getAt(1);
+        return !compressedLine.peekAt(0) && compressedLine.peekAt(1);
     }
 
     private void decompressRle() {
-        compressedLine.consume(1);
-        boolean oneColor = ONE_COLOR == compressedLine.getAndConsume(1);
+        compressedLine.movePointer(1);
+        boolean oneColor = ONE_COLOR == compressedLine.remove(1);
 
-        int color1id = compressedLine.getAndConsume(ENCODE_SIZE);
-        int color2id = oneColor ? NOT_FOUND : compressedLine.getAndConsume(ENCODE_SIZE);
+        int color1id = compressedLine.remove(ENCODE_SIZE);
+        int color2id = oneColor ? NOT_FOUND : compressedLine.remove(ENCODE_SIZE);
         int color1 = palette.get(color1id);
         if (oneColor) {
             for (int x = xStart; x < xEnd; x++) {
@@ -301,7 +301,7 @@ public class CompressionLine {
             }
         } else {
             int encodeSizeForLength = IntegerMath.log2(LINE_SIZE);
-            int length = compressedLine.getAndConsume(encodeSizeForLength);
+            int length = compressedLine.remove(encodeSizeForLength);
             int color2 = palette.get(color2id);
             int x;
             for (x = xStart; x < xStart + length; x++) {
@@ -314,24 +314,24 @@ public class CompressionLine {
     }
 
     private void decompressDifferential() {
-        compressedLine.consume(2);
-        int colorId = compressedLine.getAndConsume(ENCODE_SIZE);
+        compressedLine.movePointer(2);
+        int colorId = compressedLine.remove(ENCODE_SIZE);
         layer.set(xStart, y, palette.get(colorId));
         for (int x = xStart + 1; x < xEnd; x++) {
-            int nextSame = compressedLine.getAndConsume(1);
+            int nextSame = compressedLine.remove(1);
             if (nextSame == 1) {
                 layer.set(x, y, palette.get(colorId));
             } else {
-                colorId = compressedLine.getAndConsume(ENCODE_SIZE);
+                colorId = compressedLine.remove(ENCODE_SIZE);
                 layer.set(x, y, palette.get(colorId));
             }
         }
     }
 
     private void decompressSimple() {
-        compressedLine.consume(2);
+        compressedLine.movePointer(2);
         for (int x = xStart; x < xEnd; x++) {
-            layer.set(x, y, palette.get(compressedLine.getAndConsume(ENCODE_SIZE)));
+            layer.set(x, y, palette.get(compressedLine.remove(ENCODE_SIZE)));
         }
     }
 

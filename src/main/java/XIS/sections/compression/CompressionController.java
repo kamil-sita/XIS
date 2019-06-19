@@ -167,7 +167,7 @@ public final class CompressionController extends XisController {
             public Runnable onUninterruptedFinish() {
                 return () -> {
                     processedImage = compressionOutput.getPreviewImage();
-                    int size = compressionOutput.getBitSequence().getSize()/8/1024;
+                    int size = compressionOutput.getBitSequence().getSizeLeft()/8/1024;
                     Platform.runLater(() -> {
                         outputSize.setText("Output size: " + size + "kB");
                         JavaFXTools.showPreview(processedImage, imagePreview, CompressionController.this::setNewImage, getUserFeedback());

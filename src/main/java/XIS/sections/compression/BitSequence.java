@@ -1,12 +1,16 @@
 package XIS.sections.compression;
 
 import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Specific collection (list) that is used as a way to make working on data formed right from binary values easier. Resembles FIFO queue.
+ * Values are not actually removed, instead pseudo pointer is pointing at corresponding position. If you want to read queue again, you should use resetPointer() method.
+ */
 public class BitSequence {
-
     private final int BYTE_SIZE = 8; //byte size in bits
 
-    private ArrayList<Boolean> seq = new ArrayList<>();
+    private List<Boolean> sequence = new ArrayList<>();
     int pointer = 0;
 
     public BitSequence() {
@@ -17,47 +21,51 @@ public class BitSequence {
         for (var bytef : data) {
             var bools = toBoolArray(bytef, BYTE_SIZE);
             for (var bool : bools) {
-                seq.add(bool);
+                sequence.add(bool);
             }
         }
     }
 
-    public void put(long value, int length) {
+    public void insert(long value, int length) {
         boolean[] arr = toBoolArray(value, length);
         for (boolean b : arr) {
-            seq.add(b);
+            sequence.add(b);
         }
     }
 
-    public void putOne(int value) {
-        put(value, 1);
+    public void insert(boolean value) {
+        sequence.add(value);
+    }
+
+    public void insert(int value) {
+        insert(value, 1);
     }
 
     public boolean has(int size) {
-        return seq.size() - pointer >= size;
+        return sequence.size() - pointer >= size;
     }
 
     public void addAll(BitSequence bitSequence) {
-        this.seq.addAll(bitSequence.seq);
+        this.sequence.addAll(bitSequence.sequence);
     }
 
     public void resetPointer() {
         pointer = 0;
     }
 
-    public void consume(int size) {
+    public void movePointer(int size) {
         pointer += size;
-        if (pointer > getSizeIgnoreConsumed()) throw new IllegalArgumentException("Consumed more than is available");
+        if (pointer > getSize()) throw new IllegalArgumentException("Pointer out of bounds");
     }
 
-    public boolean getAt(int index) {
-        return seq.get(index + pointer);
+    public boolean peekAt(int index) {
+        return sequence.get(index + pointer);
     }
 
-    public int getNext(int count) {
+    public int peekNext(int count) {
         int out = 0;
         for (int i = 0; i < count; i++) {
-            if (seq.get(i + pointer)) {
+            if (sequence.get(i + pointer)) {
                 int value = 1 << (count - i - 1);
                 out = (value | out);
             }
@@ -65,38 +73,42 @@ public class BitSequence {
         return out;
     }
 
-    public int getAndConsume(int count) {
-        if (!has(count)) consume(count); //throwing error
-        int v = getNext(count);
-        consume(count);
+    public int remove(int count) {
+        if (!has(count)) movePointer(count);
+        int v = peekNext(count);
+        movePointer(count);
         return v;
     }
 
-    public ArrayList<Boolean> getSeq() {
-        return seq;
+    public List<Boolean> getAllAsList() {
+        return sequence;
     }
 
-    public byte[] getSeqArray() {
-        fitByteSize();
-        byte[] data = new byte[getSizeIgnoreConsumed() / BYTE_SIZE];
+    public byte[] getAllAsByteArray() {
+        fitBytePadding();
+        byte[] data = new byte[getSize() / BYTE_SIZE];
         for (int i = 0; i < data.length; i += 1) {
             data[i] = fitBitsIntoByte(i);
         }
         return data;
     }
 
+    public int getSizeLeft() {
+        return sequence.size() - pointer;
+    }
+
     public int getSize() {
-        return seq.size() - pointer;
+        return sequence.size();
     }
 
-    public int getSizeIgnoreConsumed() {
-        return seq.size();
-    }
-
-    public int getConsumedSize() {
+    public int getPointerPosition() {
         return pointer;
     }
 
+    public void clear() {
+        sequence.clear();
+        resetPointer();
+    }
 
     private boolean[] toBoolArray(long input, int length) {
         boolean[] arr = new boolean[length];
@@ -109,17 +121,17 @@ public class BitSequence {
         return arr;
     }
 
-    private void fitByteSize() {
-        while (getSize() % BYTE_SIZE != 0) {
-            put(0, 1);
+    private void fitBytePadding() {
+        while (getSizeLeft() % BYTE_SIZE != 0) {
+            insert(0, 1);
         }
     }
 
-    private byte fitBitsIntoByte(int octaId) {
+    private byte fitBitsIntoByte(int bytePosId) {
         byte out = 0;
         int j = 7;
-        for (int i = octaId * 8; i < (octaId + 1) * 8; i++) {
-            if (seq.get(i)) {
+        for (int i = bytePosId * 8; i < (bytePosId + 1) * 8; i++) {
+            if (sequence.get(i)) {
                 int value = 1 << j;
                 out = (byte) (value | out);
             }

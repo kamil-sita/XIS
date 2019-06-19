@@ -65,7 +65,7 @@ public class LosticCompression {
 
         BufferedImage preview = ycbcr.getBufferedImage();
 
-        statistic.setSize(b.getSize());
+        statistic.setSize(b.getSizeLeft());
         return Optional.of(new CompressionOutput(b, preview, statistic));
     }
 
@@ -161,22 +161,22 @@ public class LosticCompression {
     }
 
     private static void encodeDictionary(BitSequence bitSequence, int k, ArrayList<Integer> palette) {
-        bitSequence.put(k - 1, K_SIZE); //k is min 1, so to use all of the space k-1 is saved instead
+        bitSequence.insert(k - 1, K_SIZE); //k is min 1, so to use all of the space k-1 is saved instead
         for (int i = 0; i < k; i++) {
             int v = palette.get(i);
             if (v > 255) v = 255;
-            bitSequence.put(v, 8);
+            bitSequence.insert(v, 8);
         }
     }
 
     private static boolean decompressBlock(int xBlock, int yBlock, int size, BitSequence bitSequence, YCbCrLayer layer, Header header) {
         if (!bitSequence.has(K_SIZE)) return false;
-        int dictionarySize = bitSequence.getAndConsume(K_SIZE) + 1;
+        int dictionarySize = bitSequence.remove(K_SIZE) + 1;
         int encodeSize = IntegerMath.log2(dictionarySize);
         ArrayList<Integer> dictionary = new ArrayList<>();
         if (!bitSequence.has(8 * dictionarySize)) return false;
         for (int i = 0; i < dictionarySize; i++) {
-            dictionary.add(bitSequence.getAndConsume(8));
+            dictionary.add(bitSequence.remove(8));
         }
 
         int xStart = xBlock * size;

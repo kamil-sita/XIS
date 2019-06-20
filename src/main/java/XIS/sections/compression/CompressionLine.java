@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * Compressor of line ( which is [N x 1] rectangle ) from bitmap.
+ */
 public class CompressionLine {
     private final int NOT_FOUND = -1;
     private final int ONE_COLOR = 0;
@@ -73,7 +76,7 @@ public class CompressionLine {
 
     public void put(int v) {
         if (full) throw new IllegalArgumentException("Can't add new values after finalization");
-        if (inputLine.size() == LINE_SIZE) throw  new IllegalArgumentException("Too much values");
+        if (inputLine.size() == LINE_SIZE) throw new IllegalArgumentException("Too much values");
         inputLine.add(v);
 
     }

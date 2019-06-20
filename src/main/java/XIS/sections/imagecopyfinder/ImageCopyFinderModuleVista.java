@@ -4,14 +4,14 @@ import XIS.sections.Vista;
 
 import java.nio.file.FileSystems;
 
-public final class ImageCopyFinderVista extends Vista {
+public final class ImageCopyFinderModuleVista extends Vista {
 
     private static final String LOCATION_VIEW1 = "/XIS/sections/imagecopyfinder/view1settings/view1.fxml";
     private static final String LOCATION_VIEW2 = "/XIS/sections/imagecopyfinder/view2comparison/view2.fxml";
     private static ImageComparator imageComparator;
     private static String deleteDirectory;
 
-    public ImageCopyFinderVista() {
+    public ImageCopyFinderModuleVista() {
         this.defaultLocation = LOCATION_VIEW1;
     }
 
@@ -31,7 +31,7 @@ public final class ImageCopyFinderVista extends Vista {
     }
 
     public static void setImageComparator(ImageComparator imageComparator) {
-        ImageCopyFinderVista.imageComparator = imageComparator;
+        ImageCopyFinderModuleVista.imageComparator = imageComparator;
     }
 
     public static String getDeleteDirectory() {

@@ -13,7 +13,7 @@ import javafx.scene.image.ImageView;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 
-public final class ScannerToNoteController extends XisController {
+public final class ScannerToNoteModuleController extends XisController {
 
     Notifier notifier;
     private BufferedImage plainImage = null;
@@ -82,8 +82,8 @@ public final class ScannerToNoteController extends XisController {
                         //
                     }
 
-                    Optional<BufferedImage> optionalImage = ScannerToNoteConverter.convert(
-                            new ScannerToNoteConverter.ScannerToNoteParameters(
+                    Optional<BufferedImage> optionalImage = ScannerToNote.convert(
+                            new ScannerToNote.ScannerToNoteParameters(
                                     plainImage,
                                     isolateBackground.isSelected(),
                                     correctBrightness.isSelected(),

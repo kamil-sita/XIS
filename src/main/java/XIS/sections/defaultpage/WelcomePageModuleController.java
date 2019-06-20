@@ -10,7 +10,7 @@ import javafx.scene.web.WebView;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public final class WelcomePageController extends XisController {
+public final class WelcomePageModuleController extends XisController {
 
     @FXML
     private WebView webView;

@@ -3,7 +3,7 @@ package XIS.sections.imagecopyfinder.view2comparison;
 import XIS.sections.XisController;
 import XIS.sections.imagecopyfinder.ComparableImage;
 import XIS.sections.imagecopyfinder.ComparableImagePair;
-import XIS.sections.imagecopyfinder.ImageCopyFinderVista;
+import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
 import XIS.sections.imagecopyfinder.imageinfoview.ImageInfoView;
 import XIS.sections.imagecopyfinder.imageinfoview.ImageInfoViewController;
 import javafx.collections.FXCollections;
@@ -81,7 +81,7 @@ public final class View2Controller extends XisController {
             gridPane.setPrefHeight(height - 300);
         });
 
-        deleteLocation = ImageCopyFinderVista.getDeleteDirectory();
+        deleteLocation = ImageCopyFinderModuleVista.getDeleteDirectory();
 
         sliderPercentIdentical.valueProperty().addListener((observable, oldValue, newValue) -> {
             double x = sliderPercentIdentical.getValue() / 100.0;
@@ -101,7 +101,7 @@ public final class View2Controller extends XisController {
                     }
                 }
         );
-        imagePairs = ImageCopyFinderVista.getImageComparator().getImagePairs();
+        imagePairs = ImageCopyFinderModuleVista.getImageComparator().getImagePairs();
         displayAllImages();
         comparableImagePairListView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> elementHovered(newValue)

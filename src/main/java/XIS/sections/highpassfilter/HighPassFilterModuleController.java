@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 
 import java.awt.image.BufferedImage;
 
-public final class HighPassFilterController extends XisController {
+public final class HighPassFilterModuleController extends XisController {
 
     private BufferedImage inputImage;
     private BufferedImage processedImage;

@@ -20,7 +20,7 @@ import javafx.scene.image.ImageView;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public final class AutomatedFilterController extends XisController {
+public final class AutomatedFilterModuleController extends XisController {
 
     private File openPdf = null;
 
@@ -145,7 +145,7 @@ public final class AutomatedFilterController extends XisController {
            @Override
            public Runnable onUninterruptedFinish() {
                return () -> {
-                   JavaFXTools.showPreview(output[0], imagePreview, AutomatedFilterController.this::setNewImage, getUserFeedback());
+                   JavaFXTools.showPreview(output[0], imagePreview, AutomatedFilterModuleController.this::setNewImage, getUserFeedback());
                };
            }
        });

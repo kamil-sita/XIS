@@ -5,7 +5,7 @@ import XIS.sections.SingleJobManager;
 import XIS.sections.XisController;
 import XIS.sections.imagecopyfinder.FolderImageComparator;
 import XIS.sections.imagecopyfinder.ImageComparator;
-import XIS.sections.imagecopyfinder.ImageCopyFinderVista;
+import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,9 +68,9 @@ public final class View1Controller extends XisController {
 
     private void onFinish(ImageComparator imageComparator) {
         if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.SUCCESSFUL) {
-            ImageCopyFinderVista.setImageComparator(imageComparator);
-            ImageCopyFinderVista.setDeleteDirectory(deleteFolder.getText());
-            getMainViewController().getImageCopyFinder().setInterface(ImageCopyFinderVista.ImageCopyFinderViews.compareCopiedImagesView);
+            ImageCopyFinderModuleVista.setImageComparator(imageComparator);
+            ImageCopyFinderModuleVista.setDeleteDirectory(deleteFolder.getText());
+            getMainViewController().getImageCopyFinder().setInterface(ImageCopyFinderModuleVista.ImageCopyFinderViews.compareCopiedImagesView);
             refreshVista();
         } else {
             if (imageComparator.getStatus() == ImageComparator.ImageComparatorStatus.ERROR_ALREADY_HANDLED) return;

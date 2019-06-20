@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="thisAnchorPane" prefHeight="311.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.automatedfilter.AutomatedFilterController">
+<AnchorPane fx:id="thisAnchorPane" prefHeight="311.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.automatedfilter.AutomatedFilterModuleController">
     <children>
         <TextField fx:id="blur" layoutX="14.0" layoutY="25.0" text="blur strength" AnchorPane.leftAnchor="7.0" AnchorPane.topAnchor="7.0" />
         <ImageView fx:id="imagePreview" fitHeight="242.0" fitWidth="271.0" layoutX="7.0" layoutY="136.0" pickOnBounds="true" smooth="false" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="922.0" AnchorPane.topAnchor="80.0" />

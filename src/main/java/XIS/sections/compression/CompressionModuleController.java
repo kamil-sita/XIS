@@ -15,7 +15,7 @@ import javafx.scene.image.ImageView;
 import java.awt.image.BufferedImage;
 import java.util.Optional;
 
-public final class CompressionController extends XisController {
+public final class CompressionModuleController extends XisController {
 
     Notifier notifier;
     private BufferedImage loadedImage = null;
@@ -170,7 +170,7 @@ public final class CompressionController extends XisController {
                     int size = compressionOutput.getBitSequence().getSizeLeft()/8/1024;
                     Platform.runLater(() -> {
                         outputSize.setText("Output size: " + size + "kB");
-                        JavaFXTools.showPreview(processedImage, imagePreview, CompressionController.this::setNewImage, getUserFeedback());
+                        JavaFXTools.showPreview(processedImage, imagePreview, CompressionModuleController.this::setNewImage, getUserFeedback());
                     });
                 };
             }

@@ -4,12 +4,12 @@ import XIS.sections.Notifier;
 import XIS.sections.SingleJobManager;
 import XIS.sections.Vista;
 import XIS.sections.XisController;
-import XIS.sections.automatedfilter.AutomatedFilter;
-import XIS.sections.compression.CompressionVista;
-import XIS.sections.defaultpage.WelcomePage;
-import XIS.sections.highpassfilter.HighPassFilter;
-import XIS.sections.imagecopyfinder.ImageCopyFinderVista;
-import XIS.sections.scannertonote.ScannerToNote;
+import XIS.sections.automatedfilter.AutomatedFilterModuleVista;
+import XIS.sections.compression.CompressionModuleVista;
+import XIS.sections.defaultpage.WelcomePageModuleVista;
+import XIS.sections.highpassfilter.HighPassFilterModuleVista;
+import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
+import XIS.sections.scannertonote.ScannerToNoteModuleVista;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,22 +54,22 @@ public final class MainViewController {
     @FXML
     private ColumnConstraints gridPaneBarRight;
 
-    private ImageCopyFinderVista imageCopyFinder;
+    private ImageCopyFinderModuleVista imageCopyFinder;
 
 
     //Actions methods
 
     @FXML
     void mainPress(ActionEvent event) {
-        WelcomePage welcomePage = new WelcomePage();
-        changeVistaIfChanged(welcomePage);
-        currentModule = welcomePage;
+        WelcomePageModuleVista welcomePageModuleVista = new WelcomePageModuleVista();
+        changeVistaIfChanged(welcomePageModuleVista);
+        currentModule = welcomePageModuleVista;
         setStatus("welcome page loaded");
     }
 
     @FXML
     void imageCopyFinderPress(ActionEvent event) {
-        imageCopyFinder = new ImageCopyFinderVista();
+        imageCopyFinder = new ImageCopyFinderModuleVista();
         changeVistaIfChanged(imageCopyFinder);
         currentModule = imageCopyFinder;
         setStatus("imagecopyfinder module loaded");
@@ -77,7 +77,7 @@ public final class MainViewController {
 
     @FXML
     void scannerToNotePress(ActionEvent event) {
-        var scannerToNote = new ScannerToNote();
+        var scannerToNote = new ScannerToNoteModuleVista();
         changeVistaIfChanged(scannerToNote);
         currentModule = scannerToNote;
         setStatus("scanner-to-note module loaded");
@@ -85,7 +85,7 @@ public final class MainViewController {
 
     @FXML
     void highPassFilterPress(ActionEvent event) {
-        var highPassFilter = new HighPassFilter();
+        var highPassFilter = new HighPassFilterModuleVista();
         changeVistaIfChanged(highPassFilter);
         currentModule = highPassFilter;
         setStatus("high-pass-filter module loaded");
@@ -93,7 +93,7 @@ public final class MainViewController {
 
     @FXML
     void automatedFilteringPress(ActionEvent event) {
-        var automatedFilter = new AutomatedFilter();
+        var automatedFilter = new AutomatedFilterModuleVista();
         changeVistaIfChanged(automatedFilter);
         currentModule = automatedFilter;
         setStatus("automatedFilter module loaded");
@@ -101,7 +101,7 @@ public final class MainViewController {
 
     @FXML
     void imageCompressionPress(ActionEvent event) {
-        var imageCompression = new CompressionVista();
+        var imageCompression = new CompressionModuleVista();
         changeVistaIfChanged(imageCompression);
         currentModule = imageCompression;
         setStatus("automatedFilter module loaded");
@@ -242,7 +242,7 @@ public final class MainViewController {
         return staticController;
     }
 
-    public ImageCopyFinderVista getImageCopyFinder() {
+    public ImageCopyFinderModuleVista getImageCopyFinder() {
         return imageCopyFinder;
     }
 

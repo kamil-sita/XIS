@@ -8,6 +8,7 @@ import XIS.toolset.imagetools.YCbCrLayer;
 import pl.ksitarski.simplekmeans.KMeans;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -71,16 +72,15 @@ public class LosticCompression {
     }
 
     public static Optional<BufferedImage> decompress(BitSequence bitSequence, Interruptible interruptible) {
-
         if (bitSequence == null) return Optional.empty();
+
         bitSequence.resetPointer();
         Header h = new Header(bitSequence);
         if (!headerOkay(h)) {
-            interruptible.reportProgress("Invalid file");
-            interruptible.popup("Invalid file");
+            interruptible.reportProgress("Damaged or invalid file - header doesn't match");
+            interruptible.popup("Damaged or invalid file - header doesn't match");
             return Optional.empty();
         }
-
 
         int size_X = (int) Math.ceil(1.0 * h.width / h.blockSize);
         int size_Y = (int) Math.ceil(1.0 * h.height / h.blockSize);
@@ -90,11 +90,11 @@ public class LosticCompression {
         int i = 0;
         for (int y = 0; y < size_Y; y++) {
             for (int x = 0; x < size_X; x++) {
-                boolean flag;
-                flag = decompressBlock(x, y, h.blockSize, bitSequence, image.getYl(), h);
-                flag = flag & decompressBlock(x, y, h.blockSize, bitSequence, image.getCbl(), h);
-                flag = flag & decompressBlock(x, y, h.blockSize, bitSequence, image.getCrl(), h);
-                if (!flag) {
+                try {
+                    decompressBlock(x, y, h.blockSize, bitSequence, image.getYl(), h);
+                    decompressBlock(x, y, h.blockSize, bitSequence, image.getCbl(), h);
+                    decompressBlock(x, y, h.blockSize, bitSequence, image.getCrl(), h);
+                } catch (Exception e) {
                     interruptible.reportProgress("Corrupted file");
                     interruptible.popup("Corrupted file");
                     return Optional.empty();
@@ -130,14 +130,13 @@ public class LosticCompression {
     }
 
     private static void compressBlock(int x, int y, int size, BitSequence bitSequence, YCbCrLayer layer, double multiplier, boolean allowReordering, Statistic statistic) {
-        int dictionarySize = calculateDictionarySize(x, y, size, layer, multiplier);
+        final int DICTIONARY_SIZE = calculateDictionarySize(x, y, size, layer, multiplier);
+        final int ENCODE_SIZE = IntegerMath.log2(DICTIONARY_SIZE);
 
-        statistic.addDictionarySize(dictionarySize);
+        statistic.addDictionarySize(DICTIONARY_SIZE);
 
-        ArrayList<Integer> dictionary = generateDictionary(x, y, size, layer, dictionarySize);
-        encodeDictionary(bitSequence, dictionarySize, dictionary);
-
-        final int ENCODE_SIZE = IntegerMath.log2(dictionarySize);
+        ArrayList<Integer> dictionary = generateDictionary(x, y, size, layer, DICTIONARY_SIZE);
+        encodeDictionary(bitSequence, dictionary);
 
         layer.replace(x * size, (x + 1) * size, y * size, (y + 1) * size, dictionary, bitSequence, ENCODE_SIZE, allowReordering, statistic);
 
@@ -157,21 +156,25 @@ public class LosticCompression {
         return palette;
     }
 
-    private static void encodeDictionary(BitSequence bitSequence, int k, ArrayList<Integer> palette) {
-        bitSequence.insert(k - 1, MAXIMUM_MEMORY_SIZE); //k is min 1, so to use all of the space k-1 is saved instead
-        for (int i = 0; i < k; i++) {
-            int v = palette.get(i);
-            if (v > 255) v = 255;
+    private static void encodeDictionary(BitSequence bitSequence, ArrayList<Integer> dictionary) {
+        bitSequence.insert(dictionary.size() - 1,  //size of dictionary is always > 1 and we can't encode 1 << MAXIMUM_MEMORY_SIZE, so the encoded value is smaller.
+                MAXIMUM_MEMORY_SIZE);
+
+        for (int v : dictionary) {
             bitSequence.insert(v, 8);
         }
     }
 
-    private static boolean decompressBlock(int xBlock, int yBlock, int size, BitSequence bitSequence, YCbCrLayer layer, Header header) {
-        if (!bitSequence.has(MAXIMUM_MEMORY_SIZE)) return false;
+    private static void decompressBlock(int xBlock, int yBlock, int size, BitSequence bitSequence, YCbCrLayer layer, Header header) throws IOException {
+        if (!bitSequence.has(MAXIMUM_MEMORY_SIZE)) {
+            throw new IOException("Failed to read dictionary size");
+        }
         int dictionarySize = bitSequence.remove(MAXIMUM_MEMORY_SIZE) + 1;
         int encodeSize = IntegerMath.log2(dictionarySize);
         ArrayList<Integer> dictionary = new ArrayList<>();
-        if (!bitSequence.has(8 * dictionarySize)) return false;
+        if (!bitSequence.has(8 * dictionarySize)) {
+            throw new IOException("Failed to read dictionary");
+        }
         for (int i = 0; i < dictionarySize; i++) {
             dictionary.add(bitSequence.remove(8));
         }
@@ -196,15 +199,13 @@ public class LosticCompression {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw new IOException("Decompression failed");
         }
-
-
-        return true;
     }
 
     private static ArrayList<IntKMeans> getListFromArea(int x, int y, int size, YCbCrLayer layer) {
-        var valueList = new ArrayList<IntKMeans>();
+        var valueList = new ArrayList<IntKMeans>(((x + 1) * y + 1) * size * size);
+
         for (int j = y * size; j < (y + 1) * size; j++) {
             for (int i = x * size; i < (x + 1) * size; i++) {
                 if (i < layer.width() && j < layer.height()) {

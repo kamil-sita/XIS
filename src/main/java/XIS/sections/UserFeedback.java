@@ -73,8 +73,8 @@ public final class UserFeedback {
             Parent root;
             UserFeedback userFeedback;
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(UserFeedback.class.getClassLoader().getResource("XIS/sections/textAreaPopup.fxml"));
-                root = fxmlLoader.load();
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                root = fxmlLoader.load(getClass().getResourceAsStream("/XIS/sections/textAreaPopup.fxml"));
                 Stage stage = new Stage();
                 stage.setTitle("Message");
                 stage.setScene(new Scene(root));
@@ -83,6 +83,7 @@ public final class UserFeedback {
                 stage.show();
                 userFeedback.textArea.setText(message);
             } catch (IOException e) {
+                e.printStackTrace();
                 //
             }
         });

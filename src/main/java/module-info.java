@@ -16,8 +16,8 @@ module XIS {
     requires pdfbox;
 
     exports XIS;
-
     exports XIS.main;
+    exports XIS.sections;
 
     opens XIS.sections.defaultpage to javafx.fxml;
     opens XIS.sections.automatedfilter to javafx.fxml;
@@ -28,5 +28,6 @@ module XIS {
     opens XIS.sections.imagecopyfinder.view2comparison to javafx.fxml;
     opens XIS.sections.imagecopyfinder.imageinfoview to javafx.fxml;
     opens XIS.sections.scannertonote to javafx.fxml;
+    opens XIS.sections to javafx.fxml;
     opens XIS.main to javafx.fxml;
 }

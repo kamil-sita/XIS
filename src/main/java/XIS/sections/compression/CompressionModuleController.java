@@ -121,7 +121,9 @@ public final class CompressionModuleController extends XisController {
 
     @FXML
     void statisticPress() {
-        getUserFeedback().longPopupTextArea(compressionOutput.getStatistic().toString());
+        if (compressionOutput != null && compressionOutput.getStatistic() != null) {
+            getUserFeedback().longPopupTextArea(compressionOutput.getStatistic().toString());
+        }
     }
 
     @FXML

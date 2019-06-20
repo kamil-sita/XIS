@@ -8,16 +8,20 @@ public final class SingleJobManager {
 
     private static Interruptible currentJob = null;
     private static UserFeedback userFeedback;
+    private static int launched = 0;
 
     public static void setAndRunJob(Interruptible job) {
         attemptInterrupt();
         currentJob = job;
-        new Thread(() -> {
-            job.getRunnable().run();
-            if (!job.isInterrupted()) {
-                job.onUninterruptedFinish().run();
-            }
-        }).start();
+        new Thread(
+                () -> {
+                    job.getRunnable().run();
+                    if (!job.isInterrupted()) {
+                        job.onUninterruptedFinish().run();
+                    }
+                },
+                "SingleJobManager Interruptible (" + launched + ")").start();
+        launched++;
     }
 
     public static void attemptInterrupt() {

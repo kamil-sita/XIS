@@ -128,6 +128,7 @@ public final class CompressionModuleController extends XisController {
 
     @FXML
     void compressButton(ActionEvent event) {
+        getUserFeedback().reportProgress("Running");
         if (loadedImage == null) {
             getUserFeedback().popup("Can't run without loaded file");
             return;
@@ -141,12 +142,12 @@ public final class CompressionModuleController extends XisController {
             cWeightValue = Integer.parseInt(cWeight.getText());
             blockSizeValue = Integer.parseInt(blockSize.getText());
         } catch (Exception e) {
-            getUserFeedback().reportProgress("Some of values are not integer values.");
+            getUserFeedback().popup("Some of values are not integer values.");
             return;
         }
 
         if (yWeightValue < 0 || cWeightValue < 0 || blockSizeValue < 2) {
-            getUserFeedback().reportProgress("Some of values are smaller than their minimum size");
+            getUserFeedback().popup("Some of values are smaller than their minimum size");
             return;
         }
 

@@ -2,6 +2,7 @@ package XIS.sections.compression;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Specific collection (list) that is used as a way to make working on data formed right from binary values easier. Resembles FIFO queue.
@@ -140,4 +141,21 @@ public class BitSequence {
         return out;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BitSequence that = (BitSequence) o;
+        if (that.sequence.size() != this.sequence.size()) return false;
+        for (int i = 0; i < this.sequence.size(); i++) {
+            if (!sequence.get(i).equals(that.sequence.get(i))) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sequence);
+    }
 }

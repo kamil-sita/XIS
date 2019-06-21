@@ -11,6 +11,8 @@ public class Statistic {
     private List<Integer> differentialLines = new ArrayList<>();
     private List<Integer> normalLines = new ArrayList<>();
     private int timesReordered = 0;
+    private int sameLines = 0;
+    private int approxSavedSameLines = 0;
 
     //adders/setters
     public void setSize(int size) {
@@ -40,6 +42,14 @@ public class Statistic {
     public void incrementTimesReordered() {
         timesReordered++;
     };
+
+    public void addSameLine() {
+        sameLines++;
+    }
+
+    public void addApproxSavedSameLines(int v) {
+        approxSavedSameLines += v;
+    }
 
     //getters
     public int getSize() {
@@ -105,6 +115,8 @@ public class Statistic {
                 "\nAverage length of RLE = " + getAverageRleLineSize() +
                 "\nAverage length of DIFF = " + getAverageDifferentialLinesSize() +
                 "\nAverage length of SIMPLE = " + getAverageNormalLineSize() +
-                "\nTimes reordered = " + timesReordered;
+                "\nTimes reordered = " + timesReordered +
+                "\nSame lines = " + sameLines +
+                "\nSaved by same lines = " + approxSavedSameLines;
     }
 }

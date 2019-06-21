@@ -35,14 +35,30 @@ public class YCbCrLayer {
     public void replace(int xStart, int xEnd, int yStart, int yEnd, List<Integer> palette, BitSequence compressionSequence, int encodeSize, boolean allowReordering, Statistic statistic) {
         int newXEnd = xEnd > width() ? width() : xEnd;
         int newYEnd = yEnd > height() ? height() : yEnd;
+        BitSequence prevSequence = null;
         for (int y = yStart; y < newYEnd; y++) {
-            CompressionLine compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize, statistic, allowReordering);
+            var compressionLine = new CompressionLine(palette, this, xStart, newXEnd, y, encodeSize, statistic, allowReordering);
             for (int x = xStart; x < newXEnd; x++) {
                 compressionLine.put(get(x, y));
             }
+
             compressionLine.lockAdding();
-            compressionSequence.addAll(compressionLine.compress());
+
+            var compressedSequence = compressionLine.compress();
+            if (compressedSequence.equals(prevSequence)) {
+                statistic.addSameLine();
+                statistic.addApproxSavedSameLines(compressedSequence.getSize());
+            } else {
+                prevSequence = compressedSequence;
+                compressionSequence.addAll(compressedSequence);
+            }
         }
     }
 
+    public void copyLower(int xStart, int xEnd, int y) {
+        for (int x = xStart; x < xEnd; x++) {
+            int v = get(x, y);
+            set(x, y + 1, v);
+        }
+    }
 }

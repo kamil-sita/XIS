@@ -189,13 +189,21 @@ public class LosticCompression {
 
         try {
             for (int y = yStart; y < yEnd; y++) {
+                int sameLine = bitSequence.remove(1);
 
-                CompressionLine decompressionLine = new CompressionLine(bitSequence, dictionary, layer,
-                        xStart,
-                        xEnd,
-                        y,
-                        encodeSize);
-                decompressionLine.decompress();
+                if (sameLine == 1) {
+                    layer.copyLower(xStart, xEnd, y - 1);
+                } else {
+                    CompressionLine decompressionLine = new CompressionLine(bitSequence, dictionary, layer,
+                            xStart,
+                            xEnd,
+                            y,
+                            encodeSize);
+                    decompressionLine.decompress();
+                }
+
+
+
             }
         } catch (Exception e) {
             e.printStackTrace();

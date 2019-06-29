@@ -17,6 +17,7 @@ public final class BufferedImageIO implements AutoCloseable {
         BufferedImage bufferedImage = null;
         try {
             bufferedImage = ImageIO.read(file);
+            System.out.println(bufferedImage);
         } catch (IOException | IllegalArgumentException e) {
             return Optional.empty();
         } catch (Exception e) {
@@ -36,6 +37,7 @@ public final class BufferedImageIO implements AutoCloseable {
                 try {
                     bufferedImage[0] = ImageIO.read(file);
                     countDownLatch.countDown();
+                    System.out.println(bufferedImage[0]);
                 } catch (IOException e) {
                     countDownLatch.countDown();
                 }

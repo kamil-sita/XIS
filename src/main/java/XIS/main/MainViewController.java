@@ -10,6 +10,7 @@ import XIS.sections.defaultpage.WelcomePageModuleVista;
 import XIS.sections.highpassfilter.HighPassFilterModuleVista;
 import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
 import XIS.sections.scannertonote.ScannerToNoteModuleVista;
+import XIS.sections.scanprocessing.ScanProcessingModuleVista;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -104,7 +105,15 @@ public final class MainViewController {
         var imageCompression = new CompressionModuleVista();
         changeVistaIfChanged(imageCompression);
         currentModule = imageCompression;
-        setStatus("automatedFilter module loaded");
+        setStatus("image compression module loaded");
+    }
+
+    @FXML
+    void scanProcessingPress(ActionEvent event) {
+        var scanProcessing = new ScanProcessingModuleVista();
+        changeVistaIfChanged(scanProcessing);
+        currentModule = scanProcessing;
+        setStatus("scan processing module loaded");
     }
 
 

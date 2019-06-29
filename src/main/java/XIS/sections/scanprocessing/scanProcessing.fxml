@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<AnchorPane fx:id="thisAnchorPane" prefHeight="300.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.scanprocessing.ScanProcessingModuleController">
+   <children>
+      <ImageView fx:id="imagePreview" fitHeight="367.0" fitWidth="931.0" layoutX="261.0" layoutY="76.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
+      <CheckBox fx:id="scaleBrightness" layoutX="13.0" layoutY="253.0" mnemonicParsing="false" selected="true" text="correct brightness" />
+      <Slider fx:id="brightnessSlider" layoutX="9.0" layoutY="287.0" majorTickUnit="10.0" minorTickCount="1" prefHeight="24.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" value="70.0" />
+      <Separator layoutX="258.0" layoutY="3.0" orientation="VERTICAL" prefHeight="273.0" prefWidth="5.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="3.0" />
+      <TabPane layoutX="20.0" layoutY="14.0" prefHeight="66.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0">
+        <tabs>
+          <Tab text="One image">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="124.0" prefWidth="252.0">
+                     <children>
+                        <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadFilePress" text="load image" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                        <Button layoutX="105.0" layoutY="13.0" mnemonicParsing="false" onAction="#saveFilePress" text="save image" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="5.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="PDF">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <TabPane layoutX="9.0" layoutY="76.0" prefHeight="125.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="76.0">
+        <tabs>
+          <Tab text="High Pass Filter">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="blur" layoutX="37.0" layoutY="15.0" text="blur strength" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="6.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Quantization">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <Button layoutX="192.0" layoutY="241.0" mnemonicParsing="false" onAction="#runButton" prefHeight="25.0" prefWidth="56.0" text="run" AnchorPane.leftAnchor="192.0" AnchorPane.topAnchor="241.0" />
+   </children>
+</AnchorPane>

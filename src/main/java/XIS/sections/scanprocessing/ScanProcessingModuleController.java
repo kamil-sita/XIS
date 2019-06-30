@@ -32,6 +32,9 @@ public final class ScanProcessingModuleController extends XisController {
     @FXML
     private Slider brightnessSlider;
 
+    @FXML
+    private CheckBox blackAndWhiteCheckbox;
+
 
     @FXML
     void loadFilePress(ActionEvent event) {
@@ -78,7 +81,7 @@ public final class ScanProcessingModuleController extends XisController {
             getUserFeedback().reportProgress("Converting...");
             double brightnessFix = brightnessSlider.getValue()/100.0;
             brightnessFix = Math.min(brightnessFix, 0.995);
-            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessFix);
+            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessFix, blackAndWhiteCheckbox.isSelected());
             processedImage = output;
             getUserFeedback().reportProgress("Converted image!");
             Platform.runLater(() -> setNewImage(output));

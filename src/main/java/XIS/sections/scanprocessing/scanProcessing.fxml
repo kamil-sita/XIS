@@ -35,6 +35,7 @@
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="blur" layoutX="37.0" layoutY="15.0" text="blur strength" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="6.0" />
+                        <CheckBox fx:id="blackAndWhiteCheckbox" layoutX="14.0" layoutY="40.0" mnemonicParsing="false" selected="true" text="grayscale" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="35.0" />
                      </children>
                   </AnchorPane>
             </content>

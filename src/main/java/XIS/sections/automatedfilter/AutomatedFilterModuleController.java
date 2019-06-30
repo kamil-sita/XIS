@@ -138,7 +138,7 @@ public final class AutomatedFilterModuleController extends XisController {
                        lastImage = inputImage[0];
                    }
                    getUserFeedback().reportProgress("Filtering image...");
-                   output[0] = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue() / 100.0);
+                   output[0] = HighPassFilterConverter.convert(inputImage[0], finalBlurPasses, scaleBrightness.isSelected(), brightnessSlider.getValue() / 100.0, false);
                };
            }
 

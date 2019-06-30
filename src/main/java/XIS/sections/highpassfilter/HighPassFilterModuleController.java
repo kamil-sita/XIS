@@ -78,7 +78,7 @@ public final class HighPassFilterModuleController extends XisController {
                 //failed parsing
             }
             getUserFeedback().reportProgress("Converting...");
-            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0);
+            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessSlider.getValue()/100.0, false);
             processedImage = output;
             getUserFeedback().reportProgress("Converted image!");
             Platform.runLater(() -> setNewImage(output));

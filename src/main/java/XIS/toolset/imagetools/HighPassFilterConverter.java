@@ -5,9 +5,14 @@ import java.awt.image.Kernel;
 
 public final class HighPassFilterConverter {
 
-    public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, double scaleBrightnessVal) {
+    public static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, double scaleBrightnessVal, boolean blackAndWhite) {
         long time = System.nanoTime();
         bufferedImage = changeToIntArgb(bufferedImage);
+
+        if (blackAndWhite) {
+            BufferedImageLayers.convertToGrayscale(bufferedImage);
+        }
+
         var blurredImage = BufferedImageLayers.copyImage(bufferedImage);
 
         Kernel kernel = BufferedImageBlur.generateGaussianKernel(blurPasses);

@@ -1,5 +1,7 @@
 package XIS.toolset.imagetools;
 
+import java.awt.*;
+
 /**
  * Class that helps use integer as a pixel color in ARGB model, provided by BufferedImage.
  * Old class (RGB) had too big of a memory footprint.
@@ -14,10 +16,7 @@ public final class IntArgb {
 
     public static int[] asArray(int argb) {
         int[] array = new int[ARR_SIZE];
-        array[A] = (argb >> 24) & 0xFF;
-        array[R] = (argb >> 16) & 0xFF;
-        array[G] = (argb >> 8) & 0xFF;
-        array[B] = argb & 0xFF;
+        asArray(argb, array);
         return array;
     }
 
@@ -62,7 +61,12 @@ public final class IntArgb {
         return value * value;
     }
 
-    public static Hsb toHsb(int argb) {
-        return new Rgb(argb).toHSB();
+
+    public static void ColorspaceRGBtoHSB(int[] argb, float[] hsb) {
+        Color.RGBtoHSB(argb[R], argb[G], argb[B], hsb);
+    }
+
+    public static int ColorspaceHSBtoIntArgb(float[] hsb) {
+        return Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
     }
 }

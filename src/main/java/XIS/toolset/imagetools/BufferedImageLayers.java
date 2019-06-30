@@ -2,30 +2,33 @@ package XIS.toolset.imagetools;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import static XIS.toolset.imagetools.IntArgb.*;
 
 public class BufferedImageLayers {
     public static BufferedImage divide(BufferedImage image0, BufferedImage image1) {
-        var output = clone(image0);
+        if (image0.getType() != BufferedImage.TYPE_INT_ARGB) throw new IllegalArgumentException("Type of BufferedImage must be TYPE_INT_ARGB");
+        if (image1.getType() != BufferedImage.TYPE_INT_ARGB) throw new IllegalArgumentException("Type of BufferedImage must be TYPE_INT_ARGB");
 
-        int[] rgb0 = new int[4];
-        int[] rgb1 = new int[4];
-        int[] out = new int[4];
-        out[A] = 255;
 
-        for (int x = 0; x < output.getWidth(); x++) {
-            for (int y = 0; y < output.getHeight(); y++) {
+        int[] opImage0 = ((DataBufferInt) image0.getRaster().getDataBuffer()).getData();
+        int[] opImage1 = ((DataBufferInt) image1.getRaster().getDataBuffer()).getData();
+        var output = cloneCanvas(image0);
+        int[] outputOp = ((DataBufferInt) output.getRaster().getDataBuffer()).getData();
+        System.arraycopy(opImage0, 0, outputOp, 0, opImage0.length);
 
-                asArray(image0.getRGB(x, y), rgb0);
-                asArray(image1.getRGB(x, y), rgb1);
+        int[] argb0 = new int[4];
+        int[] argb1 = new int[4];
+        int[] argbOut = new int[4];
 
-                out[R] = Math.min(255, (int) (255.0 * rgb0[R] / rgb1[R]));
-                out[G] = Math.min(255, (int) (255.0 * rgb0[G] / rgb1[G]));
-                out[B] = Math.min(255, (int) (255.0 * rgb0[B] / rgb1[B]));
-
-                output.setRGB(x, y, toRgbaInteger(out));
-            }
+        for (int i = 0; i < opImage0.length; i++) {
+            asArray(opImage0[i], argb0);
+            asArray(opImage1[i], argb1);
+            argbOut[R] = Math.min(255, (int) (255.0 * argb0[R] / argb1[R]));
+            argbOut[G] = Math.min(255, (int) (255.0 * argb0[G] / argb1[G]));
+            argbOut[B] = Math.min(255, (int) (255.0 * argb0[B] / argb1[B]));
+            outputOp[i] = toRgbaInteger(argbOut);
         }
 
         return output;
@@ -40,7 +43,7 @@ public class BufferedImageLayers {
         return imageCopy;
     }
 
-    private static BufferedImage clone(BufferedImage input) {
+    private static BufferedImage cloneCanvas(BufferedImage input) {
         return new BufferedImage(input.getWidth(), input.getHeight(), BufferedImage.TYPE_INT_ARGB);
     }
 }

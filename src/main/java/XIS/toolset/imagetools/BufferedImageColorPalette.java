@@ -3,6 +3,7 @@ package XIS.toolset.imagetools;
 import javafx.util.Pair;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,23 +81,28 @@ public class BufferedImageColorPalette {
 
     public static void scaleAndCutoffBrightness(BufferedImage bufferedImage, double cutOff) {
 
+        if (bufferedImage.getType() != BufferedImage.TYPE_INT_ARGB) throw new IllegalArgumentException("Type of BufferedImage must be TYPE_INT_ARGB");
+
         double diff = cutOff;
         double scale = 1/(1-cutOff);
 
+        int[] dataImage = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
+        int[] rgb = new int[4];
+        float[] hsb = new float[3];
 
-        for (int x = 0; x < bufferedImage.getWidth(); x++) {
-            for (int y = 0; y < bufferedImage.getHeight(); y++) {
-                var rgb = new Rgb(bufferedImage.getRGB(x, y));
-                var hsb = rgb.toHSB();
-                if (hsb.B <= cutOff) {
-                    hsb.B = 0;
-                    bufferedImage.setRGB(x, y, hsb.toRGB().toInt());
-                } else {
-                    hsb.B -= diff;
-                    hsb.B *= scale;
-                    bufferedImage.setRGB(x, y, hsb.toRGB().toInt());
-                }
+        for (int i = 0; i < dataImage.length; i++) {
+            IntArgb.asArray(dataImage[i], rgb);
+            IntArgb.ColorspaceRGBtoHSB(rgb, hsb);
+
+            if (hsb[2] <= cutOff) {
+                hsb[2] = 0;
+            } else {
+                hsb[2] -= diff;
+                hsb[2] *= scale;
             }
+
+            dataImage[i] = IntArgb.ColorspaceHSBtoIntArgb(hsb);
         }
+
     }
 }

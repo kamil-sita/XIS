@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import static java.lang.Math.*;
 
-public class BufferedImageBlur {
+public final class BufferedImageBlur {
 
     private static HashMap<Integer, Kernel> flyweightLoader = new HashMap<>();
 

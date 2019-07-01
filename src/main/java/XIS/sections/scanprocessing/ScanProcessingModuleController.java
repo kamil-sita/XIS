@@ -3,13 +3,16 @@ package XIS.sections.scanprocessing;
 import XIS.sections.NotifierFactory;
 import XIS.sections.XisController;
 import XIS.toolset.JavaFXTools;
-import XIS.toolset.imagetools.HighPassFilterConverter;
 import XIS.toolset.io.GuiFileIO;
-import javafx.application.Platform;
+import XIS.toolset.scanfilters.Filter;
+import XIS.toolset.scanfilters.FilterArguments;
+import XIS.toolset.scanfilters.HighPassFilter;
+import XIS.toolset.scanfilters.HighPassFilterArguments;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
@@ -35,6 +38,11 @@ public final class ScanProcessingModuleController extends XisController {
     @FXML
     private CheckBox blackAndWhiteCheckbox;
 
+    @FXML
+    private TabPane inputSelector;
+
+    @FXML
+    private TabPane methodSelector;
 
     @FXML
     void loadFilePress(ActionEvent event) {
@@ -45,7 +53,7 @@ public final class ScanProcessingModuleController extends XisController {
         } else {
             inputImage = optionalInputImage.get();
             processedImage = inputImage;
-            setNewImage(inputImage);
+            setImagePreview(inputImage);
         }
 
     }
@@ -65,32 +73,48 @@ public final class ScanProcessingModuleController extends XisController {
         reAddNotifier();
     }
 
+    private static final int METHOD_HIGHPASS = 0;
+    private static final int METHOD_QUANTIZATION = 1;
+
     @FXML
     void runButton(ActionEvent event) {
         if (inputImage == null) {
             getUserFeedback().popup("Can't run without loaded file");
             return;
         }
-        new Thread(() -> {
+
+        Filter filter = null;
+        FilterArguments args = null;
+
+        if (methodSelector.getSelectionModel().getSelectedIndex() == METHOD_HIGHPASS) {
+            filter = new HighPassFilter();
+            var hargs = new HighPassFilterArguments();
+            hargs.setScaleBrightness(scaleBrightness.isSelected());
+            hargs.setBlackAndWhite(blackAndWhiteCheckbox.isSelected());
+            hargs.setScaleBrightnessVal(Math.min(brightnessSlider.getValue()/100.0, 0.995));
             int blurValue = 5;
             try {
                 blurValue = Integer.parseInt(blur.getText());
             } catch (Exception e) {
                 //failed parsing
             }
-            getUserFeedback().reportProgress("Converting...");
-            double brightnessFix = brightnessSlider.getValue()/100.0;
-            brightnessFix = Math.min(brightnessFix, 0.995);
-            var output = HighPassFilterConverter.convert(inputImage, blurValue, scaleBrightness.isSelected(), brightnessFix, blackAndWhiteCheckbox.isSelected());
-            processedImage = output;
-            getUserFeedback().reportProgress("Converted image!");
-            Platform.runLater(() -> setNewImage(output));
+            hargs.setBlurPasses(blurValue);
+            args = hargs;
+        }
+        if (methodSelector.getSelectionModel().getSelectedIndex() == METHOD_QUANTIZATION) {
+            filter = null;
+        }
 
-            JavaFXTools.showPreview(output, imagePreview, this::setNewImage, getUserFeedback());
-        }).start();
+
+        FilterCaller.oneImage(inputImage, filter, args, this::setImagePreview, this::setProcessedImage, imagePreview);
 
     }
-    private void setNewImage(BufferedImage bufferedImage) {
+
+    private void setProcessedImage(BufferedImage bufferedImage) {
+        processedImage = bufferedImage;
+    }
+
+    private void setImagePreview(BufferedImage bufferedImage) {
         imagePreview.setImage(JavaFXTools.toFxImage(bufferedImage));
         reAddNotifier();
         refreshVista();

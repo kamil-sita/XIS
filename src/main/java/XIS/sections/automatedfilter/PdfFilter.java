@@ -14,7 +14,7 @@ public class PdfFilter {
             interruptible.reportProgress((1.0*i + 1)/size);
             interruptible.reportProgress("Progress: page " + (i + 1) + "/" + size + ".");
             var image = PdfIO.getPdfAsImage(inputFile, i, interruptible);
-            var filteredImage = HighPassFilterConverter.convert(image, blurPasses, scaleBrightness, scaleBrightnessVal, false);
+            var filteredImage = HighPassFilterConverter.convert(image, blurPasses, scaleBrightness, scaleBrightnessVal, true);
             PdfIO.addImage(document, filteredImage);
         }
         PdfIO.saveDocumentAndClose(outputFile, document);

@@ -1,4 +1,4 @@
-package XIS.sections.scannertonote;
+package XIS.sections.scanprocessing.quantization;
 
 import java.awt.image.BufferedImage;
 

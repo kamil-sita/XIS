@@ -1,7 +1,7 @@
 package XIS.toolset.imagetools;
 
 
-import XIS.sections.scannertonote.RgbContainer;
+import XIS.sections.scanprocessing.quantization.RgbContainer;
 
 import java.awt.*;
 

@@ -7,9 +7,7 @@ import XIS.sections.XisController;
 import XIS.sections.automatedfilter.AutomatedFilterModuleVista;
 import XIS.sections.compression.CompressionModuleVista;
 import XIS.sections.defaultpage.WelcomePageModuleVista;
-import XIS.sections.highpassfilter.HighPassFilterModuleVista;
 import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
-import XIS.sections.scannertonote.ScannerToNoteModuleVista;
 import XIS.sections.scanprocessing.ScanProcessingModuleVista;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -74,22 +72,6 @@ public final class MainViewController {
         changeVistaIfChanged(imageCopyFinder);
         currentModule = imageCopyFinder;
         setStatus("imagecopyfinder module loaded");
-    }
-
-    @FXML
-    void scannerToNotePress(ActionEvent event) {
-        var scannerToNote = new ScannerToNoteModuleVista();
-        changeVistaIfChanged(scannerToNote);
-        currentModule = scannerToNote;
-        setStatus("scanner-to-note module loaded");
-    }
-
-    @FXML
-    void highPassFilterPress(ActionEvent event) {
-        var highPassFilter = new HighPassFilterModuleVista();
-        changeVistaIfChanged(highPassFilter);
-        currentModule = highPassFilter;
-        setStatus("high-pass-filter module loaded");
     }
 
     @FXML

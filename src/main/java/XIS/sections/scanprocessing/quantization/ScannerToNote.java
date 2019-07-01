@@ -1,4 +1,4 @@
-package XIS.sections.scannertonote;
+package XIS.sections.scanprocessing.quantization;
 
 import XIS.sections.Interruptible;
 import XIS.toolset.imagetools.BufferedImageColorPalette;

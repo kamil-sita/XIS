@@ -1,4 +1,4 @@
-package XIS.sections.scannertonote;
+package XIS.sections.scanprocessing.quantization;
 
 import XIS.toolset.imagetools.Rgb;
 import pl.ksitarski.simplekmeans.KMeansData;

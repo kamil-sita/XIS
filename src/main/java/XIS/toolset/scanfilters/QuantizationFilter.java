@@ -1,8 +1,8 @@
 package XIS.toolset.scanfilters;
 
 import XIS.sections.Interruptible;
-import XIS.sections.scannertonote.ScannerToNote;
-import XIS.sections.scannertonote.ScannerToNoteParameters;
+import XIS.sections.scanprocessing.quantization.ScannerToNote;
+import XIS.sections.scanprocessing.quantization.ScannerToNoteParameters;
 
 import java.awt.image.BufferedImage;
 

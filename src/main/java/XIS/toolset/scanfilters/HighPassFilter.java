@@ -10,22 +10,24 @@ import java.awt.image.Kernel;
 
 public class HighPassFilter implements Filter {
 
+    private HighPassFilterArguments arguments;
+
+    public HighPassFilter(HighPassFilterArguments arguments) {
+        this.arguments = arguments;
+    }
+
     @Override
-    public BufferedImage filter(BufferedImage input, FilterArguments args, Interruptible interruptible) {
-        if (!(args instanceof HighPassFilterArguments)) //RIP good coding
-            throw new IllegalArgumentException("FilterArguments should be of HighPassFilterArguments type");
-        HighPassFilterArguments arguments = (HighPassFilterArguments) args;
+    public BufferedImage filter(BufferedImage input, Interruptible interruptible) {
 
         return convert(
                 input,
                 arguments.getBlurPasses(),
-                arguments.isScaleBrightness(),
                 arguments.getScaleBrightnessVal(),
                 arguments.isBlackAndWhite()
         );
     }
 
-    private static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, boolean scaleBrightness, double scaleBrightnessVal, boolean blackAndWhite) {
+    private static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, double scaleBrightnessVal, boolean blackAndWhite) {
         long time = System.nanoTime();
         bufferedImage = changeToIntArgb(bufferedImage);
 
@@ -42,7 +44,7 @@ public class HighPassFilter implements Filter {
         var output = BufferedImageLayers.divide(
                 BufferedImageLayers.copyImage(bufferedImage), blurredImage);
 
-        if (scaleBrightness) BufferedImageColorPalette.scaleAndCutoffBrightness(output, scaleBrightnessVal);
+        BufferedImageColorPalette.scaleAndCutoffBrightness(output, scaleBrightnessVal);
 
         System.out.println((System.nanoTime() - time) / 1_000_000_000.0 + "s");
 

@@ -1,8 +1,7 @@
 package XIS.toolset.scanfilters;
 
-public class HighPassFilterArguments implements FilterArguments {
+public class HighPassFilterArguments {
     private int blurPasses;
-    private boolean scaleBrightness;
     private double scaleBrightnessVal;
     boolean blackAndWhite;
 
@@ -13,15 +12,6 @@ public class HighPassFilterArguments implements FilterArguments {
     public void setBlurPasses(int blurPasses) {
         this.blurPasses = blurPasses;
     }
-
-    public boolean isScaleBrightness() {
-        return scaleBrightness;
-    }
-
-    public void setScaleBrightness(boolean scaleBrightness) {
-        this.scaleBrightness = scaleBrightness;
-    }
-
     public double getScaleBrightnessVal() {
         return scaleBrightnessVal;
     }

@@ -4,10 +4,7 @@ import XIS.sections.NotifierFactory;
 import XIS.sections.XisController;
 import XIS.toolset.JavaFXTools;
 import XIS.toolset.io.GuiFileIO;
-import XIS.toolset.scanfilters.Filter;
-import XIS.toolset.scanfilters.FilterArguments;
-import XIS.toolset.scanfilters.HighPassFilter;
-import XIS.toolset.scanfilters.HighPassFilterArguments;
+import XIS.toolset.scanfilters.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -30,9 +27,6 @@ public final class ScanProcessingModuleController extends XisController {
     private ImageView imagePreview;
 
     @FXML
-    private CheckBox scaleBrightness;
-
-    @FXML
     private Slider brightnessSlider;
 
     @FXML
@@ -43,6 +37,29 @@ public final class ScanProcessingModuleController extends XisController {
 
     @FXML
     private TabPane methodSelector;
+
+
+    //quantization
+    @FXML
+    private TextField colorCountTextField;
+
+    @FXML
+    private CheckBox correctBrightnessCheckbox;
+
+    @FXML
+    private CheckBox isolateBackgroundCheckbox;
+
+    @FXML
+    private Slider brightnessDifferenceSlider;
+
+    @FXML
+    private Slider saturationDifferenceSlider;
+
+    @FXML
+    void isolateBackgroundAction(ActionEvent event) {
+        brightnessDifferenceSlider.setDisable(!isolateBackgroundCheckbox.isSelected());
+        saturationDifferenceSlider.setDisable(!isolateBackgroundCheckbox.isSelected());
+    }
 
     @FXML
     void loadFilePress(ActionEvent event) {
@@ -84,29 +101,44 @@ public final class ScanProcessingModuleController extends XisController {
         }
 
         Filter filter = null;
-        FilterArguments args = null;
 
-        if (methodSelector.getSelectionModel().getSelectedIndex() == METHOD_HIGHPASS) {
-            filter = new HighPassFilter();
-            var hargs = new HighPassFilterArguments();
-            hargs.setScaleBrightness(scaleBrightness.isSelected());
-            hargs.setBlackAndWhite(blackAndWhiteCheckbox.isSelected());
-            hargs.setScaleBrightnessVal(Math.min(brightnessSlider.getValue()/100.0, 0.995));
-            int blurValue = 5;
-            try {
-                blurValue = Integer.parseInt(blur.getText());
-            } catch (Exception e) {
-                //failed parsing
-            }
-            hargs.setBlurPasses(blurValue);
-            args = hargs;
+        switch (methodSelector.getSelectionModel().getSelectedIndex()) {
+            case METHOD_HIGHPASS:
+                var hargs = new HighPassFilterArguments();
+                hargs.setBlackAndWhite(blackAndWhiteCheckbox.isSelected());
+                hargs.setScaleBrightnessVal(Math.min(brightnessSlider.getValue()/100.0, 0.995));
+                int blurValue = 5;
+                try {
+                    blurValue = Integer.parseInt(blur.getText());
+                } catch (Exception e) {
+                    //failed parsing
+                }
+                hargs.setBlurPasses(blurValue);
+
+                filter = new HighPassFilter(hargs);
+                break;
+
+            case METHOD_QUANTIZATION:
+                var qargs = new QuantizationFilterArguments();
+                qargs.setBrightnessDifference(brightnessDifferenceSlider.getValue()/100.0);
+                qargs.setSaturationDifference(saturationDifferenceSlider.getValue()/100.0);
+                qargs.setFilterBackground(isolateBackgroundCheckbox.isSelected());
+                qargs.setScaleBrightness(correctBrightnessCheckbox.isSelected());
+
+                int colors = 5;
+                try {
+                    colors = Integer.parseInt(colorCountTextField.getText());
+                } catch (Exception e) {
+                    //failed parsing
+                }
+                qargs.setColorCount(colors);
+
+                filter = new QuantizationFilter(qargs);
+                break;
         }
-        if (methodSelector.getSelectionModel().getSelectedIndex() == METHOD_QUANTIZATION) {
-            filter = null;
-        }
 
 
-        FilterCaller.oneImage(inputImage, filter, args, this::setImagePreview, this::setProcessedImage, imagePreview);
+        FilterCaller.oneImage(inputImage, filter, this::setImagePreview, this::setProcessedImage, imagePreview);
 
     }
 

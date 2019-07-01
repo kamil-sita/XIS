@@ -83,7 +83,7 @@ public final class ScannerToNoteModuleController extends XisController {
                     }
 
                     Optional<BufferedImage> optionalImage = ScannerToNote.convert(
-                            new ScannerToNote.ScannerToNoteParameters(
+                            new ScannerToNoteParameters(
                                     plainImage,
                                     isolateBackground.isSelected(),
                                     correctBrightness.isSelected(),

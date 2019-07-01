@@ -4,14 +4,13 @@ import XIS.sections.Interruptible;
 import XIS.sections.SingleJobManager;
 import XIS.toolset.JavaFXTools;
 import XIS.toolset.scanfilters.Filter;
-import XIS.toolset.scanfilters.FilterArguments;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 
 import java.awt.image.BufferedImage;
 
 public class FilterCaller {
-    public static void oneImage(BufferedImage input, Filter filter, FilterArguments args,
+    public static void oneImage(BufferedImage input, Filter filter,
                                 final JavaFXTools.SetImageDelegate setPreview,
                                 final JavaFXTools.SetImageDelegate imageOutput,
                                 ImageView imageView) {
@@ -22,7 +21,7 @@ public class FilterCaller {
             public Runnable getRunnable() {
                 return () -> {
                     getUserFeedback().reportProgress("Converting...");
-                    output = filter.filter(input, args, this);
+                    output = filter.filter(input, this);
                 };
             }
 

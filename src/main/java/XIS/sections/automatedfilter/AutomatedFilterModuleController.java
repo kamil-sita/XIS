@@ -1,9 +1,6 @@
 package XIS.sections.automatedfilter;
 
-import XIS.sections.Interruptible;
-import XIS.sections.NotifierFactory;
-import XIS.sections.SingleJobManager;
-import XIS.sections.XisController;
+import XIS.sections.*;
 import XIS.toolset.JavaFXTools;
 import XIS.toolset.imagetools.HighPassFilterConverter;
 import XIS.toolset.io.GuiFileIO;
@@ -66,7 +63,13 @@ public final class AutomatedFilterModuleController extends XisController {
             public Runnable getRunnable() {
                 return () -> {
                     Platform.runLater(() -> getUserFeedback().popup("Popup will show up once PDF is filtered"));
-                    PdfFilter.filter(openPdf, savePdf, scaleBrightness.isSelected(), brightnessSlider.getValue() / 100.0, finalBlurPasses, this);
+                    PdfFilter.filter(openPdf,
+                            savePdf,
+                            scaleBrightness.isSelected(),
+                            brightnessSlider.getValue() / 100.0,
+                            finalBlurPasses,
+                            this,
+                            bufferedImage -> scaleSetNewImage(bufferedImage));
 
                 };
             }
@@ -150,6 +153,15 @@ public final class AutomatedFilterModuleController extends XisController {
            }
        });
 
+    }
+
+    private void scaleSetNewImage(BufferedImage bufferedImage) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JavaFXTools.showPreview(bufferedImage, imagePreview, AutomatedFilterModuleController.this::setNewImage, UserFeedback.getInstance());
+            }
+        }).start();
     }
 
 

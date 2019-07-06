@@ -2,8 +2,9 @@ package XIS.sections.imagecopyfinder;
 
 import XIS.sections.GlobalSettings;
 import XIS.sections.Interruptible;
-import XIS.toolset.imagetools.Rgb;
+import XIS.toolset.imagetools.IntArgb;
 
+import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -158,18 +159,23 @@ public final class ImageComparator {
 
         double equality = 0;
 
-        for (int x = 0; x < generatedMiniatureSize; x++) {
-            for (int y = 0; y < generatedMiniatureSize; y++) {
+        int[] opImage0 = ((DataBufferInt) image1.getPreview().getRaster().getDataBuffer()).getData();
+        int[] opImage1 = ((DataBufferInt) image2.getPreview().getRaster().getDataBuffer()).getData();
 
-                Rgb rgb1 = new Rgb(image1.getPreview().getRGB(x, y));
-                Rgb rgb2 = new Rgb(image2.getPreview().getRGB(x, y));
+        int[] rgb0 = new int[4];
+        int[] rgb1 = new int[4];
 
-                equality += Math.pow(1 - rgb1.compareToRGB(rgb2), POWER);
-
-            }
+        for (int i = 0; i < opImage0.length; i++) {
+            IntArgb.asArray(opImage0[i], rgb0);
+            IntArgb.asArray(opImage1[i], rgb1);
+            equality += pow6(1 - IntArgb.compare(rgb0, rgb1));
         }
 
         return 1 - Math.pow(equality/(generatedMiniatureSize * generatedMiniatureSize), 1/POWER);
+    }
+
+    private double pow6(double v) {
+        return v * v * v * v * v * v;
     }
 
     private boolean areProportionsAcceptable(ComparableImage image1, ComparableImage image2) {

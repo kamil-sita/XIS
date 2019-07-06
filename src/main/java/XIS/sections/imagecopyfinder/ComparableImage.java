@@ -39,6 +39,9 @@ public final class ComparableImage {
         image = BufferedImageBlur.simpleBlur(image, BufferedImageBlur.generateGaussianKernel(3));
 
         smallImage = BufferedImageScale.getComparableScaledDownImage(image, COMPARED_IMAGE_SIZE);
+        if (smallImage.getType() != BufferedImage.TYPE_INT_ARGB) {
+            System.err.println("Image should be of type TYPE_INT_ARGB!");
+        }
 
 
         Rgb rgb = new Rgb(BufferedImageScale.getComparableScaledDownImage(smallImage, 1).getRGB(0, 0));

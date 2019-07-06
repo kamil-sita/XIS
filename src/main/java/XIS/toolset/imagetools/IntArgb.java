@@ -57,6 +57,21 @@ public final class IntArgb {
         );
     }
 
+
+    /**
+     * Compares two colors, using r g b channels
+     * @return % of similarity (100% - equal)
+     */
+    public static double compare(int[] rgba0, int[] rgba1) {
+        double totalSimilarity = 255.0 * 3.0;
+
+        totalSimilarity -= Math.abs(rgba0[R] - rgba1[R]);
+        totalSimilarity -= Math.abs(rgba0[G] - rgba1[G]);
+        totalSimilarity -= Math.abs(rgba0[B] - rgba1[B]);
+
+        return totalSimilarity/(255.0*3.0);
+    }
+
     private static double square(double value) {
         return value * value;
     }

@@ -1,4 +1,4 @@
-package XIS.sections.automatedfilter;
+package XIS.sections.scanprocessing;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;

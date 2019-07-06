@@ -3,11 +3,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="thisAnchorPane" prefHeight="458.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.scanprocessing.ScanProcessingModuleController">
+<AnchorPane fx:id="thisAnchorPane" prefHeight="515.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.scanprocessing.ScanProcessingModuleController">
    <children>
       <ImageView fx:id="imagePreview" fitHeight="367.0" fitWidth="931.0" layoutX="261.0" layoutY="76.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
       <Separator layoutX="258.0" layoutY="3.0" orientation="VERTICAL" prefHeight="273.0" prefWidth="5.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="3.0" />
-      <TabPane fx:id="inputSelector" layoutX="20.0" layoutY="14.0" prefHeight="114.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0">
+      <TabPane fx:id="inputSelector" layoutX="20.0" layoutY="14.0" prefHeight="164.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0">
         <tabs>
           <Tab text="One image">
             <content>
@@ -21,18 +21,20 @@
           </Tab>
           <Tab text="PDF">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="252.0">
                      <children>
                         <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectInputPdfPress" text="select input file" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
                         <Button layoutX="120.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectOutputPdfPress" text="select output file" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="14.0" />
                         <Button layoutX="186.0" layoutY="46.0" mnemonicParsing="false" onAction="#previewPagePress" text="preview page" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="46.0" />
                         <TextField fx:id="pageNumberText" layoutX="14.0" layoutY="46.0" prefHeight="25.0" prefWidth="126.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="46.0" />
+                        <Label layoutX="15.0" layoutY="81.0" text="Pdf Render DPI" />
+                        <TextField fx:id="dpiText" layoutX="98.0" layoutY="77.0" text="300" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="77.0" />
                      </children></AnchorPane>
             </content>
           </Tab>
         </tabs>
       </TabPane>
-      <TabPane fx:id="methodSelector" layoutX="9.0" layoutY="76.0" prefHeight="285.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="120.0">
+      <TabPane fx:id="methodSelector" layoutX="3.0" layoutY="171.0" prefHeight="285.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="171.0">
         <tabs>
           <Tab text="High Pass Filter">
             <content>
@@ -64,6 +66,6 @@
           </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="199.0" layoutY="385.0" mnemonicParsing="false" onAction="#runButton" prefHeight="25.0" prefWidth="56.0" text="run" AnchorPane.leftAnchor="199.0" AnchorPane.topAnchor="415.0" />
+      <Button layoutX="199.0" layoutY="476.0" mnemonicParsing="false" onAction="#runButton" prefHeight="25.0" prefWidth="56.0" text="run" AnchorPane.leftAnchor="199.0" AnchorPane.topAnchor="476.0" />
    </children>
 </AnchorPane>

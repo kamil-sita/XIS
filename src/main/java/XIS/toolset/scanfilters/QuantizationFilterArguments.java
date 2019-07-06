@@ -1,6 +1,6 @@
 package XIS.toolset.scanfilters;
 
-public class QuantizationFilterArguments {
+public class QuantizationFilterArguments implements Arguments {
     private boolean filterBackground;
     private boolean scaleBrightness;
     private int colorCount;

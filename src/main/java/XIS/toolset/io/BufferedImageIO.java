@@ -17,7 +17,6 @@ public final class BufferedImageIO implements AutoCloseable {
         BufferedImage bufferedImage = null;
         try {
             bufferedImage = ImageIO.read(file);
-            System.out.println(bufferedImage);
         } catch (IOException | IllegalArgumentException e) {
             return Optional.empty();
         } catch (Exception e) {

@@ -2,8 +2,8 @@ package XIS.sections.scanprocessing;
 
 import XIS.sections.Interruptible;
 import XIS.sections.SingleJobManager;
-import XIS.sections.automatedfilter.PdfFilter;
 import XIS.toolset.JavaFXTools;
+import XIS.toolset.io.PdfIO;
 import XIS.toolset.scanfilters.Filter;
 import javafx.application.Platform;
 import javafx.scene.image.ImageView;
@@ -34,13 +34,16 @@ public class FilterCaller {
                     getUserFeedback().reportProgress("Converted image!");
 
                     Platform.runLater(() -> setPreview.set(output));
-                    JavaFXTools.showPreview(output, imageView, setPreview, getUserFeedback());
                 };
             }
         });
     }
 
+
+
+
     public static void multipleImages(File input, File output,
+                                      int dpi,
                                       Filter filter,
                                       final JavaFXTools.SetImageDelegate imageOutput) {
         SingleJobManager.setAndRunJob(new Interruptible() {
@@ -49,7 +52,7 @@ public class FilterCaller {
                 return () -> {
                     Platform.runLater(() -> getUserFeedback().popup("Popup will show up once PDF is filtered"));
                     getUserFeedback().reportProgress("Starting...");
-                    PdfFilter.filter(input, output, filter, this, imageOutput);
+                    PdfFilter.filter(input, output, filter, this, imageOutput, dpi);
                 };
             }
 
@@ -57,6 +60,37 @@ public class FilterCaller {
             public Runnable onUninterruptedFinish() {
                 return () -> {
                     Platform.runLater(() -> getUserFeedback().popup("Finished filtering pdf"));
+                };
+            }
+        });
+    }
+
+
+
+
+
+    public static void previewPdf(File input, int dpi, int page,
+                                  Filter filter,
+                                  ImageView imageView,
+                                  final JavaFXTools.SetImageDelegate imageDelegate) {
+
+        SingleJobManager.setAndRunJob(new Interruptible() {
+            BufferedImage output;
+            @Override
+            public Runnable getRunnable() {
+                return () -> {
+                    getUserFeedback().reportProgress("Converting...");
+                    output = PdfIO.getPdfAsImage(input, page, dpi,this);
+                    output = filter.filter(output, this);
+                };
+            }
+
+            @Override
+            public Runnable onUninterruptedFinish() {
+                return () -> {
+                    getUserFeedback().reportProgress("Converted image!");
+
+                    Platform.runLater(() -> imageDelegate.set(output));
                 };
             }
         });

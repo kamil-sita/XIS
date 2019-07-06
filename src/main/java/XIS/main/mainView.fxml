@@ -18,9 +18,9 @@
             <TilePane fx:id="tilePane" maxWidth="200.0" minWidth="0.0" prefHeight="574.0" prefWidth="232.0" styleClass="tile-pane">
                <children>
                   <Button mnemonicParsing="false" onAction="#mainPress" prefHeight="42.0" prefWidth="200.0" text="About" />
-                  <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="[Buggy] Image copy finder" />
-                  <Button mnemonicParsing="false" onAction="#scanProcessingPress" prefHeight="42.0" prefWidth="200.0" text="[WIP] Scan processing" />
-                  <Button mnemonicParsing="false" onAction="#imageCompressionPress" prefHeight="42.0" prefWidth="200.0" text="[WIP] Image compression" />
+                  <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="Image copy finder" />
+                  <Button mnemonicParsing="false" onAction="#scanProcessingPress" prefHeight="42.0" prefWidth="200.0" text="Scan processing" />
+                  <Button mnemonicParsing="false" onAction="#imageCompressionPress" prefHeight="42.0" prefWidth="200.0" text="[Concept] Image compression" />
                </children>
             </TilePane>
             <GridPane prefHeight="523.0" prefWidth="644.0" GridPane.columnIndex="1">

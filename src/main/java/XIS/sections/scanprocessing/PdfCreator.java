@@ -1,4 +1,4 @@
-package XIS.sections.automatedfilter;
+package XIS.sections.scanprocessing;
 
 import XIS.toolset.JavaFXTools;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -33,7 +33,6 @@ public class PdfCreator implements AutoCloseable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        document.addPage(new PDPage(new PDRectangle()));
 
         if (delegate != null) {
             delegate.set(image);

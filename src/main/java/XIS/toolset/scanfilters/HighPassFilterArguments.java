@@ -1,6 +1,6 @@
 package XIS.toolset.scanfilters;
 
-public class HighPassFilterArguments {
+public class HighPassFilterArguments implements Arguments {
     private int blurPasses;
     private double scaleBrightnessVal;
     boolean blackAndWhite;

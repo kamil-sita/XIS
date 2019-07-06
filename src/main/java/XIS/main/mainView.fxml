@@ -20,7 +20,6 @@
                   <Button mnemonicParsing="false" onAction="#mainPress" prefHeight="42.0" prefWidth="200.0" text="About" />
                   <Button mnemonicParsing="false" onAction="#imageCopyFinderPress" prefHeight="42.0" prefWidth="200.0" text="[Buggy] Image copy finder" />
                   <Button mnemonicParsing="false" onAction="#scanProcessingPress" prefHeight="42.0" prefWidth="200.0" text="[WIP] Scan processing" />
-                  <Button mnemonicParsing="false" onAction="#automatedFilteringPress" prefHeight="42.0" prefWidth="200.0" text="Automated HPF" />
                   <Button mnemonicParsing="false" onAction="#imageCompressionPress" prefHeight="42.0" prefWidth="200.0" text="[WIP] Image compression" />
                </children>
             </TilePane>

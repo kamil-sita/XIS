@@ -14,23 +14,28 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 public final class ScanProcessingModuleController extends XisController {
 
     private BufferedImage inputImage;
     private BufferedImage processedImage;
 
-    @FXML
-    private TextField blur;
+    private File inputFile;
+    private File outputFile;
 
+    private static final int METHOD_HIGHPASS = 0;
+    private static final int METHOD_QUANTIZATION = 1;
+
+    private static final int SINGLE_IMAGE = 0;
+    private static final int MULTIPLE_IMAGES = 1;
+    /*
+    FXML fields
+     */
+
+    //global
     @FXML
     private ImageView imagePreview;
-
-    @FXML
-    private Slider brightnessSlider;
-
-    @FXML
-    private CheckBox blackAndWhiteCheckbox;
 
     @FXML
     private TabPane inputSelector;
@@ -38,6 +43,19 @@ public final class ScanProcessingModuleController extends XisController {
     @FXML
     private TabPane methodSelector;
 
+    //pdf
+    @FXML
+    private TextField pageNumberText;
+
+    //highpass
+    @FXML
+    private TextField blurText;
+
+    @FXML
+    private Slider brightnessSlider;
+
+    @FXML
+    private CheckBox blackAndWhiteCheckbox;
 
     //quantization
     @FXML
@@ -55,43 +73,14 @@ public final class ScanProcessingModuleController extends XisController {
     @FXML
     private Slider saturationDifferenceSlider;
 
-    @FXML
-    void isolateBackgroundAction(ActionEvent event) {
-        brightnessDifferenceSlider.setDisable(!isolateBackgroundCheckbox.isSelected());
-        saturationDifferenceSlider.setDisable(!isolateBackgroundCheckbox.isSelected());
-    }
-
-    @FXML
-    void loadFilePress(ActionEvent event) {
-        var oldInputImage = inputImage;
-        var optionalInputImage = GuiFileIO.getImage();
-        if (!optionalInputImage.isPresent()) {
-            inputImage = oldInputImage;
-        } else {
-            inputImage = optionalInputImage.get();
-            processedImage = inputImage;
-            setImagePreview(inputImage);
-        }
-
-    }
-
-    @FXML
-    void saveFilePress(ActionEvent event) {
-        var imageToSave = processedImage != null ? processedImage : inputImage;
-        if (imageToSave == null) {
-            getUserFeedback().popup("Can't save non-opened image.");
-        } else {
-            GuiFileIO.saveImage(imageToSave);
-        }
-    }
+    /*
+    FXML methods
+     */
 
     @FXML
     void initialize() {
         reAddNotifier();
     }
-
-    private static final int METHOD_HIGHPASS = 0;
-    private static final int METHOD_QUANTIZATION = 1;
 
     @FXML
     void runButton(ActionEvent event) {
@@ -109,7 +98,7 @@ public final class ScanProcessingModuleController extends XisController {
                 hargs.setScaleBrightnessVal(Math.min(brightnessSlider.getValue()/100.0, 0.995));
                 int blurValue = 5;
                 try {
-                    blurValue = Integer.parseInt(blur.getText());
+                    blurValue = Integer.parseInt(blurText.getText());
                 } catch (Exception e) {
                     //failed parsing
                 }
@@ -137,10 +126,73 @@ public final class ScanProcessingModuleController extends XisController {
                 break;
         }
 
+        switch (inputSelector.getSelectionModel().getSelectedIndex()) {
+            case SINGLE_IMAGE:
+                FilterCaller.oneImage(inputImage, filter, this::setImagePreview, this::setProcessedImage, imagePreview);
+                break;
+            case MULTIPLE_IMAGES:
+                FilterCaller.multipleImages(null, null, filter, this::setImagePreview);
+                break;
+        }
 
-        FilterCaller.oneImage(inputImage, filter, this::setImagePreview, this::setProcessedImage, imagePreview);
+
 
     }
+
+    //single image
+
+    @FXML
+    void loadImagePress(ActionEvent event) {
+        var oldInputImage = inputImage;
+        var optionalInputImage = GuiFileIO.getImage();
+        if (!optionalInputImage.isPresent()) {
+            inputImage = oldInputImage;
+        } else {
+            inputImage = optionalInputImage.get();
+            processedImage = inputImage;
+            setImagePreview(inputImage);
+        }
+
+    }
+
+    @FXML
+    void saveImagePress(ActionEvent event) {
+        var imageToSave = processedImage != null ? processedImage : inputImage;
+        if (imageToSave == null) {
+            getUserFeedback().popup("Can't save non-opened image.");
+        } else {
+            GuiFileIO.saveImage(imageToSave);
+        }
+    }
+
+    //pdf file
+
+    @FXML
+    void selectInputPdfPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void selectOutputPdfPress(ActionEvent event) {
+
+    }
+
+    @FXML
+    void previewPagePress(ActionEvent event) {
+
+    }
+
+    //quantization
+
+    @FXML
+    void isolateBackgroundAction(ActionEvent event) {
+        brightnessDifferenceSlider.setDisable(!isolateBackgroundCheckbox.isSelected());
+        saturationDifferenceSlider.setDisable(!isolateBackgroundCheckbox.isSelected());
+    }
+
+    //high pass
+
+    //
 
     private void setProcessedImage(BufferedImage bufferedImage) {
         processedImage = bufferedImage;

@@ -3,36 +3,42 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<AnchorPane fx:id="thisAnchorPane" prefHeight="300.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.scanprocessing.ScanProcessingModuleController">
+<AnchorPane fx:id="thisAnchorPane" prefHeight="458.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="XIS.sections.scanprocessing.ScanProcessingModuleController">
    <children>
       <ImageView fx:id="imagePreview" fitHeight="367.0" fitWidth="931.0" layoutX="261.0" layoutY="76.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="265.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0" />
       <Separator layoutX="258.0" layoutY="3.0" orientation="VERTICAL" prefHeight="273.0" prefWidth="5.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="3.0" />
-      <TabPane fx:id="inputSelector" layoutX="20.0" layoutY="14.0" prefHeight="66.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0">
+      <TabPane fx:id="inputSelector" layoutX="20.0" layoutY="14.0" prefHeight="114.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="3.0">
         <tabs>
           <Tab text="One image">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="124.0" prefWidth="252.0">
                      <children>
-                        <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadFilePress" text="load image" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                        <Button layoutX="105.0" layoutY="13.0" mnemonicParsing="false" onAction="#saveFilePress" text="save image" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="5.0" />
+                        <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#loadImagePress" text="load image" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                        <Button layoutX="105.0" layoutY="13.0" mnemonicParsing="false" onAction="#saveImagePress" text="save image" AnchorPane.leftAnchor="95.0" AnchorPane.topAnchor="14.0" />
                      </children>
                   </AnchorPane>
             </content>
           </Tab>
           <Tab text="PDF">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectInputPdfPress" text="select input file" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0" />
+                        <Button layoutX="120.0" layoutY="14.0" mnemonicParsing="false" onAction="#selectOutputPdfPress" text="select output file" AnchorPane.leftAnchor="120.0" AnchorPane.topAnchor="14.0" />
+                        <Button layoutX="186.0" layoutY="46.0" mnemonicParsing="false" onAction="#previewPagePress" text="preview page" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="46.0" />
+                        <TextField fx:id="pageNumberText" layoutX="14.0" layoutY="46.0" prefHeight="25.0" prefWidth="126.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="46.0" />
+                     </children></AnchorPane>
             </content>
           </Tab>
         </tabs>
       </TabPane>
-      <TabPane fx:id="methodSelector" layoutX="9.0" layoutY="76.0" prefHeight="285.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="76.0">
+      <TabPane fx:id="methodSelector" layoutX="9.0" layoutY="76.0" prefHeight="285.0" prefWidth="252.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="120.0">
         <tabs>
           <Tab text="High Pass Filter">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="106.0" prefWidth="252.0">
                      <children>
-                        <TextField fx:id="blur" layoutX="136.0" layoutY="2.0" prefHeight="25.0" prefWidth="77.0" text="5" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="6.0" />
+                        <TextField fx:id="blurText" layoutX="136.0" layoutY="2.0" prefHeight="25.0" prefWidth="77.0" text="5" AnchorPane.leftAnchor="136.0" AnchorPane.topAnchor="6.0" />
                         <CheckBox fx:id="blackAndWhiteCheckbox" layoutX="14.0" layoutY="40.0" mnemonicParsing="false" selected="true" text="grayscale" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="35.0" />
                         <Label layoutX="13.0" layoutY="14.0" text="Blur strength" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="8.0" />
                         <Slider fx:id="brightnessSlider" layoutX="6.0" layoutY="100.0" majorTickUnit="10.0" minorTickCount="1" prefHeight="24.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" value="70.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0" />
@@ -58,6 +64,6 @@
           </Tab>
         </tabs>
       </TabPane>
-      <Button layoutX="199.0" layoutY="385.0" mnemonicParsing="false" onAction="#runButton" prefHeight="25.0" prefWidth="56.0" text="run" AnchorPane.leftAnchor="199.0" AnchorPane.topAnchor="385.0" />
+      <Button layoutX="199.0" layoutY="385.0" mnemonicParsing="false" onAction="#runButton" prefHeight="25.0" prefWidth="56.0" text="run" AnchorPane.leftAnchor="199.0" AnchorPane.topAnchor="415.0" />
    </children>
 </AnchorPane>

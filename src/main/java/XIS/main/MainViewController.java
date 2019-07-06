@@ -4,7 +4,6 @@ import XIS.sections.Notifier;
 import XIS.sections.SingleJobManager;
 import XIS.sections.Vista;
 import XIS.sections.XisController;
-import XIS.sections.automatedfilter.AutomatedFilterModuleVista;
 import XIS.sections.compression.CompressionModuleVista;
 import XIS.sections.defaultpage.WelcomePageModuleVista;
 import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
@@ -72,14 +71,6 @@ public final class MainViewController {
         changeVistaIfChanged(imageCopyFinder);
         currentModule = imageCopyFinder;
         setStatus("imagecopyfinder module loaded");
-    }
-
-    @FXML
-    void automatedFilteringPress(ActionEvent event) {
-        var automatedFilter = new AutomatedFilterModuleVista();
-        changeVistaIfChanged(automatedFilter);
-        currentModule = automatedFilter;
-        setStatus("automatedFilter module loaded");
     }
 
     @FXML

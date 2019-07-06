@@ -5,7 +5,6 @@ import XIS.toolset.JavaFXTools;
 import XIS.toolset.imagetools.HighPassFilterConverter;
 import XIS.toolset.io.GuiFileIO;
 import XIS.toolset.io.PdfIO;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -58,29 +57,6 @@ public final class AutomatedFilterModuleController extends XisController {
         }
         int finalBlurPasses = blurPasses;
 
-        SingleJobManager.setAndRunJob(new Interruptible() {
-            @Override
-            public Runnable getRunnable() {
-                return () -> {
-                    Platform.runLater(() -> getUserFeedback().popup("Popup will show up once PDF is filtered"));
-                    PdfFilter.filter(openPdf,
-                            savePdf,
-                            scaleBrightness.isSelected(),
-                            brightnessSlider.getValue() / 100.0,
-                            finalBlurPasses,
-                            this,
-                            bufferedImage -> scaleSetNewImage(bufferedImage));
-
-                };
-            }
-
-            @Override
-            public Runnable onUninterruptedFinish() {
-                return () -> {
-                    Platform.runLater(() -> getUserFeedback().popup("Finished filtering pdf"));
-                };
-            }
-        });
 
         new Thread(() -> {
         }).start();

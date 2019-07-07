@@ -1,5 +1,6 @@
 package XIS.sections.imagecopyfinder;
 
+import XIS.sections.GlobalSettings;
 import XIS.sections.Interruptible;
 import XIS.toolset.imagetools.IntArgb;
 
@@ -10,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -70,8 +70,7 @@ public final class ImageComparator {
 
         var startTime = System.nanoTime();
 
-        //ExecutorService exec = GlobalSettings.getInstance().getExecutorServiceForMostThreads();
-        ExecutorService exec = Executors.newSingleThreadExecutor();
+        ExecutorService exec = GlobalSettings.getInstance().getExecutorServiceForMostThreads();
         AtomicInteger finishedThreads = new AtomicInteger();
         CountDownLatch latch = new CountDownLatch(images.size());
 

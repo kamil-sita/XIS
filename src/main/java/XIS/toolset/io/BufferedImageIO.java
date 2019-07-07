@@ -36,7 +36,6 @@ public final class BufferedImageIO implements AutoCloseable {
                 try {
                     bufferedImage[0] = ImageIO.read(file);
                     countDownLatch.countDown();
-                    System.out.println(bufferedImage[0]);
                 } catch (IOException e) {
                     countDownLatch.countDown();
                 }

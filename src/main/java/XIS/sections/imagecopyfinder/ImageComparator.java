@@ -1,6 +1,5 @@
 package XIS.sections.imagecopyfinder;
 
-import XIS.sections.GlobalSettings;
 import XIS.sections.Interruptible;
 import XIS.toolset.imagetools.IntArgb;
 
@@ -11,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -70,7 +70,8 @@ public final class ImageComparator {
 
         var startTime = System.nanoTime();
 
-        ExecutorService exec = GlobalSettings.getInstance().getExecutorServiceForMostThreads();
+        //ExecutorService exec = GlobalSettings.getInstance().getExecutorServiceForMostThreads();
+        ExecutorService exec = Executors.newSingleThreadExecutor();
         AtomicInteger finishedThreads = new AtomicInteger();
         CountDownLatch latch = new CountDownLatch(images.size());
 
@@ -103,11 +104,10 @@ public final class ImageComparator {
 
     private void findPairsFor(int index) {
         //comparing with all other images until hues differ enough
-        double hForIndex = images.get(index).getAverageHsb().H;
         for (int i = 1; i < images.size(); i++) {
             int compareIndex = (i + index)%images.size();
 
-            if (Math.abs(images.get(compareIndex).getAverageHsb().H - hForIndex) > MAXIMUM_HUE_DIFFERENCE) {
+            if (images.get(index).getAverageHsb().hueDiff(images.get(compareIndex).getAverageHsb()) > MAXIMUM_HUE_DIFFERENCE) {
                 return;
             }
             addPairIfSimilar(images.get(index), images.get(compareIndex));
@@ -126,20 +126,20 @@ public final class ImageComparator {
         }
     }
 
-    private void reportFindPairingProgress(long startTime, int i, int all) {
-        if (i >= 10) {
-            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + "). Estimated time left for comparing: " + getApproximateTimeLeftLinear(all, startTime, all - i) + " seconds.");
+    private void reportFindPairingProgress(long startingTime, int currentCount, int allCount) {
+        if (currentCount >= 10) {
+            interruptible.reportProgress("Comparing images (" + (currentCount+1) + "/" + images.size() + "). Estimated time left for comparing: " + getApproximateTimeLeftLinear(startingTime, currentCount, allCount) + " seconds.");
         } else {
-            interruptible.reportProgress("Comparing images (" + (i+1) + "/" + images.size() + ")");
+            interruptible.reportProgress("Comparing images (" + (currentCount+1) + "/" + images.size() + ")");
         }
 
-        interruptible.reportProgress((1.0*i)/images.size());
+        interruptible.reportProgress((1.0*currentCount)/images.size());
     }
 
-    private static int getApproximateTimeLeftLinear(int allTime, long time, int left) {
-        double dt = System.nanoTime() - time;
-        dt = dt * (left) / (allTime);
-        dt /= 1000000000;
+    private static int getApproximateTimeLeftLinear(long startingTime, int currentCount, int allCount) {
+        double dt = System.nanoTime() - startingTime;
+        dt = dt * (allCount) / (currentCount);
+        dt /= 1_000_000_000;
         return (int) dt;
     }
 

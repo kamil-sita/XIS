@@ -26,7 +26,7 @@ public final class ImageComparator {
     private int generatedMiniatureSize;
 
     private List<ComparableImage> images;
-    private List<ComparableImagePair> imagePairs;
+    private List<ComparedImagePair> imagePairs;
 
     private ImageComparatorStatus status;
 
@@ -37,7 +37,7 @@ public final class ImageComparator {
         this.generatedMiniatureSize = generatedMiniatureSize;
     }
 
-    public List<ComparableImagePair> getImagePairs() {
+    public List<ComparedImagePair> getImagePairs() {
         return imagePairs;
     }
 
@@ -120,7 +120,7 @@ public final class ImageComparator {
         if (image1.getAverageHsb().hueDiff(image2.getAverageHsb()) <= MAXIMUM_HUE_DIFFERENCE) {
             double similarity = compareImages(image1, image2);
             if (similarity >= MINIMUM_SIMILARITY) {
-                imagePairs.add(new ComparableImagePair(image1, image2, similarity));
+                imagePairs.add(new ComparedImagePair(image1.getComparedImage(), image2.getComparedImage(), similarity));
             }
         }
     }

@@ -26,5 +26,6 @@
          </children>
       </GridPane>
       <Label fx:id="numberOfImages" layoutX="451.0" layoutY="7.0" text="x images at current view" AnchorPane.rightAnchor="20.0" />
+      <Button layoutX="514.0" layoutY="207.0" mnemonicParsing="false" onAction="#serializePress" text="Save results for later" AnchorPane.rightAnchor="7.0" />
    </children>
 </AnchorPane>

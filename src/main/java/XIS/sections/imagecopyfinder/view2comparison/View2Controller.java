@@ -1,8 +1,8 @@
 package XIS.sections.imagecopyfinder.view2comparison;
 
 import XIS.sections.XisController;
-import XIS.sections.imagecopyfinder.ComparableImage;
-import XIS.sections.imagecopyfinder.ComparableImagePair;
+import XIS.sections.imagecopyfinder.ComparedImage;
+import XIS.sections.imagecopyfinder.ComparedImagePair;
 import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
 import XIS.sections.imagecopyfinder.imageinfoview.ImageInfoView;
 import XIS.sections.imagecopyfinder.imageinfoview.ImageInfoViewController;
@@ -26,12 +26,12 @@ import static XIS.toolset.FileManagementTools.moveFile;
 
 public final class View2Controller extends XisController {
 
-    private List<ComparableImagePair> imagePairs;
-    private ComparableImagePair hoveredElement;
+    private List<ComparedImagePair> imagePairs;
+    private ComparedImagePair hoveredElement;
     private String deleteLocation;
 
     @FXML
-    private ListView<ComparableImagePair> comparableImagePairListView;
+    private ListView<ComparedImagePair> comparableImagePairListView;
 
     @FXML
     private Slider sliderPercentIdentical;
@@ -52,16 +52,22 @@ public final class View2Controller extends XisController {
     private double lastSimilarity;
 
     @FXML
+    void serializePress(ActionEvent event) {
+
+    }
+
+
+    @FXML
     void deleteLeftPress(ActionEvent event) {
         int index = getSelectedItemIndex();
-        delete(hoveredElement.getComparableImageLeft());
+        delete(hoveredElement.getImageOnLeft());
         selectItemAtIndex(index);
     }
 
     @FXML
     void deleteRightPress(ActionEvent event) {
         int index = getSelectedItemIndex();
-        delete(hoveredElement.getComparableImageRight());
+        delete(hoveredElement.getImageOnRight());
         selectItemAtIndex(index);
     }
 
@@ -91,12 +97,12 @@ public final class View2Controller extends XisController {
 
         comparableImagePairListView.setCellFactory(param -> new ListCell<>() {
                     @Override
-                    protected void updateItem(ComparableImagePair comparableImagePair, boolean empty) {
-                        super.updateItem(comparableImagePair, empty);
-                        if (empty || comparableImagePair == null) {
+                    protected void updateItem(ComparedImagePair comparedImagePair, boolean empty) {
+                        super.updateItem(comparedImagePair, empty);
+                        if (empty || comparedImagePair == null) {
                             setText(null);
                         } else {
-                            setText(comparableImagePair.toString());
+                            setText(comparedImagePair.toString());
                         }
                     }
                 }
@@ -129,7 +135,7 @@ public final class View2Controller extends XisController {
 
     }
 
-    private void delete(ComparableImage cip) {
+    private void delete(ComparedImage cip) {
         for (int i = 0; i < imagePairs.size(); i++) {
             if (imagePairs.get(i).isInPair(cip)) {
                 imagePairs.remove(i);
@@ -146,15 +152,15 @@ public final class View2Controller extends XisController {
 
     private void displayPairsWithSimilarityOver(double value) {
         lastSimilarity = value;
-        ArrayList<ComparableImagePair> displayedImagePairs = new ArrayList<>();
-        for (ComparableImagePair imagePair : imagePairs) {
+        ArrayList<ComparedImagePair> displayedImagePairs = new ArrayList<>();
+        for (ComparedImagePair imagePair : imagePairs) {
             if (imagePair.getSimilarity() >= value) {
                 displayedImagePairs.add(imagePair);
             }
         }
-        ObservableList<ComparableImagePair> comparableImagePairs = FXCollections.observableArrayList();
-        comparableImagePairs.addAll(displayedImagePairs);
-        comparableImagePairListView.setItems(comparableImagePairs);
+        ObservableList<ComparedImagePair> comparedImagePairs = FXCollections.observableArrayList();
+        comparedImagePairs.addAll(displayedImagePairs);
+        comparableImagePairListView.setItems(comparedImagePairs);
         refreshListView();
     }
 
@@ -163,22 +169,22 @@ public final class View2Controller extends XisController {
         numberOfImages.setText(comparableImagePairListView.getItems().size() + " images at current view");
     }
 
-    private void elementHovered(ComparableImagePair comparableImagePair) {
-        if (comparableImagePair == null) return;
-        if (hoveredElement == comparableImagePair) return;
-        hoveredElement = comparableImagePair;
-        setNewImageAnchorPanes(comparableImagePair);
+    private void elementHovered(ComparedImagePair comparedImagePair) {
+        if (comparedImagePair == null) return;
+        if (hoveredElement == comparedImagePair) return;
+        hoveredElement = comparedImagePair;
+        setNewImageAnchorPanes(comparedImagePair);
     }
 
 
 
     private ArrayList<ImageInfoViewController> oldNotifiers = new ArrayList<>();
 
-    //after selecting ComparableImagePair, the AnchorPanes on the bottom will be updated
-    private void setNewImageAnchorPanes(ComparableImagePair comparableImagePair) {
+    //after selecting ComparedImagePair, the AnchorPanes on the bottom will be updated
+    private void setNewImageAnchorPanes(ComparedImagePair comparedImagePair) {
         removeOldNotifiers();
-        setImageAnchorPane(leftPane, comparableImagePair.getComparableImageLeft());
-        setImageAnchorPane(rightPane, comparableImagePair.getComparableImageRight());
+        setImageAnchorPane(leftPane, comparedImagePair.getImageOnLeft());
+        setImageAnchorPane(rightPane, comparedImagePair.getImageOnRight());
 
     }
 
@@ -189,10 +195,10 @@ public final class View2Controller extends XisController {
         oldNotifiers.clear();
     }
 
-    private void setImageAnchorPane(Pane anchorPane, ComparableImage comparableImage) {
+    private void setImageAnchorPane(Pane anchorPane, ComparedImage comparedImage) {
         var imageInfoView = new ImageInfoView();
         var infoViewController = imageInfoView.getController();
-        infoViewController.initialize(comparableImage.getFile());
+        infoViewController.initialize(comparedImage.getFile());
         anchorPane.getChildren().setAll((Node) imageInfoView.getUserInterface());
         oldNotifiers.add(infoViewController);
     }

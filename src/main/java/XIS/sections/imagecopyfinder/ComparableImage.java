@@ -14,6 +14,7 @@ import static XIS.sections.imagecopyfinder.CompareGroup.*;
  * ComparableImage is image that can be compared by ImageComparator
  */
 public final class ComparableImage {
+
     //scaled down image, to speed up calculations
     private BufferedImage smallImage;
     //file containing image
@@ -111,4 +112,9 @@ public final class ComparableImage {
     public int getHeight() {
         return height;
     }
+
+    public ComparedImage getComparedImage() {
+        return new ComparedImage(imageFile);
+    }
+
 }

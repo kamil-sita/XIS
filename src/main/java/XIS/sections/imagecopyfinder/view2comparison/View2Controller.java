@@ -1,5 +1,6 @@
 package XIS.sections.imagecopyfinder.view2comparison;
 
+import XIS.sections.UserFeedback;
 import XIS.sections.XisController;
 import XIS.sections.imagecopyfinder.ComparedImage;
 import XIS.sections.imagecopyfinder.ComparedImagePair;
@@ -21,6 +22,7 @@ import javafx.scene.layout.StackPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static XIS.toolset.FileManagementTools.moveFile;
 
@@ -53,7 +55,7 @@ public final class View2Controller extends XisController {
 
     @FXML
     void serializePress(ActionEvent event) {
-
+        UserFeedback.getInstance().popup("No implementation!");
     }
 
 
@@ -136,14 +138,13 @@ public final class View2Controller extends XisController {
     }
 
     private void delete(ComparedImage cip) {
-        for (int i = 0; i < imagePairs.size(); i++) {
-            if (imagePairs.get(i).isInPair(cip)) {
-                imagePairs.remove(i);
-                i--;
-            }
+        if (moveFile(cip.getFile(), deleteLocation, (mainInformation, reporter) -> getUserFeedback().popup(mainInformation))) {
+            imagePairs = imagePairs
+                    .stream()
+                    .filter(image -> !image.isInPair(cip))
+                    .collect(Collectors.toList());
+            displayPairsWithSimilarityOver(lastSimilarity);
         }
-        displayPairsWithSimilarityOver(lastSimilarity);
-        moveFile(cip.getFile(), deleteLocation, (mainInformation, reporter) -> getUserFeedback().popup(mainInformation));
     }
 
     private void displayAllImages() {

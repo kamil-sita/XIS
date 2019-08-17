@@ -6,11 +6,11 @@ import java.io.File;
 
 public final class FileManagementTools {
 
-    public static void moveFile(File file, String deleteDirectory, Feedback feedback) {
+    public static boolean moveFile(File file, String deleteDirectory, Feedback feedback) {
         if (!new File(deleteDirectory).exists()) {
             if (!new File(deleteDirectory).mkdir()) {
                 feedback.report("Couldn't create directory: " + deleteDirectory, FileManagementTools.class);
-                return;
+                return false;
             }
         }
         String s = file.getName();
@@ -18,7 +18,9 @@ public final class FileManagementTools {
         localDeleteDirectory += s;
         if (!file.renameTo(new File(localDeleteDirectory))) {
             feedback.report("Couldn't move file: " + file.getName() + " to " + localDeleteDirectory, FileManagementTools.class);
+            return false;
         }
 
+        return true;
     }
 }

@@ -83,7 +83,7 @@ public class Rgb {
     }
 
     public double getDistanceFrom(Rgb rgb) {
-        return Math.sqrt(squared(r - rgb.r) + squared(g - rgb.g) + squared(b - rgb.b));
+        return Math.abs(squared(r - rgb.r) + squared(g - rgb.g) + squared(b - rgb.b));
     }
 
     private double squared(double value) {

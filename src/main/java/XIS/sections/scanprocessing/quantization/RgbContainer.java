@@ -6,9 +6,6 @@ import pl.ksitarski.simplekmeans.KMeansData;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
-
 public final class RgbContainer implements KMeansData {
 
     private Rgb rgbValue;
@@ -19,15 +16,7 @@ public final class RgbContainer implements KMeansData {
 
     @Override
     public double distanceTo(KMeansData simpleKMeansData) {
-        if (false) {
-            var hsb = ((RgbContainer) simpleKMeansData).rgbValue.toHSB();
-            var hsb1 = rgbValue.toHSB();
-
-            return sqrt(pow(hsb.B - hsb1.B, 2) + pow(hsb.S - hsb1.S, 2) + pow(hsb.H - hsb1.H, 2));
-        } else {
-            return rgbValue.getDistanceFrom(((RgbContainer) simpleKMeansData).rgbValue);
-        }
-
+        return rgbValue.getDistanceFrom(((RgbContainer) simpleKMeansData).rgbValue);
     }
 
     @Override

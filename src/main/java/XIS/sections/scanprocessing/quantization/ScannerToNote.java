@@ -1,10 +1,11 @@
 package XIS.sections.scanprocessing.quantization;
 
+import XIS.sections.GlobalSettings;
 import XIS.sections.Interruptible;
 import XIS.toolset.imagetools.BufferedImageColorPalette;
 import XIS.toolset.imagetools.BufferedImageLayers;
 import XIS.toolset.imagetools.Rgb;
-import pl.ksitarski.simplekmeans.KMeans;
+import pl.ksitarski.simplekmeans.KMeansBuilder;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -21,9 +22,9 @@ public final class ScannerToNote {
 
         var inputCopy = BufferedImageLayers.copyImage(scannerToNoteParameters.getInput());
 
-        List<RgbContainer> rgbList = sampleData(inputCopy);
+        List<Rgb> rgbList = sampleData(inputCopy);
 
-        final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = reduceBitrate(DEPTH, rgbList);
+        final List<Rgb> SAMPLE_WITH_REDUCED_BITRATE = reduceBitrate(DEPTH, rgbList);
 
         final Rgb BACKGROUND_COLOR = scannerToNoteParameters.isFilterBackground() ? getMostCommon(SAMPLE_WITH_REDUCED_BITRATE) : null;
 
@@ -36,28 +37,35 @@ public final class ScannerToNote {
             return Optional.empty();
         }
 
-        var kMeans = new KMeans<>(scannerToNoteParameters.getColors(), rgbList);
 
-        kMeans.setOnUpdate(() -> {
-            interruptable.reportProgress(kMeans.getProgress());
-            if (interruptable.isInterrupted()) {
-                kMeans.abort();
-            }
-        });
+        var kMeans = new KMeansBuilder<>(
+                rgbList,
+                scannerToNoteParameters.getColors(),
+                Rgb::meanOfList,
+                Rgb::distance
+        ).onUpdate(interruptable::reportProgress).setOptimizationSkipUpdatesBasedOnRange()
+          .setThreadCount(GlobalSettings.getInstance().getNormalizedThreadCount())
+          .build();
+
+
+        Runnable listener = kMeans::earlyStop;
+        interruptable.addListener(listener);
 
         kMeans.iterate(ITERATIONS);
+
+        interruptable.removeListener(listener);
 
         if (interruptable.isInterrupted()) {
             return Optional.empty();
         }
 
-        List<RgbContainer> results = kMeans.getCalculatedMeanPoints();
+        List<Rgb> results = kMeans.getCalculatedMeanPoints();
 
         if (scannerToNoteParameters.isFilterBackground()) {
-            results.add(new RgbContainer(BACKGROUND_COLOR));
+            results.add(new Rgb(BACKGROUND_COLOR));
         }
 
-        BufferedImageColorPalette.replace(inputCopy, RgbContainer.toRgbList(results));
+        BufferedImageColorPalette.replace(inputCopy, results);
 
         scaleBrightnessIfNeeded(scannerToNoteParameters.isScaleBrightness(), inputCopy, results);
 
@@ -68,57 +76,53 @@ public final class ScannerToNote {
         return Optional.of(inputCopy);
     }
 
-    private static void scaleBrightnessIfNeeded(boolean scaleBrightness, BufferedImage inputCopy, List<RgbContainer> results) {
+    private static void scaleBrightnessIfNeeded(boolean scaleBrightness, BufferedImage inputCopy, List<Rgb> results) {
         if (scaleBrightness) {
-            var rgbs = new ArrayList<Rgb>();
-            for (var rgbContainer : results) {
-                rgbs.add(rgbContainer.getRgb());
-            }
-            BufferedImageColorPalette.scaleBrightness(inputCopy, rgbs);
+            BufferedImageColorPalette.scaleBrightness(inputCopy, results);
         }
     }
 
-    private static List<RgbContainer> reduceBitrate(int DEPTH, List<RgbContainer> rgbList) {
-        final List<RgbContainer> SAMPLE_WITH_REDUCED_BITRATE = getCopyOf(rgbList);
+    private static List<Rgb> reduceBitrate(int DEPTH, List<Rgb> rgbList) {
+        final List<Rgb> SAMPLE_WITH_REDUCED_BITRATE = getDeepCopyOf(rgbList);
         for (var rgb : SAMPLE_WITH_REDUCED_BITRATE) {
             rgb.reduceDepth(DEPTH);
         }
         return SAMPLE_WITH_REDUCED_BITRATE;
     }
 
-    private static List<RgbContainer> sampleData(BufferedImage inputCopy) {
-        List<RgbContainer> rgbList = new ArrayList<>();
+    private static List<Rgb> sampleData(BufferedImage inputCopy) {
+        List<Rgb> rgbList = new ArrayList<>();
         for (int y = 0; y < inputCopy.getHeight(); y += 3) {
             for (int x = 0; x < inputCopy.getWidth(); x += 2) {
                 var rgb = new Rgb(inputCopy.getRGB(x, y));
-                rgbList.add(rgb.inContainer());
+                rgbList.add(rgb);
             }
         }
         return rgbList;
     }
 
-    private static List<RgbContainer> getCopyOf(List<RgbContainer> rgbContainers) {
-        var copy = new ArrayList<RgbContainer>();
+    private static List<Rgb> getDeepCopyOf(List<Rgb> rgbContainers) {
+        var copy = new ArrayList<Rgb>();
         for (var rgb : rgbContainers) {
-            copy.add(rgb.copy());
+            copy.add(new Rgb(rgb));
         }
         return copy;
     }
 
-    private static Rgb getMostCommon(List<RgbContainer> rgbs) {
+    private static Rgb getMostCommon(List<Rgb> rgbs) {
         //counting occurrences
         HashMap<Rgb, Integer> rgbWithOccurrences = new HashMap<>();
         for (var rgb : rgbs) {
-            if (rgbWithOccurrences.containsKey(rgb.getRgb())) {
-                int newVal = rgbWithOccurrences.get(rgb.getRgb()) + 1;
-                rgbWithOccurrences.put(rgb.getRgb(), newVal);
+            if (rgbWithOccurrences.containsKey(rgb)) {
+                int newVal = rgbWithOccurrences.get(rgb) + 1;
+                rgbWithOccurrences.put(rgb, newVal);
             } else {
-                rgbWithOccurrences.put(rgb.getRgb(), 1);
+                rgbWithOccurrences.put(rgb, 1);
             }
         }
         var entries = rgbWithOccurrences.entrySet();
         int mostCommonOccurrences = -1;
-        var mostCommon = rgbs.get(0).getRgb();
+        var mostCommon = rgbs.get(0);
         var entriesArray = entries.toArray();
 
         for (var entryo : entriesArray) {
@@ -132,11 +136,10 @@ public final class ScannerToNote {
         return mostCommon;
     }
 
-    private static void filterOutBackgroundByBrightnessAndSaturation(List<RgbContainer> rgbContainerList, Rgb backgroundColor, double minBrightnessDiff, double minSaturationDiff) {
+    private static void filterOutBackgroundByBrightnessAndSaturation(List<Rgb> rgbContainerList, Rgb backgroundColor, double minBrightnessDiff, double minSaturationDiff) {
         var hsbBackground = backgroundColor.toHSB();
         for (int i = 0; i < rgbContainerList.size(); i++) {
-            var rgbC = rgbContainerList.get(i);
-            var rgb = rgbC.getRgb();
+            var rgb = rgbContainerList.get(i);
             var hsb = rgb.toHSB();
             if (hsb.brightnessDiff(hsbBackground) < minBrightnessDiff) {
                 rgbContainerList.remove(i);

@@ -2,13 +2,16 @@ package XIS.sections;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Abstract class for job interruption and JavaFX progress feedback.
+ * Abstract class for job interruption and progress feedback. If you don't need neither use MockInterruptible class.
  */
 public abstract class Interruptible {
-    protected boolean isInterrupted = false;
+    private boolean isInterrupted = false;
     private UserFeedback userFeedback;
+    private List<Runnable> listeners = new ArrayList<>();
 
     public abstract Runnable getRunnable();
     public abstract Runnable onUninterruptedFinish();
@@ -17,12 +20,15 @@ public abstract class Interruptible {
         userFeedback = UserFeedback.getInstance();
     }
 
-    public boolean isInterrupted() {
+    public final boolean isInterrupted() {
         return isInterrupted;
     }
 
-    public void interrupt() {
+    protected final void interrupt() {
         isInterrupted = true;
+        for (var listener : listeners) {
+            listener.run();
+        }
     }
 
     public void reportProgress(double percentProgress) {
@@ -45,7 +51,15 @@ public abstract class Interruptible {
         userFeedback.openInDefault(bufferedImage);
     }
 
-    public UserFeedback getUserFeedback() {
+    public final UserFeedback getUserFeedback() {
         return userFeedback;
+    }
+
+    public final void addListener(Runnable listener) {
+        listeners.add(listener);
+    }
+
+    public final void removeListener(Runnable listener) {
+        listeners.remove(listener);
     }
 }

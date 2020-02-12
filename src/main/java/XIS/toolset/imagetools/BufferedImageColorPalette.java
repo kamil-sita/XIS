@@ -71,9 +71,9 @@ public class BufferedImageColorPalette {
         double distance = 0;
         for (int i = 0; i < rgbList.size(); i++) {
             Rgb rgb = rgbList.get(i);
-            if (closest == null || target.getDistanceFrom(rgb) < distance) {
+            if (closest == null || target.optimizedDistance(rgb) < distance) {
                 closest = rgb;
-                distance = target.getDistanceFrom(rgb);
+                distance = target.optimizedDistance(rgb);
             }
         }
         return closest;

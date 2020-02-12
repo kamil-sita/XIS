@@ -1,37 +1,18 @@
 package XIS.sections.compression;
 
-import pl.ksitarski.simplekmeans.KMeansData;
-
 import java.util.List;
 
-class IntKMeans implements KMeansData {
-
-    private int val;
-
-    public IntKMeans(int val) {
-        this.val = val;
+class IntKMeans {
+    public static double distance(int a, int b) {
+        return Math.abs(a - b);
     }
 
-    public int getVal() {
-        return val;
-    }
-
-    public void setVal(int val) {
-        this.val = val;
-    }
-
-    @Override
-    public double distanceTo(KMeansData kMeansData) {
-        return Math.abs(val - ((IntKMeans)kMeansData).getVal());
-    }
-
-    @Override
-    public KMeansData meanOfList(List<KMeansData> list) {
+    public static int meanOfList(List<Integer> list) {
         int a = 0;
         for (var val : list) {
-            a += ((IntKMeans) val).getVal();
+            a += val;
         }
         a = a / list.size();
-        return new IntKMeans(a);
+        return a;
     }
 }

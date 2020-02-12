@@ -1,11 +1,12 @@
 package XIS.sections.compression;
 
+import XIS.sections.GlobalSettings;
 import XIS.sections.Interruptible;
-import XIS.sections.MockInterruptible;
 import XIS.toolset.IntegerMath;
 import XIS.toolset.imagetools.YCbCrImage;
 import XIS.toolset.imagetools.YCbCrLayer;
 import pl.ksitarski.simplekmeans.KMeans;
+import pl.ksitarski.simplekmeans.KMeansBuilder;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,14 +29,6 @@ public class LosticCompression {
 
     private static final int FLAG_NONE = 0;
 
-
-    /**
-     * compress() delegate for outside calls to the function
-     */
-    public static Optional<CompressionOutput> compressedAndPreview(CompressionArguments compressionArguments) {
-        return compress(compressionArguments, new MockInterruptible());
-    }
-
     public static Optional<CompressionOutput> compress(CompressionArguments arguments, Interruptible interruptible) {
         var input = arguments.getInput();
         if (input == null) return Optional.empty();
@@ -46,8 +39,6 @@ public class LosticCompression {
         var ycbcr = new YCbCrImage(input);
         int size_X = (int) Math.ceil(input.getWidth() / blockSize);
         int size_Y = (int) Math.ceil(input.getHeight() / blockSize);
-
-        KMeans.setLogger(s -> {});
 
         int i = 0;
         for (int y = 0; y < size_Y; y++) {
@@ -65,10 +56,6 @@ public class LosticCompression {
 
         statistic.setSize(b.getSizeLeft());
         return Optional.of(new CompressionOutput(b, preview, statistic));
-    }
-
-    public static Optional<BufferedImage> decompress(BitSequence bitSequence) {
-        return decompress(bitSequence, new MockInterruptible());
     }
 
     public static Optional<BufferedImage> decompress(BitSequence bitSequence, Interruptible interruptible) {
@@ -143,13 +130,21 @@ public class LosticCompression {
     }
 
     private static ArrayList<Integer> generateDictionary(int x, int y, int size, YCbCrLayer layer, int k) {
-        ArrayList<IntKMeans> valueList = getListFromArea(x, y, size, layer);
-        KMeans<IntKMeans> kMeansKMeans = new KMeans<>(k, valueList);
-        kMeansKMeans.iterate(POST_ITERATIONS);
+        ArrayList<Integer> valueList = getListFromArea(x, y, size, layer);
+        KMeans<Integer> kMeansKMeans = new KMeansBuilder<>(
+                valueList,
+                k,
+                IntKMeans::meanOfList,
+                IntKMeans::distance
+        )
+                .setOptimizationSkipUpdatesBasedOnRange()
+                .setThreadCount(GlobalSettings.getInstance().getNormalizedThreadCount())
+                .build();
+        kMeansKMeans.iterateUntilStandardDeviationDeltaSmallerOrEqualTo(0.01, POST_ITERATIONS);
         var results = kMeansKMeans.getCalculatedMeanPoints();
         var palette = new ArrayList<Integer>();
         for (var result : results) {
-            palette.add(result.getVal());
+            palette.add(result);
         }
 
         palette.sort(Integer::compareTo);
@@ -184,8 +179,8 @@ public class LosticCompression {
         int yStart = yBlock * size;
         int yEnd = (yBlock + 1) * size;
 
-        xEnd = xEnd > header.width ? header.width : xEnd;
-        yEnd = yEnd > header.height ? header.height : yEnd;
+        xEnd = Math.min(xEnd, header.width);
+        yEnd = Math.min(yEnd, header.height);
 
         try {
             for (int y = yStart; y < yEnd; y++) {
@@ -211,13 +206,13 @@ public class LosticCompression {
         }
     }
 
-    private static ArrayList<IntKMeans> getListFromArea(int x, int y, int size, YCbCrLayer layer) {
-        var valueList = new ArrayList<IntKMeans>(((x + 1) * y + 1) * size * size);
+    private static ArrayList<Integer> getListFromArea(int x, int y, int size, YCbCrLayer layer) {
+        var valueList = new ArrayList<Integer>(size * size);
 
         for (int j = y * size; j < (y + 1) * size; j++) {
             for (int i = x * size; i < (x + 1) * size; i++) {
                 if (i < layer.width() && j < layer.height()) {
-                    valueList.add(new IntKMeans(layer.get(i, j)));
+                    valueList.add(layer.get(i, j));
                 }
             }
         }
@@ -232,21 +227,28 @@ public class LosticCompression {
 
         final int INITIAL_RESULT_COUNT = 32;
 
-        KMeans<IntKMeans> kMeans = new KMeans<>(INITIAL_RESULT_COUNT, valueList);
-        kMeans.iterate(PRE_ITERATIONS);
+        KMeans<Integer> kMeans = new KMeansBuilder<>(
+                valueList,
+                INITIAL_RESULT_COUNT,
+                IntKMeans::meanOfList,
+                IntKMeans::distance
+        )
+                .setThreadCount(GlobalSettings.getInstance().getNormalizedThreadCount())
+                .setOptimizationSkipUpdatesBasedOnRange()
+                .build();
+        kMeans.iterateUntilStandardDeviationDeltaSmallerOrEqualTo(0.01, PRE_ITERATIONS);
         var results = kMeans.getCalculatedMeanPoints();
-        results.sort(Comparator.comparingInt(IntKMeans::getVal));
+        results.sort(Comparator.comparingInt(Integer::intValue));
 
         List<Integer> sortedList = new ArrayList<>();
 
         //converting from IntKMeans to Integer, removing duplicates (probably duplicates can be added, not sure)
         int prevVal = -1;
         for (var v : results) {
-            int val = v.getVal();
-            if (val != prevVal) {
-                sortedList.add(v.getVal());
+            if (v != prevVal) {
+                sortedList.add(v);
             }
-            prevVal = val;
+            prevVal = v;
         }
 
         double continuity = calculateContinuity(sortedList);

@@ -3,29 +3,27 @@ package XIS.sections;
 public final class MockInterruptible extends Interruptible {
     @Override
     public Runnable getRunnable() {
-        return null;
+        return () -> {};
     }
 
     @Override
     public Runnable onUninterruptedFinish() {
-        return null;
+        return () -> {};
     }
 
-    public boolean isInterrupted() {
-        return false;
-    }
-
-    public void interrupt() {
-
-    }
-
+    @Override
     public void reportProgress(double percentProgress) {
+
     }
 
+    @Override
     public void reportProgress (String message) {
+
     }
 
+    @Override
     public void popup(String message) {
+
     }
 
 }

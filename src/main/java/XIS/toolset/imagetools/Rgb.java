@@ -1,9 +1,8 @@
 package XIS.toolset.imagetools;
 
 
-import XIS.sections.scanprocessing.quantization.RgbContainer;
-
 import java.awt.*;
+import java.util.List;
 
 /**
  * Class representing pixel color in RGB model
@@ -35,6 +34,13 @@ public class Rgb {
         r = (rgba >> 16) & 0xFF;
         g = (rgba >> 8) & 0xFF;
         b = rgba & 0xFF;
+    }
+
+    public Rgb(Rgb rgb) {
+        this.r = rgb.r;
+        this.g = rgb.g;
+        this.b = rgb.b;
+        this.a = rgb.a;
     }
 
     /**
@@ -82,7 +88,7 @@ public class Rgb {
         return this;
     }
 
-    public double getDistanceFrom(Rgb rgb) {
+    public double optimizedDistance(Rgb rgb) {
         return Math.abs(squared(r - rgb.r) + squared(g - rgb.g) + squared(b - rgb.b));
     }
 
@@ -106,6 +112,24 @@ public class Rgb {
         r = r & depth;
         g = g & depth;
         b = b & depth;
+    }
+
+    public static double distance(Rgb point1, Rgb point2) {
+        return point1.optimizedDistance(point2);
+    }
+
+    public static Rgb meanOfList(List<Rgb> list) {
+        if (list == null || list.size() == 0) return null;
+        Rgb rgb = new Rgb(0, 0 ,0);
+        for (var someRgb : list) {
+            rgb.r += someRgb.r;
+            rgb.g += someRgb.g;
+            rgb.b += someRgb.b;
+        }
+        rgb.r /= list.size();
+        rgb.g /= list.size();
+        rgb.b /= list.size();
+        return rgb;
     }
 
     private int getDepthConst(int bitDepth) {
@@ -152,9 +176,4 @@ public class Rgb {
     public int hashCode() {
         return toInt();
     }
-
-    public RgbContainer inContainer() {
-        return new RgbContainer(this);
-    }
-
 }

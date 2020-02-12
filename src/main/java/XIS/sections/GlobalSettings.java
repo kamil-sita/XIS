@@ -13,8 +13,12 @@ public class GlobalSettings {
 
     }
 
-    private int getNormalizedThreadCount() {
-        return Math.max(Math.min(Runtime.getRuntime().availableProcessors(), maxThreads), 1);
+    private int availableProcessors = -1;
+    public int getNormalizedThreadCount() {
+        if (availableProcessors == -1) {
+            availableProcessors = Math.max(Math.min(Runtime.getRuntime().availableProcessors(), maxThreads), 1);
+        }
+        return availableProcessors;
     }
 
     public ExecutorService getExecutorServiceForMostThreads() {

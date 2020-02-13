@@ -19,7 +19,7 @@ public final class WindowStart extends Application {
         var res = getClass().getResource("main/mainView.fxml");
 
         Parent root = FXMLLoader.load(res);
-        stage.setTitle("XIS 0.4.1");
+        stage.setTitle("XIS 0.5.0");
         stage.setScene(new Scene (root, 1280, 800));
         stage.setMinHeight(480);
         stage.setMinWidth(800);

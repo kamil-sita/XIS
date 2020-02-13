@@ -1,9 +1,11 @@
 package XIS.sections.imagecopyfinder;
 
+import java.io.Serializable;
+
 /**
  * Pair of compared images images
  */
-public final class ComparedImagePair {
+public final class ComparedImagePair implements Serializable {
 
     private ComparedImage image1;
     private ComparedImage image2;

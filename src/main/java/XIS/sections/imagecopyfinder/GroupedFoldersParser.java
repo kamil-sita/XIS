@@ -6,7 +6,7 @@ import java.util.List;
 
 import static XIS.sections.imagecopyfinder.CompareGroup.*;
 
-public class GroupedFoldersParser {
+public final class GroupedFoldersParser {
     public static List<GroupedFolder> parse(String[] input) {
         ArrayList<GroupedFolder> groupedFolders = new ArrayList<>();
         int currentGroupdId = -1;

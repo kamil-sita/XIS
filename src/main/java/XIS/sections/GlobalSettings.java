@@ -7,16 +7,16 @@ public class GlobalSettings {
 
     private static GlobalSettings globalSettingsInstance;
 
-    private int maxThreads = Integer.MAX_VALUE;
-
     public GlobalSettings() {
 
     }
 
     private int availableProcessors = -1;
+
     public int getNormalizedThreadCount() {
         if (availableProcessors == -1) {
-            availableProcessors = Math.max(Math.min(Runtime.getRuntime().availableProcessors(), maxThreads), 1);
+            final int MAX_THREADS = Integer.MAX_VALUE;
+            availableProcessors = Math.max(Math.min(Runtime.getRuntime().availableProcessors(), MAX_THREADS), 1);
         }
         return availableProcessors;
     }

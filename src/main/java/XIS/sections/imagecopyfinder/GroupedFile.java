@@ -2,7 +2,7 @@ package XIS.sections.imagecopyfinder;
 
 import java.io.File;
 
-public class GroupedFile {
+public final class GroupedFile {
     private int groupId;
     private CompareGroup compareGroup;
     private File file;

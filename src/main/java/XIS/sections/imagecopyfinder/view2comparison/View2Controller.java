@@ -5,6 +5,7 @@ import XIS.sections.XisController;
 import XIS.sections.imagecopyfinder.ComparedImage;
 import XIS.sections.imagecopyfinder.ComparedImagePair;
 import XIS.sections.imagecopyfinder.ImageCopyFinderModuleVista;
+import XIS.sections.imagecopyfinder.SerializableIcfState;
 import XIS.sections.imagecopyfinder.imageinfoview.ImageInfoView;
 import XIS.sections.imagecopyfinder.imageinfoview.ImageInfoViewController;
 import javafx.collections.FXCollections;
@@ -31,6 +32,8 @@ public final class View2Controller extends XisController {
     private List<ComparedImagePair> imagePairs;
     private ComparedImagePair hoveredElement;
     private String deleteLocation;
+    private String inputCommand;
+    private int imageInputSize;
 
     @FXML
     private ListView<ComparedImagePair> comparableImagePairListView;
@@ -55,7 +58,13 @@ public final class View2Controller extends XisController {
 
     @FXML
     void serializePress(ActionEvent event) {
-        UserFeedback.getInstance().popup("No implementation!");
+        SerializableIcfState icfState = new SerializableIcfState(imagePairs, inputCommand, imageInputSize, deleteLocation);
+        boolean result = SerializableIcfState.serialize(icfState);
+        if (result) {
+            UserFeedback.getInstance().popup("Saved successfully!");
+        } else {
+            UserFeedback.getInstance().popup("Could not save!");
+        }
     }
 
 
@@ -90,6 +99,8 @@ public final class View2Controller extends XisController {
         });
 
         deleteLocation = ImageCopyFinderModuleVista.getDeleteDirectory();
+        imageInputSize = ImageCopyFinderModuleVista.getImageSize();
+        inputCommand = ImageCopyFinderModuleVista.getInputString();
 
         sliderPercentIdentical.valueProperty().addListener((observable, oldValue, newValue) -> {
             double x = sliderPercentIdentical.getValue() / 100.0;
@@ -109,7 +120,7 @@ public final class View2Controller extends XisController {
                     }
                 }
         );
-        imagePairs = ImageCopyFinderModuleVista.getImageComparator().getImagePairs();
+        imagePairs = ImageCopyFinderModuleVista.getImagePairList();
         displayAllImages();
         comparableImagePairListView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> elementHovered(newValue)

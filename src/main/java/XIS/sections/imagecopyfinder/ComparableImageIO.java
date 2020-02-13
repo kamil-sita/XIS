@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ComparableImageIO {
+public final class ComparableImageIO {
 
     public static List<ComparableImage> loadFiles(List<GroupedFolder> groupedFolders, int generatedMiniatureSize, Interruptible interruptible) {
         interruptible.reportProgress("Finding files in folder");

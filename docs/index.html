@@ -20,13 +20,13 @@
     <h3>Image copy finder</h3>
     <h4>Description:</h4>
     Image copy finder attempts to find copies of images in folders selected by the user. After initial scan
-    should any pairs of similar-looking images be found, they are displayed to the user, who can decide
-    to move one of them into user-selected "delete" folder or ignore that pair.
+    if any pairs of similar-looking images are found, they are displayed to the user. User can then decide for each pair
+    to move one of the images into user-selected "delete" folder or ignore that pair.
 
     <h4>Important tip:</h4>
 
     If you compare a large amount of images it might not only take a long time, but also a lot of memory space.
-    The application won't crash, but the thread that compares images will be probably killed, resulting in no progress
+    The application might not crash, but the thread that compares images will be probably killed, resulting in no progress
     at all.
     If you fear that it might happen, select lower size of compared image (for example less than 64)
 
@@ -98,14 +98,14 @@
         they
         are added as a pair to list containing similar images.
     </ol>
-    After completing those two phases list of images is displayed to the user.
+    After completing those two phases list of pairs of images is displayed to the user.
 </div>
 <hr/>
 
 <div>
-    <h3>Scanprocessing</h3>
+    <h3>Scan-processing</h3>
     <h4>Description:</h4>
-    This module contains filters created to make printing scanned or photographed text or pictures clearer.
+    This module contains filters created to make printed images cleaner, no matter whether they come from image or from presentation, or from a book.
     Filters can be used on either a single image or on .pdf file. <br/> <br/>
     Currently there are two modules: high-pass-filter and quantization. <br/>
     High pass filter works by dividing the original image by the blurred version of it. <br/>
@@ -129,7 +129,7 @@
     <h4>Description:</h4>
     Image compression uses my custom lossy compression algorithm to compress images. It uses a combination of chroma
     subsampling, dictionary compression and RLE compression. Additional improvements are planned. <br/>
-    <b>Do not use it for serious storage currently - it is too slow and sometimes the files are damaged</b>
+    <b><u>Do not use it for serious storage currently - it is too slow and sometimes the files are damaged</u></b>
     <h4>File structure:</h4>
     Best way to describe algorithm is to describe its file structure (somewhat outdated currently):
     <ol>

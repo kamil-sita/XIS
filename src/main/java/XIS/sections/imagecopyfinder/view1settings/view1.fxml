@@ -12,5 +12,7 @@
       <TextArea fx:id="folderLocations" layoutX="14.0" layoutY="176.0" prefHeight="113.0" prefWidth="1158.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="176.0" />
       <Label layoutX="14.0" layoutY="300.0" styleClass="caption" text="Move deleted to" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="300.0" />
       <TextField fx:id="deleteFolder" layoutX="24.0" layoutY="329.0" prefHeight="25.0" prefWidth="1158.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="329.0" />
+      <Button layoutX="1054.0" layoutY="80.0" mnemonicParsing="false" onAction="#restoreOldStatePress" prefHeight="25.0" prefWidth="129.0" text="Restore old state" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="85.0" />
+      <Button layoutX="1054.0" layoutY="118.0" mnemonicParsing="false" onAction="#restoreOldSettingsPress" prefHeight="25.0" prefWidth="129.0" text="Restore old settings" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="120.0" />
 </children>
 </AnchorPane>

@@ -2,7 +2,7 @@ package XIS.sections.imagecopyfinder;
 
 import java.io.File;
 
-public class GroupedFolder {
+public final class GroupedFolder {
     private int groupId;
     private CompareGroup compareGroup;
     private boolean openRecursively;

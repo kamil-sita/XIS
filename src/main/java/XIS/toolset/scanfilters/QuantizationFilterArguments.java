@@ -6,6 +6,7 @@ public class QuantizationFilterArguments implements Arguments {
     private int colorCount;
     private double brightnessDifference;
     private double saturationDifference;
+    private boolean inverted;
 
     public boolean isFilterBackground() {
         return filterBackground;
@@ -45,5 +46,13 @@ public class QuantizationFilterArguments implements Arguments {
 
     public void setSaturationDifference(double saturationDifference) {
         this.saturationDifference = saturationDifference;
+    }
+
+    public void setInverted(boolean inverted) {
+        this.inverted = inverted;
+    }
+
+    public boolean isInverted() {
+        return inverted;
     }
 }

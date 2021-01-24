@@ -23,7 +23,8 @@ public class QuantizationFilter implements Filter {
                         arguments.isScaleBrightness(),
                         arguments.getColorCount(),
                         arguments.getBrightnessDifference(),
-                        arguments.getSaturationDifference()
+                        arguments.getSaturationDifference(),
+                        arguments.isInverted()
                 ),
                 interruptible).orElse(null);
     }

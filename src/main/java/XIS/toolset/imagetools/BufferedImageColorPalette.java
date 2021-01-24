@@ -106,7 +106,7 @@ public class BufferedImageColorPalette {
 
     }
 
-    public static BufferedImage invert(BufferedImage bufferedImage) {
+    public static void invert(BufferedImage bufferedImage) {
         if (bufferedImage.getType() != BufferedImage.TYPE_INT_ARGB) throw new IllegalArgumentException("Type of BufferedImage must be TYPE_INT_ARGB");
 
         int[] dataImage = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
@@ -122,6 +122,5 @@ public class BufferedImageColorPalette {
 
             dataImage[i] = IntArgb.toRgbaInteger(rgb);
         }
-        return bufferedImage;
     }
 }

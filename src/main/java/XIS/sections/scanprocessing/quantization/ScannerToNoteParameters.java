@@ -9,14 +9,16 @@ public class ScannerToNoteParameters {
     private final int colors;
     private final double brightnessDiff;
     private final double saturationDiff;
+    private final boolean inverted;
 
-    public ScannerToNoteParameters(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff) {
+    public ScannerToNoteParameters(BufferedImage input, boolean filterBackground, boolean scaleBrightness, int colors, double brightnessDiff, double saturationDiff, boolean inverted) {
         this.input = input;
         this.filterBackground = filterBackground;
         this.scaleBrightness = scaleBrightness;
         this.colors = colors;
         this.brightnessDiff = brightnessDiff;
         this.saturationDiff = saturationDiff;
+        this.inverted = inverted;
     }
 
     public BufferedImage getInput() {
@@ -41,5 +43,9 @@ public class ScannerToNoteParameters {
 
     public double getSaturationDiff() {
         return saturationDiff;
+    }
+
+    public boolean isInverted() {
+        return inverted;
     }
 }

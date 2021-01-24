@@ -69,6 +69,11 @@ public final class ScannerToNote {
 
         scaleBrightnessIfNeeded(scannerToNoteParameters.isScaleBrightness(), inputCopy, results);
 
+        if (scannerToNoteParameters.isInverted()) {
+            BufferedImageColorPalette.invert(inputCopy);
+        }
+
+
         if (interruptable.isInterrupted()) {
             return Optional.empty();
         }

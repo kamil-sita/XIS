@@ -61,7 +61,7 @@ public final class ScanProcessingModuleController extends XisController {
     private CheckBox blackAndWhiteCheckbox;
 
     @FXML
-    private CheckBox invertCheckbox;
+    private CheckBox invertCheckboxHighPass;
 
     //quantization
     @FXML
@@ -78,6 +78,9 @@ public final class ScanProcessingModuleController extends XisController {
 
     @FXML
     private Slider saturationDifferenceSlider;
+
+    @FXML
+    private CheckBox invertCheckboxQuantization;
 
     /*
     FXML methods
@@ -252,7 +255,7 @@ public final class ScanProcessingModuleController extends XisController {
                 var hargs = new HighPassFilterArguments();
                 hargs.setBlackAndWhite(blackAndWhiteCheckbox.isSelected());
                 hargs.setScaleBrightnessVal(Math.min(brightnessSlider.getValue()/100.0, 0.995));
-                hargs.setInverted(invertCheckbox.isSelected());
+                hargs.setInverted(invertCheckboxHighPass.isSelected());
                 int blurValue = 5;
                 try {
                     blurValue = Integer.parseInt(blurText.getText());
@@ -266,6 +269,7 @@ public final class ScanProcessingModuleController extends XisController {
                 var qargs = new QuantizationFilterArguments();
                 qargs.setBrightnessDifference(brightnessDifferenceSlider.getValue()/100.0);
                 qargs.setSaturationDifference(saturationDifferenceSlider.getValue()/100.0);
+                qargs.setInverted(invertCheckboxQuantization.isSelected());
                 qargs.setFilterBackground(isolateBackgroundCheckbox.isSelected());
                 qargs.setScaleBrightness(correctBrightnessCheckbox.isSelected());
 

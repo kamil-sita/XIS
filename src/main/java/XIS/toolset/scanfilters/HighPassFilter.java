@@ -50,7 +50,7 @@ public class HighPassFilter implements Filter {
         System.out.println((System.nanoTime() - time) / 1_000_000_000.0 + "s");
 
         if (inverted) {
-            output = BufferedImageColorPalette.invert(output);
+            BufferedImageColorPalette.invert(output);
         }
 
         return output;

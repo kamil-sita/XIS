@@ -45,6 +45,7 @@
                         <Label layoutX="13.0" layoutY="14.0" text="Blur strength" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="8.0" />
                         <Slider fx:id="brightnessSlider" layoutX="6.0" layoutY="100.0" majorTickUnit="10.0" minorTickCount="1" prefHeight="24.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" value="70.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="90.0" />
                         <Label layoutX="13.0" layoutY="71.0" text="Correct brightness value:" AnchorPane.leftAnchor="13.0" AnchorPane.topAnchor="65.0" />
+                        <CheckBox fx:id="invertCheckbox" layoutX="104.0" layoutY="35.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="65.0" text="Invert" />
                      </children>
                   </AnchorPane>
             </content>

@@ -105,4 +105,23 @@ public class BufferedImageColorPalette {
         }
 
     }
+
+    public static BufferedImage invert(BufferedImage bufferedImage) {
+        if (bufferedImage.getType() != BufferedImage.TYPE_INT_ARGB) throw new IllegalArgumentException("Type of BufferedImage must be TYPE_INT_ARGB");
+
+        int[] dataImage = ((DataBufferInt) bufferedImage.getRaster().getDataBuffer()).getData();
+        int[] rgb = new int[4];
+
+        for (int i = 0; i < dataImage.length; i++) {
+            IntArgb.asArray(dataImage[i], rgb);
+
+            rgb[IntArgb.R] = 255 - rgb[IntArgb.R];
+            rgb[IntArgb.G] = 255 - rgb[IntArgb.G];
+            rgb[IntArgb.B] = 255 - rgb[IntArgb.B];
+
+
+            dataImage[i] = IntArgb.toRgbaInteger(rgb);
+        }
+        return bufferedImage;
+    }
 }

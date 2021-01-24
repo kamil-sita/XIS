@@ -60,6 +60,9 @@ public final class ScanProcessingModuleController extends XisController {
     @FXML
     private CheckBox blackAndWhiteCheckbox;
 
+    @FXML
+    private CheckBox invertCheckbox;
+
     //quantization
     @FXML
     private TextField colorCountTextField;
@@ -249,6 +252,7 @@ public final class ScanProcessingModuleController extends XisController {
                 var hargs = new HighPassFilterArguments();
                 hargs.setBlackAndWhite(blackAndWhiteCheckbox.isSelected());
                 hargs.setScaleBrightnessVal(Math.min(brightnessSlider.getValue()/100.0, 0.995));
+                hargs.setInverted(invertCheckbox.isSelected());
                 int blurValue = 5;
                 try {
                     blurValue = Integer.parseInt(blurText.getText());

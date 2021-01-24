@@ -23,11 +23,12 @@ public class HighPassFilter implements Filter {
                 input,
                 arguments.getBlurPasses(),
                 arguments.getScaleBrightnessVal(),
-                arguments.isBlackAndWhite()
+                arguments.isBlackAndWhite(),
+                arguments.isInverted()
         );
     }
 
-    private static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, double scaleBrightnessVal, boolean blackAndWhite) {
+    private static BufferedImage convert(BufferedImage bufferedImage, int blurPasses, double scaleBrightnessVal, boolean blackAndWhite, boolean inverted) {
         long time = System.nanoTime();
         bufferedImage = changeToIntArgb(bufferedImage);
 
@@ -47,6 +48,10 @@ public class HighPassFilter implements Filter {
         BufferedImageColorPalette.scaleAndCutoffBrightness(output, scaleBrightnessVal);
 
         System.out.println((System.nanoTime() - time) / 1_000_000_000.0 + "s");
+
+        if (inverted) {
+            output = BufferedImageColorPalette.invert(output);
+        }
 
         return output;
     }

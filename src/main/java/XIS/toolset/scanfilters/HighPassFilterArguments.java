@@ -3,7 +3,8 @@ package XIS.toolset.scanfilters;
 public class HighPassFilterArguments implements Arguments {
     private int blurPasses;
     private double scaleBrightnessVal;
-    boolean blackAndWhite;
+    private boolean blackAndWhite;
+    private boolean inverted;
 
     public int getBlurPasses() {
         return blurPasses;
@@ -26,5 +27,14 @@ public class HighPassFilterArguments implements Arguments {
 
     public void setBlackAndWhite(boolean blackAndWhite) {
         this.blackAndWhite = blackAndWhite;
+    }
+
+    public boolean isInverted() {
+        return inverted;
+    }
+
+    public HighPassFilterArguments setInverted(boolean inverted) {
+        this.inverted = inverted;
+        return this;
     }
 }

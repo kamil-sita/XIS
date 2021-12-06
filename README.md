@@ -30,4 +30,4 @@ For more information see docs at: https://kamil-sita.github.io/XIS/
 ----
 
 ## Building and running
-Building and running XIS requires JRE/JDK at minimum 11 version. I recommend using [AdoptOpenJDK](https://github.com/AdoptOpenJDK/openjdk11-binaries/releases) one, as it's the one I use for my development and running purposes.
+Building and running XIS requires JRE/JDK at minimum 17 version. I recommend using [AdoptOpenJDK](https://github.com/AdoptOpenJDK/openjdk11-binaries/releases) one, as it's the one I use for my development and running purposes.

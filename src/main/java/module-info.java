@@ -5,7 +5,7 @@ module XIS {
     requires javafx.web;
     requires javafx.swing;
 
-    requires gson;
+    requires com.google.gson;
 
     requires java.desktop;
     requires java.sql;
@@ -13,7 +13,7 @@ module XIS {
     requires simple.kmeans;
 
     requires imgscalr.lib;
-    requires pdfbox;
+    requires org.apache.pdfbox;
 
     exports XIS;
     exports XIS.main;

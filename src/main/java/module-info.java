@@ -26,6 +26,6 @@ module XIS {
     opens XIS.sections.imagecopyfinder.view2comparison to javafx.fxml;
     opens XIS.sections.imagecopyfinder.imageinfoview to javafx.fxml;
     opens XIS.sections.scanprocessing to javafx.fxml;
-    opens XIS.sections to javafx.fxml;
+    opens XIS.sections to javafx.fxml, com.google.gson;
     opens XIS.main to javafx.fxml;
 }
